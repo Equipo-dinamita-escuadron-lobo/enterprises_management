@@ -8,14 +8,13 @@ import com.enterprises_management.enterprise.application.ports.input.ITaxLiabili
 import com.enterprises_management.enterprise.application.ports.output.ITaxLiabilityOutputPort;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @Service
 public class TaxLiabilityService implements ITaxLiabilityManagerPort{
 
     private final ITaxLiabilityOutputPort taxLiabilityOutputPort;
-
-    public TaxLiabilityService(ITaxLiabilityOutputPort taxLiabilityOutputPort) {
-        this.taxLiabilityOutputPort = taxLiabilityOutputPort;
-    }
 
     @Override
     public List<TaxLiability> getAllTaxLiability() {
