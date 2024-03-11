@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name="location")
 public class LocationEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String address;

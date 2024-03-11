@@ -1,9 +1,6 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +10,7 @@ import lombok.Setter;
 @Table(name="person_type")
 public class PersonTypeEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String type;
     private String name;
