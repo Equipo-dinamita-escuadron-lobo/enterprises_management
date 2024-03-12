@@ -13,6 +13,8 @@ public class CityEntity
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @ManyToOne
+    @JoinColumn(name="department_id")
+    private DepartmentEntity department;
     private String name;
 }

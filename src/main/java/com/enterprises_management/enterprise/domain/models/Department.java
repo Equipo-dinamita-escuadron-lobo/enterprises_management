@@ -1,5 +1,6 @@
 package com.enterprises_management.enterprise.domain.models;
 
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.CountryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,4 +14,5 @@ public class Department {
 
     private Long id;
     private String name;
+    private Country country;
 }
