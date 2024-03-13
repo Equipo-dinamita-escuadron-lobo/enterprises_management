@@ -1,5 +1,8 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.config;
 
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.IAddressRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IAddressMapper;
+import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,5 +35,10 @@ public class MapStructConfig {
     IEnterpriseRestMapper mapStructMapperEnterpriseRest() {
         return Mappers.getMapper(IEnterpriseRestMapper.class);
     }
+    @Bean
+    IAddressMapper mapStructMapperAddress(){return Mappers.getMapper(IAddressMapper.class);}
+    @Bean
+    IAddressRestMapper mapStructMapperAddressRestMapper(){return Mappers.getMapper(IAddressRestMapper.class);}
+
 }
 
