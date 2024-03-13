@@ -13,4 +13,5 @@ public class City
 {
     private Long id;
     private String name;
+    private Department department;
 }
