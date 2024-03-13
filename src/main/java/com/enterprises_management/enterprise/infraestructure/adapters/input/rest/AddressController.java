@@ -1,20 +1,22 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.input.rest;
 
-import com.enterprises_management.enterprise.application.ports.output.IAddressSearchOutputPort;
-import com.enterprises_management.enterprise.domain.models.City;
-import com.enterprises_management.enterprise.domain.models.Department;
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.CityAddressResponse;
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.DepartmentAddressResponse;
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.IAddressRestMapper;
-import lombok.AllArgsConstructor;
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-import java.util.List;
+import com.enterprises_management.enterprise.application.ports.output.IAddressSearchOutputPort;
+import com.enterprises_management.enterprise.domain.models.City;
+import com.enterprises_management.enterprise.domain.models.Department;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.CityAddressResponse;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.DepartmentAddressResponse;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.IAddressRestMapper;
+
+import lombok.AllArgsConstructor;
 
 @RequestMapping("/address")
 @RestController
