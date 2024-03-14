@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -16,6 +18,7 @@ public class DepartmentEntity {
     @JoinColumn(name="country_id")
     private CountryEntity country;
     private String name;
-     Private List<CityEntity> cities;
+    @OneToMany(mappedBy = "department" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CityEntity> cities;
 
 }

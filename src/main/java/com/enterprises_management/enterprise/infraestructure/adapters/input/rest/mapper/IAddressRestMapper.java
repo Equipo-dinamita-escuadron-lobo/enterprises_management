@@ -12,4 +12,5 @@ public interface IAddressRestMapper {
     CityAddressResponse ToCityResponseList(City cities);
     DepartmentAddressResponse toDepartmentResponseList(Department department);
     List<DepartmentAddressResponse> toDepartmentListResponse(List<Department> departments);
+    List<CityAddressResponse> toCitiesListResponse(List<City> cities);
 }

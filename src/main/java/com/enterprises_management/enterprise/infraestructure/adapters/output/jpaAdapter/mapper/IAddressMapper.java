@@ -14,4 +14,5 @@ public interface IAddressMapper {
     Department tolistModelDeparment(DepartmentEntity deparmentEntities);
     City tolistModelCity(CityEntity citiesEntities);
     List<Department> toModelListDepartment(List<DepartmentEntity> departmentEntities);
+    List<City> toModelListCities(List<CityEntity> citiesEntities);
 }

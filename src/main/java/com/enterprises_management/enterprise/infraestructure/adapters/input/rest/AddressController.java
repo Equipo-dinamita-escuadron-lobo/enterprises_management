@@ -13,10 +13,8 @@ import com.enterprises_management.enterprise.application.ports.input.IAddressSea
 import com.enterprises_management.enterprise.application.ports.output.IAddressSearchOutputPort;
 import com.enterprises_management.enterprise.domain.models.City;
 import com.enterprises_management.enterprise.domain.models.Department;
-import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.CityAddressResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.DepartmentAddressResponse;
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.TaxLiabilityResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.IAddressRestMapper;
 
 import lombok.AllArgsConstructor;
@@ -45,5 +43,11 @@ public class AddressController {
     public ResponseEntity<List<DepartmentAddressResponse>> getAllDepartment(){
         List<Department> departments =  addressSearchManagerPort.getAllDepartment();
         return ResponseEntity.ok(addressRestMapper.toDepartmentListResponse(departments));
+    }
+    @GetMapping("/cities/{idDepartment}")
+    public ResponseEntity<List<CityAddressResponse>> getAllCities(@PathVariable("idDepartment") Long idDapartment){
+        List<City> cities=addressSearchManagerPort.getAllCities(idDapartment);
+        return ResponseEntity.ok(addressRestMapper.toCitiesListResponse(cities));
+
     }
 }

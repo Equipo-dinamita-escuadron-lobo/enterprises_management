@@ -9,6 +9,7 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IAddressMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IAddressRepository;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IDepartmentAddressRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -45,4 +46,13 @@ public class AddressJpaAdapter implements IAddressSearchOutputPort {
         List<Department> departments = addressMapper.toModelListDepartment(departmententities);
         return departments;
     }
+
+    @Override
+    public List<City> getAllCities(Long idDepartment) {
+        DepartmentEntity departmentEntity = departmentAddressRepository.findById( idDepartment).orElseThrow(() -> new EntityNotFoundException("Department not found"));
+        List<CityEntity> cityEntities = departmentEntity.getCities();
+        return addressMapper.toModelListCities(cityEntities);
+    }
+
+
 }

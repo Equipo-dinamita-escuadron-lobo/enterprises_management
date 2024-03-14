@@ -10,5 +10,6 @@ import java.util.List;
 public interface IAddressSearchManagerPort {
     Department getDepartment(Long id);
     City getCity(Long id);
-    List<Department> getAllDepartment(); 
+    List<Department> getAllDepartment();
+    List<City>getAllCities(Long idDepartment);
 }
