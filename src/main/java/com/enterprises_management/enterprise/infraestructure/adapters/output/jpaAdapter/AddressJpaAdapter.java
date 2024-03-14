@@ -2,7 +2,6 @@ package com.enterprises_management.enterprise.infraestructure.adapters.output.jp
 
 import com.enterprises_management.enterprise.application.ports.output.IAddressSearchOutputPort;
 import com.enterprises_management.enterprise.domain.models.City;
-import com.enterprises_management.enterprise.domain.models.Country;
 import com.enterprises_management.enterprise.domain.models.Department;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.CityEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.DepartmentEntity;
@@ -10,10 +9,11 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IAddressRepository;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IDepartmentAddressRepository;
 import lombok.Data;
+
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
 @Component
 @Data
 public class AddressJpaAdapter implements IAddressSearchOutputPort {

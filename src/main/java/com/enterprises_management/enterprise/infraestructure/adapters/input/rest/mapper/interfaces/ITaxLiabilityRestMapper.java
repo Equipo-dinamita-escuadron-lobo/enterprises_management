@@ -1,4 +1,4 @@
-package com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper;
+package com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces;
 
 import java.util.List;
 

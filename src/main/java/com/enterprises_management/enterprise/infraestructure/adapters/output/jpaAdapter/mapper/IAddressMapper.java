@@ -2,13 +2,13 @@ package com.enterprises_management.enterprise.infraestructure.adapters.output.jp
 
 import com.enterprises_management.enterprise.domain.models.City;
 import com.enterprises_management.enterprise.domain.models.Department;
-import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.CityEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.DepartmentEntity;
-import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
-import org.mapstruct.Mapper;
 
 import java.util.List;
+
+import org.mapstruct.Mapper;
+
 @Mapper
 public interface IAddressMapper {
     Department tolistModelDeparment(DepartmentEntity deparmentEntities);

@@ -1,4 +1,4 @@
-package com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper;
+package com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces;
 
 import java.util.List;
 
@@ -9,6 +9,8 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 
 @Mapper
 public interface IEnterpriseRestMapper {
+    //Se crea un mapeo de la lista de empresas a la lista de respuestas de empresas
     List<EnterpriseListResponse> ToEnterpriseResponseList(List<Enterprise> enterprises);
     EnterpriseListResponse toResponse(Enterprise enterprise);
+
 }
