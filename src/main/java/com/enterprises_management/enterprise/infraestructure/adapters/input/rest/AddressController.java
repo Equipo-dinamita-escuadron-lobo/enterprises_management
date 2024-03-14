@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enterprises_management.enterprise.application.ports.input.IAddressSearchManagerPort;
 import com.enterprises_management.enterprise.application.ports.output.IAddressSearchOutputPort;
 import com.enterprises_management.enterprise.domain.models.City;
 import com.enterprises_management.enterprise.domain.models.Department;
+import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.CityAddressResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.DepartmentAddressResponse;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.TaxLiabilityResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.IAddressRestMapper;
 
 import lombok.AllArgsConstructor;
@@ -22,8 +25,11 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 public class AddressController {
+
     private final IAddressSearchOutputPort  addressSearchOutputPort;
+    private final IAddressSearchManagerPort addressSearchManagerPort;
     private final  IAddressRestMapper addressRestMapper;
+
     @GetMapping("/city/{id}")
     public ResponseEntity<List<CityAddressResponse>> getCity(@PathVariable("id") Long id){
         City city=addressSearchOutputPort.getCity(id);
@@ -33,5 +39,11 @@ public class AddressController {
     public ResponseEntity<List<DepartmentAddressResponse>> getDepartment(@PathVariable("id") Long idCountry){
         Department department=addressSearchOutputPort.getDepartment(idCountry);
         return ResponseEntity.ok(Collections.singletonList(addressRestMapper.toDepartmentResponseList(department)));
+    }
+
+    @GetMapping("/departments")
+    public ResponseEntity<List<DepartmentAddressResponse>> getAllDepartment(){
+        List<Department> departments =  addressSearchManagerPort.getAllDepartment();
+        return ResponseEntity.ok(addressRestMapper.toDepartmentListResponse(departments));
     }
 }

@@ -13,5 +13,5 @@ import java.util.List;
 public interface IAddressMapper {
     Department tolistModelDeparment(DepartmentEntity deparmentEntities);
     City tolistModelCity(CityEntity citiesEntities);
-
+    List<Department> toModelListDepartment(List<DepartmentEntity> departmentEntities);
 }
