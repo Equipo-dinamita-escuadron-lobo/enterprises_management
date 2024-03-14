@@ -9,6 +9,9 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IAddressRepository;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IDepartmentAddressRepository;
 import lombok.Data;
+
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,5 +37,12 @@ public class AddressJpaAdapter implements IAddressSearchOutputPort {
 
         return city;
 
+    }
+
+    @Override
+    public List<Department> getAllDepartment(){
+        List<DepartmentEntity>  departmententities = departmentAddressRepository.findAll();
+        List<Department> departments = addressMapper.toModelListDepartment(departmententities);
+        return departments;
     }
 }

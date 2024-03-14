@@ -5,6 +5,9 @@ import com.enterprises_management.enterprise.application.ports.output.IAddressSe
 import com.enterprises_management.enterprise.domain.models.City;
 import com.enterprises_management.enterprise.domain.models.Department;
 import lombok.AllArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 
@@ -25,5 +28,10 @@ public class AddressSearchService implements IAddressSearchManagerPort {
     @Override
     public City getCity(Long id) {
         return addressSearchOutputPort.getCity(id);
+    }
+
+    @Override
+    public List<Department> getAllDepartment(){
+        return addressSearchOutputPort.getAllDepartment();
     }
 }
