@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.enterprises_management.enterprise.domain.models.City;
 import com.enterprises_management.enterprise.domain.models.Department;
-import com.enterprises_management.enterprise.domain.models.TaxLiability;
 
 
 public interface IAddressSearchManagerPort {
