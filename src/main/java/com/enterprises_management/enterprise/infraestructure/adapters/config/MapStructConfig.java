@@ -1,15 +1,17 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.config;
 
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.IAddressRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IAddressRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IAddressMapper;
-import org.mapstruct.Mapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseCreateMapper;
+
 import org.mapstruct.factory.Mappers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.IEnterpriseRestMapper;
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.ITaxLiabilityRestMapper;
-import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseSearchMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.ILocationMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.ITaxLiabilityMapper;
 
 
@@ -17,28 +19,27 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 public class MapStructConfig {
     
     @Bean
-    public ITaxLiabilityMapper mapStructMapper() {
-        return Mappers.getMapper(ITaxLiabilityMapper.class);
-    }
+    ITaxLiabilityMapper mapStructMapper() {return Mappers.getMapper(ITaxLiabilityMapper.class);}
     
     @Bean
-    public ITaxLiabilityRestMapper mapStructMapperRest() {
-        return Mappers.getMapper(ITaxLiabilityRestMapper.class);
-    }
+    ITaxLiabilityRestMapper mapStructMapperRest() {return Mappers.getMapper(ITaxLiabilityRestMapper.class);}
 
     @Bean 
-    IEnterpriseMapper mapStructMapperEnterprise() {
-        return Mappers.getMapper(IEnterpriseMapper.class);
-    }
+    IEnterpriseSearchMapper mapStructMapperEnterprise() {return Mappers.getMapper(IEnterpriseSearchMapper.class);}
 
     @Bean
-    IEnterpriseRestMapper mapStructMapperEnterpriseRest() {
-        return Mappers.getMapper(IEnterpriseRestMapper.class);
-    }
+    IEnterpriseRestMapper mapStructMapperEnterpriseRest() {return Mappers.getMapper(IEnterpriseRestMapper.class);}
+   
     @Bean
     IAddressMapper mapStructMapperAddress(){return Mappers.getMapper(IAddressMapper.class);}
+    
     @Bean
     IAddressRestMapper mapStructMapperAddressRestMapper(){return Mappers.getMapper(IAddressRestMapper.class);}
 
+    @Bean
+    IEnterpriseCreateMapper mapStructMapperEnterpriseCreate(){return Mappers.getMapper(IEnterpriseCreateMapper.class);}
+
+    @Bean
+    ILocationMapper mapStructMapperLocation(){return Mappers.getMapper(ILocationMapper.class);}
 }
 

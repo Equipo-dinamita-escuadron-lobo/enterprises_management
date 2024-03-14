@@ -7,17 +7,17 @@ import org.springframework.stereotype.Component;
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseSearchOutputPort;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
-import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseSearchMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IEnterpriseRepository;
 
 import lombok.Data;
 
 @Component
 @Data
-public class EnterpriseJpaAdapter implements IEnterpriseSearchOutputPort{
+public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort{
     
     private final IEnterpriseRepository enterpriseRepository;
-    private final IEnterpriseMapper enterpriseMapper;
+    private final IEnterpriseSearchMapper enterpriseMapper;
     
     @Override
     public List<Enterprise> getAllEnterprises() {

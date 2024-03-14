@@ -14,7 +14,7 @@ import com.enterprises_management.enterprise.domain.models.City;
 import com.enterprises_management.enterprise.domain.models.Department;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.CityAddressResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.DepartmentAddressResponse;
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.IAddressRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IAddressRestMapper;
 
 import lombok.AllArgsConstructor;
 

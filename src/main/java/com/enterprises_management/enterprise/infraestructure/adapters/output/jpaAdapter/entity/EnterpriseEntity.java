@@ -34,14 +34,16 @@ public class EnterpriseEntity {
     @ManyToOne
     TaxPayerTypeEntity taxPayerType; //tipo de contribuyente
 
-
     @ManyToOne
+    @JoinColumn(name = "enterprise_type_id", referencedColumnName = "id")
     EnterpriseTypeEntity enterpriseType; //tipo de empresa
 
     @ManyToOne
+    @JoinColumn(name = "person_type_id", referencedColumnName = "id")
     PersonTypeEntity personType; //tipo de persona
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
     LocationEntity location;
     //private Integer tenatId;
 
