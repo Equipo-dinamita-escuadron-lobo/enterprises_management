@@ -16,4 +16,6 @@ public class DepartmentEntity {
     @JoinColumn(name="country_id")
     private CountryEntity country;
     private String name;
+     Private List<CityEntity> cities;
+
 }
