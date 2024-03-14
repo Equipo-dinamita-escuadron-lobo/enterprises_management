@@ -29,4 +29,9 @@ public class AddressSearchService implements IAddressSearchManagerPort {
     public City getCity(Long id) {
         return addressSearchOutputPort.getCity(id);
     }
+
+    @Override
+    public List<Department> getAllDepartment(){
+        return addressSearchOutputPort.getAllDepartment();
+    }
 }

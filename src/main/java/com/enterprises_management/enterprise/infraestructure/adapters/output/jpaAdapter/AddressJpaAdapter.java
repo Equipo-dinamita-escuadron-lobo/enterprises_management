@@ -38,4 +38,11 @@ public class AddressJpaAdapter implements IAddressSearchOutputPort {
         return city;
 
     }
+
+    @Override
+    public List<Department> getAllDepartment(){
+        List<DepartmentEntity>  departmententities = departmentAddressRepository.findAll();
+        List<Department> departments = addressMapper.toModelListDepartment(departmententities);
+        return departments;
+    }
 }

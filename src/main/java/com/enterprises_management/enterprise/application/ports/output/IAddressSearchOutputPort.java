@@ -9,4 +9,5 @@ import java.util.List;
 public interface IAddressSearchOutputPort {
     Department getDepartment(Long id);
     City getCity(Long id);
+    List<Department> getAllDepartment();
 }
