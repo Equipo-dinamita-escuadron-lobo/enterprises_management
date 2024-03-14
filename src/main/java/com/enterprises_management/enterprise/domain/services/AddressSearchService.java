@@ -37,7 +37,8 @@ public class AddressSearchService implements IAddressSearchManagerPort {
 
     @Override
     public List<City> getAllCities(Long idDepartment) {
-        return null;
+        return addressSearchOutputPort.getAllCities( idDepartment);
+
     }
 
 
