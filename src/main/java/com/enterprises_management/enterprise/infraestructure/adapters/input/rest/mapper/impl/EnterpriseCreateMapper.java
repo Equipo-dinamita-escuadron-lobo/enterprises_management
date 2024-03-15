@@ -36,9 +36,15 @@ public class EnterpriseCreateMapper implements IEnterpriseCreateRestMapper{
         .taxPayerType(TaxPayerType.builder().id(enterpriseCreateResponse.getTaxPayerType()).build())
 
         .enterpriseType(EnterpriseType.builder().id(enterpriseCreateResponse.getEnterpriseType()).build())
+                                            
+        .personType(PersonType.builder()
+            .name(enterpriseCreateResponse.getPersonType().getName())
+            .surname(enterpriseCreateResponse.getPersonType().getSurname())
+            .bussinessName(enterpriseCreateResponse.getPersonType().getBussinessName())
+            .type(enterpriseCreateResponse.getPersonType().getType())
+            .build()
+        )
         
-        .personType(enterpriseCreateResponse.getPersonType() != null ? PersonType.builder().id(enterpriseCreateResponse.getPersonType()).build() : null)
-
         .location(
             Location.builder()
             .address(enterpriseCreateResponse.getLocation().getAddress())
@@ -71,7 +77,7 @@ public class EnterpriseCreateMapper implements IEnterpriseCreateRestMapper{
 
         .location(enterprise.getLocation())
 
-        .personType(enterprise.getPersonType() != null ? enterprise.getPersonType().getId() : null)
+        
         
         .build();
         return enterpriseCreateResponse;

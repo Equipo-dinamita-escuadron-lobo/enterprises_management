@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseCreateMannegerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseSearchManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.ILocationMangerPort;
+import com.enterprises_management.enterprise.application.ports.input.IPersonTypeManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.ITaxLiabilityManagerPort;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
@@ -40,6 +41,7 @@ public class EnterpriseController {
     private final IEnterpriseCreateRestMapper enterpriseCreateMapper;
 
     private final ILocationMangerPort locationMangerPort;
+    private final IPersonTypeManagerPort personTypeManagerPort;
 
 
 
@@ -56,11 +58,11 @@ public class EnterpriseController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<EnterpriseCreateResponse> createEnterprise(@RequestBody EnterpriseCreateRequest enterpriseCreateRequest){
+    public ResponseEntity<EnterpriseCreateResponse> createEnterprise(@RequestBody EnterpriseCreateRequest enterpriseCreateRequest){ 
         Enterprise enterprise = enterpriseCreateMapper.toDomain(enterpriseCreateRequest);
-
         //Creamos location y guardamos en la base de datos 
         enterprise.setLocation(locationMangerPort.createLocation(enterprise.getLocation()));
+        enterprise.setPersonType(personTypeManagerPort.createPersonType(enterprise.getPersonType()));
   
         
 

@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseSearchMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.ILocationMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IPersonTypeMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.ITaxLiabilityMapper;
 
 
@@ -41,5 +42,8 @@ public class MapStructConfig {
 
     @Bean
     ILocationMapper mapStructMapperLocation(){return Mappers.getMapper(ILocationMapper.class);}
+
+    @Bean
+    IPersonTypeMapper mapStructMapperPersonType(){return Mappers.getMapper(IPersonTypeMapper.class);}
 }
 

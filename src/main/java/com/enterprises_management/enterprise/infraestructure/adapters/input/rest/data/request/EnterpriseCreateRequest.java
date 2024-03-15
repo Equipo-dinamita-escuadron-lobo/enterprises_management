@@ -3,6 +3,7 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 import java.util.List;
 
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.LocationDto;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.PersonTypeDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -34,7 +35,7 @@ public class EnterpriseCreateRequest {
 
     Long enterpriseType; 
 
-    Long personType;
+    PersonTypeDto personType;
 
     LocationDto location;
 }
