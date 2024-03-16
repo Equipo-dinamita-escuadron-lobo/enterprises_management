@@ -1,16 +1,10 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.config;
 
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.IAddressRestMapper;
-import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IAddressMapper;
-import org.mapstruct.Mapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.*;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.*;
 import org.mapstruct.factory.Mappers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.IEnterpriseRestMapper;
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.ITaxLiabilityRestMapper;
-import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseMapper;
-import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.ITaxLiabilityMapper;
 
 
 @Configuration
@@ -35,10 +29,19 @@ public class MapStructConfig {
     IEnterpriseRestMapper mapStructMapperEnterpriseRest() {
         return Mappers.getMapper(IEnterpriseRestMapper.class);
     }
-    @Bean
-    IAddressMapper mapStructMapperAddress(){return Mappers.getMapper(IAddressMapper.class);}
-    @Bean
-    IAddressRestMapper mapStructMapperAddressRestMapper(){return Mappers.getMapper(IAddressRestMapper.class);}
 
+
+    @Bean
+    ICitiesbyDepartmentMapper mapStructMapperCitiesMapper(){return Mappers.getMapper( ICitiesbyDepartmentMapper.class);
+
+    }
+    @Bean
+    ICitiesbyDepartmentRestMapper mapStructMapperCitiesRestMapper(){return Mappers.getMapper( ICitiesbyDepartmentRestMapper.class);
+    }
+
+    @Bean
+    IDepartmentsMapper mapStructMapperDepartmetsMapper(){return Mappers.getMapper( IDepartmentsMapper.class);}
+    @Bean
+    IDepartmentRestMapper mapStructMapperDepartmetRestMappper(){return Mappers.getMapper( IDepartmentRestMapper.class); }
 }
 

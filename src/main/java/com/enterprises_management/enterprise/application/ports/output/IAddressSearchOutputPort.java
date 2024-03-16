@@ -7,8 +7,7 @@ import com.enterprises_management.enterprise.domain.models.Department;
 import java.util.List;
 
 public interface IAddressSearchOutputPort {
-    Department getDepartment(Long id);
-    City getCity(Long id);
+
     List<Department> getAllDepartment();
-    List<City>getAllCities(Long idDepartment);
+    public Department getAllCities(Long idDepartment);
 }
