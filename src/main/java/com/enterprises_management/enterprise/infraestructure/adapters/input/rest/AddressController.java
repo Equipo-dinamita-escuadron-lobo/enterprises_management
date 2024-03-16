@@ -3,8 +3,9 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 import java.util.List;
 
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.CitiesbyDepartmentResponse;
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.ICitiesbyDepartmentRestMapper;
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.IDepartmentRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ICitiesbyDepartmentRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IDepartmentRestMapper;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

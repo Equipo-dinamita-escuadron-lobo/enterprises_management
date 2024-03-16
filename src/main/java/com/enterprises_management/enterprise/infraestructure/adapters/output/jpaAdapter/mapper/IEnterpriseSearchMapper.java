@@ -8,7 +8,7 @@ import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
 
 @Mapper
-public interface IEnterpriseMapper {
+public interface IEnterpriseSearchMapper {
 
     EnterpriseEntity toEntity(Enterprise enterprise);
     List<Enterprise> toListModel(List<EnterpriseEntity> enterpriseEntities);  

@@ -1,5 +1,7 @@
 package com.enterprises_management.enterprise.domain.models;
 
+
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

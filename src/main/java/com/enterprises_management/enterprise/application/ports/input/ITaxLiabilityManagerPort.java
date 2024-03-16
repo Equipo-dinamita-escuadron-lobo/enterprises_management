@@ -6,4 +6,5 @@ import com.enterprises_management.enterprise.domain.models.TaxLiability;
 
 public interface ITaxLiabilityManagerPort {
     List<TaxLiability> getAllTaxLiability();  
+    
 }
