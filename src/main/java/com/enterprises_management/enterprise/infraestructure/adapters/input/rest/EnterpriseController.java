@@ -3,6 +3,7 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,11 +25,13 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RequestMapping("/enterprises")
 @RestController
 @AllArgsConstructor
+@Validated
 public class EnterpriseController {
 
     private final ITaxLiabilityManagerPort taxLiabilityManagerPort;
@@ -58,16 +61,14 @@ public class EnterpriseController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<EnterpriseCreateResponse> createEnterprise(@RequestBody EnterpriseCreateRequest enterpriseCreateRequest){ 
-        Enterprise enterprise = enterpriseCreateMapper.toDomain(enterpriseCreateRequest);
-        //Creamos location y guardamos en la base de datos 
-        enterprise.setLocation(locationMangerPort.createLocation(enterprise.getLocation()));
-        enterprise.setPersonType(personTypeManagerPort.createPersonType(enterprise.getPersonType()));
-  
-        
+    public ResponseEntity<EnterpriseCreateResponse> createEnterprise(@Valid @RequestBody EnterpriseCreateRequest enterpriseCreateRequest){ 
+            Enterprise enterprise = enterpriseCreateMapper.toDomain(enterpriseCreateRequest);
+            //Creamos location y guardamos en la base de datos 
+            enterprise.setLocation(locationMangerPort.createLocation(enterprise.getLocation()));
+            enterprise.setPersonType(personTypeManagerPort.createPersonType(enterprise.getPersonType()));
 
-        enterprise = enterpriseCreateMannegerPort.createEnterprise(enterprise);
-        return ResponseEntity.ok(enterpriseCreateMapper.toCreateResponse(enterprise));          
+            enterprise = enterpriseCreateMannegerPort.createEnterprise(enterprise);
+            return ResponseEntity.ok(enterpriseCreateMapper.toCreateResponse(enterprise));   
     }
     
 }

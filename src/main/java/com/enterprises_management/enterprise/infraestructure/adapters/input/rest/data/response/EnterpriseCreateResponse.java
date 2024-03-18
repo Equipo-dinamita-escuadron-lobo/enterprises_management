@@ -36,4 +36,5 @@ public class EnterpriseCreateResponse {
     Long personType;
 
     Location location;  
+
 }
