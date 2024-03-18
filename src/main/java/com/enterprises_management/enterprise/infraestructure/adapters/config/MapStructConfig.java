@@ -1,10 +1,13 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.config;
 
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IAddressRestMapper;
+
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.*;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ICitiesbyDepartmentRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IDepartmentRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
-import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IAddressMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseCreateMapper;
+
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +17,7 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.ILocationMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IPersonTypeMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.ITaxLiabilityMapper;
+
 
 
 @Configuration
@@ -29,13 +33,26 @@ public class MapStructConfig {
     IEnterpriseSearchMapper mapStructMapperEnterprise() {return Mappers.getMapper(IEnterpriseSearchMapper.class);}
 
     @Bean
-    IEnterpriseRestMapper mapStructMapperEnterpriseRest() {return Mappers.getMapper(IEnterpriseRestMapper.class);}
+    IEnterpriseRestMapper mapStructMapperEnterpriseRest() {
+        return Mappers.getMapper(IEnterpriseRestMapper.class);
+    }
+
+
+    @Bean
+    ICitiesbyDepartmentMapper mapStructMapperCitiesMapper(){return Mappers.getMapper( ICitiesbyDepartmentMapper.class);
+
+    }
+    @Bean
+    ICitiesbyDepartmentRestMapper mapStructMapperCitiesRestMapper(){return Mappers.getMapper( ICitiesbyDepartmentRestMapper.class);
+    }
+
+    @Bean
+    IDepartmentsMapper mapStructMapperDepartmetsMapper(){return Mappers.getMapper( IDepartmentsMapper.class);}
+    @Bean
+    IDepartmentRestMapper mapStructMapperDepartmetRestMappper(){return Mappers.getMapper( IDepartmentRestMapper.class); }
+
    
-    @Bean
-    IAddressMapper mapStructMapperAddress(){return Mappers.getMapper(IAddressMapper.class);}
-    
-    @Bean
-    IAddressRestMapper mapStructMapperAddressRestMapper(){return Mappers.getMapper(IAddressRestMapper.class);}
+
 
     @Bean
     IEnterpriseCreateMapper mapStructMapperEnterpriseCreate(){return Mappers.getMapper(IEnterpriseCreateMapper.class);}
@@ -45,5 +62,6 @@ public class MapStructConfig {
 
     @Bean
     IPersonTypeMapper mapStructMapperPersonType(){return Mappers.getMapper(IPersonTypeMapper.class);}
+
 }
 

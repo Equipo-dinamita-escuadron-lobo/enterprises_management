@@ -18,20 +18,17 @@ public class AddressSearchService implements IAddressSearchManagerPort {
     private final IAddressSearchOutputPort addressSearchOutputPort;
 
 
-
-    @Override
-    public Department getDepartment(Long id) {
-        return addressSearchOutputPort.getDepartment(id) ;
-
-    }
-
-    @Override
-    public City getCity(Long id) {
-        return addressSearchOutputPort.getCity(id);
-    }
-
     @Override
     public List<Department> getAllDepartment(){
         return addressSearchOutputPort.getAllDepartment();
     }
+
+    @Override
+    public Department getAllCities(Long idDepartment) {
+        return addressSearchOutputPort.getAllCities( idDepartment);
+
+    }
+
+
+
 }
