@@ -6,6 +6,8 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ICitiesbyDepartmentRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IDepartmentRestMapper;
 
+import jakarta.validation.constraints.Positive;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +37,7 @@ public class AddressController {
         return ResponseEntity.ok(departmentRestMapper.toDepartmentResponseList(departments));
     }
     @GetMapping("/cities/{idDepartment}")
-    public ResponseEntity<CitiesbyDepartmentResponse> getAllCities(@PathVariable("idDepartment") Long idDepartment){
+    public ResponseEntity<CitiesbyDepartmentResponse> getAllCities(@PathVariable("idDepartment") @Positive Long idDepartment){
         Department department =addressSearchManagerPort.getAllCities( idDepartment);
         CitiesbyDepartmentResponse citiesbyDepartmentResponse=citiesbyDepartmentRestMapper.toResponse(department);
         return ResponseEntity.ok(citiesbyDepartmentResponse);
