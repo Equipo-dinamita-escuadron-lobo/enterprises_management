@@ -26,4 +26,4 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Tests with Maven
-      run: ./mvnw test
+      run: mvn test
