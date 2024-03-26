@@ -51,18 +51,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-      - name: Extract tag from GitHub ref
-        id: extract_tag
-        run: |
-          echo "tag=$(git ls-remote --tags --sort=committerdate | grep -o 'v.*' | sort -r | head -1)" >> $GITHUB_OUTPUT
+      - name: Get Previous tag
+        id: previoustag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+        with:
+          fallback: 1.0.0
 
       - name: Build the Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:${{ steps.extract_tag.outputs.tag }} .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:${{ steps.previoustag.outputs.tag }} .
 
       - name: Tag the Docker image
-        run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:${{ steps.extract_tag.outputs.tag }} ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:latest
+        run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:${{ steps.previoustag.outputs.tag }} ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:latest
 
       - name: Push Docker image
         run: |
-         docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:${{ steps.extract_tag.outputs.tag }}
+         docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:${{ steps.previoustag.outputs.tag }}
          docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:latest
