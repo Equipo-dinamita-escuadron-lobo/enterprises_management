@@ -57,13 +57,9 @@ jobs:
           latest_tag=$(git describe --tags --abbrev=0)
           echo "::set-output name=tag::$latest_tag"
 
-      - name: Build the Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:${{ steps.extract_tag.outputs.tag }} .
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:${{ steps.extract_tag.outputs.tag }},${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:latest
 
-      - name: Tag the Docker image
-        run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:${{ steps.extract_tag.outputs.tag }} ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:latest
-
-      - name: Push Docker image
-        run: |
-         docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:${{ steps.extract_tag.outputs.tag }}
-         docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:latest
