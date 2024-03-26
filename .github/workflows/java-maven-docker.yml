@@ -23,7 +23,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build with Maven
+      - name: Test with Maven
         run: mvn test
 
   docker:
@@ -54,7 +54,7 @@ jobs:
       - name: Extract tag from GitHub ref
         id: extract_tag
         run: |
-          echo "tag=${git ls-remote --tags --sort=committerdate | grep -o 'v.*' | sort -r | head -1}" >> $GITHUB_OUTPUT
+          echo "tag=$(git ls-remote --tags --sort=committerdate | grep -o 'v.*' | sort -r | head -1)" >> $GITHUB_OUTPUT
 
       - name: Build the Docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:${{ steps.extract_tag.outputs.tag }} .
