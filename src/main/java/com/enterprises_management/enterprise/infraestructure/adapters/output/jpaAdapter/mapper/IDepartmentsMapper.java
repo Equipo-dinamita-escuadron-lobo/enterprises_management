@@ -1,13 +1,10 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper;
 
-import com.enterprises_management.enterprise.domain.models.City;
 import com.enterprises_management.enterprise.domain.models.Department;
-import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.CityEntity;
-import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.CountryEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.DepartmentEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+
 
 import java.util.List;
 import java.util.stream.Collectors;

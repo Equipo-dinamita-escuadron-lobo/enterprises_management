@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseSearchManagerPort;
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseSearchOutputPort;
-import com.enterprises_management.enterprise.domain.models.Enterprise;
+import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 
 import lombok.AllArgsConstructor;
 
@@ -17,7 +17,7 @@ public class EnterpriseSearchService implements IEnterpriseSearchManagerPort {
     private final IEnterpriseSearchOutputPort enterpriseSearchOutputPort;
 
     @Override
-    public List<Enterprise> getAllEnterprises() {
+    public List<EnterpriseInfoDto> getAllEnterprises() {
         return enterpriseSearchOutputPort.getAllEnterprises();
     } 
 }

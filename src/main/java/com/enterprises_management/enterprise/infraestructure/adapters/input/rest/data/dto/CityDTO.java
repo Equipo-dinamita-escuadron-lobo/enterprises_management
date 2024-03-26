@@ -1,4 +1,4 @@
-package com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.DTO;
+package com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
