@@ -4,12 +4,29 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.enterprises_management.enterprise.domain.models.Enterprise;
-import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
+import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
+
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.projection.IEnterpriseInfoProjection;
 
 @Mapper
 public interface IEnterpriseSearchMapper {
 
-    EnterpriseEntity toEntity(Enterprise enterprise);
-    List<Enterprise> toListModel(List<EnterpriseEntity> enterpriseEntities);  
+    default List<EnterpriseInfoDto> toEnterpriseInfoDtoList(List<IEnterpriseInfoProjection> enterpriseInfo) {
+        if (enterpriseInfo == null) {
+            return null;
+        }
+
+        return enterpriseInfo.stream()
+                .map(enterprise -> {
+                    EnterpriseInfoDto enterpriseInfoDto = EnterpriseInfoDto.builder()
+                        .id(enterprise.getId())
+                        .name(enterprise.getName())
+                        .nit(enterprise.getNit())
+                        .logo(enterprise.getLogo())
+                        .build();
+                    return enterpriseInfoDto;
+                })
+                .toList();
+    }
+
 }

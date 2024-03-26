@@ -15,5 +15,6 @@ public class Department {
 
     private Long id;
     private String name;
+    private Country country;
     private List<City> cities;
 }

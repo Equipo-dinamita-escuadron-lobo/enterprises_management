@@ -7,6 +7,9 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 
 @Mapper
 public interface ILocationMapper {
+
+    
     Location toDomain(LocationEntity locationEntity);
+    
     LocationEntity toEntity(Location location); 
 }

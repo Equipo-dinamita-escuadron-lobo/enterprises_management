@@ -8,13 +8,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 @Mapper
 public interface ICitiesbyDepartmentMapper {
 
     @Mapping(target = "cities", qualifiedByName = "mapCities")
+    @Mapping(target = "country", ignore = true)
     DepartmentEntity toEntity(Department department);
 
     @Mapping(target = "cities", qualifiedByName = "mapCitiesDomain")
