@@ -1,1 +1,1 @@
-Testing polling (tag 5)
+Testing polling
