@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.LocationDto;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.PersonTypeDto;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.validation.interfaces.IUniqueNit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.validation.constraints.Email;
@@ -30,6 +31,7 @@ public class EnterpriseCreateRequest {
     @NotBlank(message = "El nombre de la empresa es requerido")
     private String name;
 
+    @IUniqueNit
     @NotBlank(message = "El NIT es requerido")
     private String nit;
 

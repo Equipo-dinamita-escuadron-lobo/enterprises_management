@@ -7,6 +7,7 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IDepartmentRestMapper;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +19,10 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 
 import lombok.AllArgsConstructor;
 
-@RequestMapping("/address")
+@RequestMapping("/api/address")
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class AddressController {
 
 
