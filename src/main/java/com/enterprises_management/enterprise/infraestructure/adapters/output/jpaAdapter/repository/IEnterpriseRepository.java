@@ -11,4 +11,7 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 public interface IEnterpriseRepository extends JpaRepository<EnterpriseEntity, Long>{
      @Query("SELECT e.id AS id, e.name AS name, e.nit AS nit, e.logo AS logo FROM EnterpriseEntity e")
      List<IEnterpriseInfoProjection> findEnterpriseInfo();   
+
+     boolean existsByNit(String nit);
+
 }
