@@ -78,7 +78,7 @@ public class IEnterpriseRepositoryTests {
         location= entityManager.persistAndFlush(location);
 
         enterpriseEntity=EnterpriseEntity.builder()
-                .name("Exito")
+                .name("Exito2")
                 .nit("4441555")
                 .phone("3136453524")
                 .branch("si")

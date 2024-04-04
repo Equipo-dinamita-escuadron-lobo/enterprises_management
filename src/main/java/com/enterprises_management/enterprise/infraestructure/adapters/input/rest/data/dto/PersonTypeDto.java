@@ -2,11 +2,13 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 public class PersonTypeDto {
     private String type;
