@@ -1,4 +1,4 @@
-package com.enterprises_management.enterprise.infraestructure.adapters.repository;
+package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository;
 
 import com.enterprises_management.enterprise.domain.models.City;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.CityEntity;

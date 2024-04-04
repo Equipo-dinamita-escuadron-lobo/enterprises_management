@@ -1,13 +1,16 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="city")
+
 public class CityEntity
 {
     @Id
