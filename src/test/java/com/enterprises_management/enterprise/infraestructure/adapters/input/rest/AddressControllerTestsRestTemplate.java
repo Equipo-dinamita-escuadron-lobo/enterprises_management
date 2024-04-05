@@ -13,6 +13,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,12 +28,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
+@SpringJUnitConfig
 public class AddressControllerTestsRestTemplate {
      @Autowired
      private TestRestTemplate testRestTemplate;
      private CityDTO cityDTO;
     @Test
     @Order(1)
+
     void testGetAllDepartment(){
 
         ResponseEntity<DepartmentAddressResponse[]> response=testRestTemplate.getForEntity("http://localhost:8080/api/address/departments", DepartmentAddressResponse[].class);
@@ -41,6 +48,10 @@ public class AddressControllerTestsRestTemplate {
     }
     @Test
     @Order(2)
+    @SqlGroup({
+            @Sql("/data.sql"),
+
+    })
     void testGetAllCities(){
 
 

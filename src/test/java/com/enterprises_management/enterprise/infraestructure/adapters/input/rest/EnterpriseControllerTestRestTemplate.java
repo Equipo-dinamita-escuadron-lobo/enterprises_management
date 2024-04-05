@@ -12,12 +12,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
+@SpringJUnitConfig
+//@Sql(scripts = {"/data.sql"})
+
 public class EnterpriseControllerTestRestTemplate {
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -26,6 +34,7 @@ public class EnterpriseControllerTestRestTemplate {
 
 
     @BeforeEach
+
     void setup(){
 
 
@@ -87,6 +96,10 @@ public class EnterpriseControllerTestRestTemplate {
     }
     @Test
     @Order(2)
+    @SqlGroup({
+            @Sql("/data.sql"),
+
+    })
     void  testCreateEnterprise() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -107,6 +120,7 @@ public class EnterpriseControllerTestRestTemplate {
     }
     @Test
     @Order(3)
+
     void testGetEnterprise(){
         ResponseEntity<EnterpriseInfoDto[]> response=testRestTemplate.getForEntity("http://localhost:8080/api/enterprises/",EnterpriseInfoDto[].class);
         List<EnterpriseInfoDto> enterprises=Arrays.asList(response.getBody());
