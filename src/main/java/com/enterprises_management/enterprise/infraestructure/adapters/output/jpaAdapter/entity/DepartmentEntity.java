@@ -1,8 +1,7 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 import java.util.List;
@@ -10,6 +9,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name="department")
 public class DepartmentEntity {
     @Id
