@@ -1,6 +1,5 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.input.rest;
 
-import com.enterprises_management.enterprise.domain.models.Department;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.CityDTO;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.CitiesbyDepartmentResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.DepartmentAddressResponse;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
