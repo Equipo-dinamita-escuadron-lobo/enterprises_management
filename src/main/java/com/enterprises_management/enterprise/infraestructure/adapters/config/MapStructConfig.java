@@ -63,5 +63,8 @@ public class MapStructConfig {
     @Bean
     IPersonTypeMapper mapStructMapperPersonType(){return Mappers.getMapper(IPersonTypeMapper.class);}
 
+
+    @Bean
+    IEnterpriseUpdateMapper mapStructMapperEnterpriseUpdate(){return Mappers.getMapper(IEnterpriseUpdateMapper.class);}
 }
 
