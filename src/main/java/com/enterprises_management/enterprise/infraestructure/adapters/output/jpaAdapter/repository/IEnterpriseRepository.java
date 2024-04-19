@@ -13,5 +13,4 @@ public interface IEnterpriseRepository extends JpaRepository<EnterpriseEntity, L
      List<IEnterpriseInfoProjection> findEnterpriseInfo();   
 
      boolean existsByNit(String nit);
-
 }

@@ -21,7 +21,6 @@ public class EnterpriseEntity {
 
     private String name;
 
-    @Column(unique = true)
     private String nit;
 
     private String DV;

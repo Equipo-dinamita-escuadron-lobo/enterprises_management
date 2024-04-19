@@ -1,5 +1,8 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.enterprises_management.enterprise.domain.models.City;
@@ -9,6 +12,7 @@ import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.domain.models.EnterpriseType;
 import com.enterprises_management.enterprise.domain.models.Location;
 import com.enterprises_management.enterprise.domain.models.PersonType;
+import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.domain.models.TaxPayerType;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.request.EnterpriseCreateRequest;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseCreateResponse;
@@ -33,6 +37,8 @@ public class EnterpriseCreateMapper implements IEnterpriseCreateRestMapper{
         .email(enterpriseCreateResponse.getEmail())
         .logo(enterpriseCreateResponse.getLogo())
 
+        .taxLiabilities(toTaxLiability(enterpriseCreateResponse.getTaxLiabilities()))
+        
         .taxPayerType(TaxPayerType.builder().id(enterpriseCreateResponse.getTaxPayerType()).build())
 
         .enterpriseType(EnterpriseType.builder().id(enterpriseCreateResponse.getEnterpriseType()).build())
@@ -71,16 +77,32 @@ public class EnterpriseCreateMapper implements IEnterpriseCreateRestMapper{
         .email(enterprise.getEmail())
         .logo(enterprise.getLogo())
 
-        .taxPayerType(enterprise.getTaxPayerType().getId())
+        .taxLiabilities(enterprise.getTaxLiabilities())
 
-        .enterpriseType(enterprise.getEnterpriseType().getId())
+        .taxPayerType(enterprise.getTaxPayerType())
+
+        .enterpriseType(enterprise.getEnterpriseType())
+
+        .personType(PersonType.builder()
+            .name(enterprise.getPersonType().getName())
+            .surname(enterprise.getPersonType().getSurname())
+            .bussinessName(enterprise.getPersonType().getBussinessName())
+            .type(enterprise.getPersonType().getType())
+            .build()
+        )
 
         .location(enterprise.getLocation())
-
-        
-        
+   
         .build();
         return enterpriseCreateResponse;
     }
-    
+
+    private  List<TaxLiability> toTaxLiability(List<Long> taxLiabilities){
+        List<TaxLiability> taxLiabilitiesList = new ArrayList<>();
+        for (Long taxLiability : taxLiabilities) {
+            taxLiabilitiesList.add(TaxLiability.builder().id(taxLiability).build());
+        }
+        return taxLiabilitiesList;
+    }
+       
 }
