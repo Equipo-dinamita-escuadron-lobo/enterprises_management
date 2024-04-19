@@ -2,8 +2,11 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 
 import java.util.List;
 
-
+import com.enterprises_management.enterprise.domain.models.EnterpriseType;
 import com.enterprises_management.enterprise.domain.models.Location;
+import com.enterprises_management.enterprise.domain.models.PersonType;
+import com.enterprises_management.enterprise.domain.models.TaxLiability;
+import com.enterprises_management.enterprise.domain.models.TaxPayerType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,13 +30,13 @@ public class EnterpriseCreateResponse {
     private String email;
     private String logo;
 
-    List<Long> taxLiabilities;
+    List<TaxLiability> taxLiabilities;
 
-    Long taxPayerType;
+    TaxPayerType taxPayerType;
 
-    Long enterpriseType; 
+    EnterpriseType enterpriseType; 
 
-    Long personType;
+    PersonType personType;
 
     Location location;  
 

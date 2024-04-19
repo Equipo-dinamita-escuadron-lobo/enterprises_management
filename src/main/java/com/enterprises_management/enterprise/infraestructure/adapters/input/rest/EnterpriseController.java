@@ -26,7 +26,6 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseCreateResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.TaxLiabilityResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseCreateRestMapper;
-//import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
 
 import jakarta.validation.Valid;
@@ -43,7 +42,6 @@ public class EnterpriseController {
     private final ITaxLiabilityRestMapper taxLiabilityRestMapper;
 
     private final IEnterpriseSearchManagerPort enterpriseSearchManagerPort;
-    //private final IEnterpriseRestMapper enterpriseRestMapper;
 
     private final IEnterpriseCreateMannegerPort enterpriseCreateMannegerPort;
     private final IEnterpriseCreateRestMapper enterpriseCreateMapper;

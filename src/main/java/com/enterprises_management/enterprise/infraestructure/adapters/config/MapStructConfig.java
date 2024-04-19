@@ -4,7 +4,6 @@ package com.enterprises_management.enterprise.infraestructure.adapters.config;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.*;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ICitiesbyDepartmentRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IDepartmentRestMapper;
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseCreateMapper;
 
@@ -31,11 +30,6 @@ public class MapStructConfig {
 
     @Bean 
     IEnterpriseSearchMapper mapStructMapperEnterprise() {return Mappers.getMapper(IEnterpriseSearchMapper.class);}
-
-    @Bean
-    IEnterpriseRestMapper mapStructMapperEnterpriseRest() {
-        return Mappers.getMapper(IEnterpriseRestMapper.class);
-    }
 
 
     @Bean
