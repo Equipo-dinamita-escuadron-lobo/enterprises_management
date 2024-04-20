@@ -1,6 +1,7 @@
 package com.enterprises_management.enterprise.domain.models;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Enterprise {
 
-    private Long id;
+    private UUID id;
     private String name;
     private String nit;
     private String DV;

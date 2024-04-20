@@ -1,6 +1,7 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.input.rest;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -82,7 +83,7 @@ public class EnterpriseController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateEnterprise(@PathVariable("id") Long id, @Valid @RequestBody EnterpriseCreateRequest enterpriseCreateRequest){
+    public ResponseEntity<?> updateEnterprise(@PathVariable("id") UUID id, @Valid @RequestBody EnterpriseCreateRequest enterpriseCreateRequest){
         Enterprise enterprise = enterpriseCreateMapper.toDomain(enterpriseCreateRequest);
 
         enterprise.setLocation(locationMangerPort.createLocation(enterprise.getLocation()));
@@ -93,7 +94,7 @@ public class EnterpriseController {
     }
 
     @PutMapping("/update/status/{id}/{state}")
-    public ResponseEntity<?> updateEnterpriseStatus(@PathVariable("id") Long id, @PathVariable("state") String state){
+    public ResponseEntity<?> updateEnterpriseStatus(@PathVariable("id") UUID id, @PathVariable("state") String state){
         try {
             StateEnum stateEnum ;
 

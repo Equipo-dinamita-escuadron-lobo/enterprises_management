@@ -1,6 +1,7 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.enterprises_management.enterprise.domain.models.EnterpriseType;
 import com.enterprises_management.enterprise.domain.models.Location;
@@ -21,7 +22,7 @@ import lombok.Setter;
 @Builder
 public class EnterpriseCreateResponse {
     
-    private Long id;
+    private UUID id;
     private String name;
     private String nit;
     private String DV;
