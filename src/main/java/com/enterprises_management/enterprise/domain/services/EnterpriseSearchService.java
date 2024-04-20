@@ -19,5 +19,10 @@ public class EnterpriseSearchService implements IEnterpriseSearchManagerPort {
     @Override
     public List<EnterpriseInfoDto> getAllEnterprises() {
         return enterpriseSearchOutputPort.getAllEnterprises();
+    }
+
+    @Override
+    public List<EnterpriseInfoDto> getAllEnterprisesInactive() {
+        return enterpriseSearchOutputPort.getAllEnterprisesInactive();
     } 
 }

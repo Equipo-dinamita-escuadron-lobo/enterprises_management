@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseUpdateOutputPort;
+import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseUpdateMapper;
@@ -50,6 +51,19 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
 
         //location
         enterpriseEntity.setLocation(updateMapper.toLocationEntity(enterprise.getLocation()));
+
+        enterpriseRepository.save(enterpriseEntity);
+    }
+
+    @Override
+    public void updateEnterpriseStatus(Long id, StateEnum state) {
+        EnterpriseEntity enterpriseEntity = enterpriseRepository.findById(id).get();
+
+        if (enterpriseEntity == null) {
+            throw new RuntimeException("Enterprise not found");
+        }
+
+        enterpriseEntity.setState(state);
 
         enterpriseRepository.save(enterpriseEntity);
     }
