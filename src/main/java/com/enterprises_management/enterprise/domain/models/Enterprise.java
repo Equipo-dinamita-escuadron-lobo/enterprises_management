@@ -2,6 +2,8 @@ package com.enterprises_management.enterprise.domain.models;
 
 import java.util.List;
 
+import com.enterprises_management.enterprise.domain.enums.StateEnum;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +23,8 @@ public class Enterprise {
     private String branch; 
     private String email;
     private String logo;
+
+    private StateEnum state;
 
     List<TaxLiability> taxLiabilities;
 

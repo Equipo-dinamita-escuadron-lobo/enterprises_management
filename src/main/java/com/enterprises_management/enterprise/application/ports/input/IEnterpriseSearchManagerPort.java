@@ -8,4 +8,5 @@ import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 public interface IEnterpriseSearchManagerPort {
     
     List<EnterpriseInfoDto> getAllEnterprises();
+    List<EnterpriseInfoDto> getAllEnterprisesInactive();
 }

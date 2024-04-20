@@ -20,6 +20,7 @@ import com.enterprises_management.enterprise.application.ports.input.ILocationMa
 import com.enterprises_management.enterprise.application.ports.input.IPersonTypeManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.ITaxLiabilityManagerPort;
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
+import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.request.EnterpriseCreateRequest;
@@ -63,6 +64,12 @@ public class EnterpriseController {
         return ResponseEntity.ok(enterprises);
     }
 
+    @GetMapping("/inactive")
+    public ResponseEntity<List<EnterpriseInfoDto>> getAllEnterprisesInactive(){
+        List<EnterpriseInfoDto> enterprises = enterpriseSearchManagerPort.getAllEnterprisesInactive();
+        return ResponseEntity.ok(enterprises);
+    }
+
     @PostMapping("/")
     public ResponseEntity<EnterpriseCreateResponse> createEnterprise(@Valid @RequestBody EnterpriseCreateRequest enterpriseCreateRequest){ 
             Enterprise enterprise = enterpriseCreateMapper.toDomain(enterpriseCreateRequest);
@@ -84,5 +91,34 @@ public class EnterpriseController {
         enterpriseUpdateManagerPort.updateEnterprise(id, enterprise);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/update/status/{id}/{state}")
+    public ResponseEntity<?> updateEnterpriseStatus(@PathVariable("id") Long id, @PathVariable("state") String state){
+        try {
+            StateEnum stateEnum ;
+
+            switch (state) {
+                case "ACTIVE":
+                    stateEnum = StateEnum.ACTIVE;
+                    break;
+                case "INACTIVE":
+                    stateEnum = StateEnum.INACTIVE;
+                    break;
+                case "SUSPENDED":
+                    stateEnum = StateEnum.SUSPENDED;
+                    break;
+                default:
+                    return ResponseEntity.badRequest().build();
+            }
+
+            enterpriseUpdateManagerPort.updateEnterpriseStatus(id, stateEnum);
+            return ResponseEntity.ok().build();
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+    }
+
     
 }

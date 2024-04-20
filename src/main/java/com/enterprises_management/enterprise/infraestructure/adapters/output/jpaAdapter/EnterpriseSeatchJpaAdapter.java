@@ -24,6 +24,12 @@ public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort{
         List<IEnterpriseInfoProjection> enterpriseInfo = enterpriseRepository.findEnterpriseInfo();
         return enterpriseMapper.toEnterpriseInfoDtoList(enterpriseInfo);
     }
+
+    @Override
+    public List<EnterpriseInfoDto> getAllEnterprisesInactive() {
+        List<IEnterpriseInfoProjection> enterpriseInfo = enterpriseRepository.findEnterpriseInfoInactive();
+        return enterpriseMapper.toEnterpriseInfoDtoList(enterpriseInfo);
+    }
     
 
 }
