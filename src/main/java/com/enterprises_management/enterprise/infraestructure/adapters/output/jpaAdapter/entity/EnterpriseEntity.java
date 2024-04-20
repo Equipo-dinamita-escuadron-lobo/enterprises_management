@@ -5,13 +5,14 @@ import lombok.*;
 
 import java.util.List;
 
+import com.enterprises_management.enterprise.domain.enums.StateEnum;
+
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 @Table(name="enterprise")
 public class EnterpriseEntity {
 
@@ -32,6 +33,8 @@ public class EnterpriseEntity {
     private String email;
 
     private String logo;
+
+    private StateEnum state;
 
     @ManyToMany
     List<TaxLiabilityEntity> taxLiabilities; //reponsabilidades tributarias

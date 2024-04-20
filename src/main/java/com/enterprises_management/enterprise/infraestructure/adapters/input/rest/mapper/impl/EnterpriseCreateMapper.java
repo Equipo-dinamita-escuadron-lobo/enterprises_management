@@ -36,6 +36,7 @@ public class EnterpriseCreateMapper implements IEnterpriseCreateRestMapper{
         .branch(enterpriseCreateResponse.getBranch())
         .email(enterpriseCreateResponse.getEmail())
         .logo(enterpriseCreateResponse.getLogo())
+        .state(enterpriseCreateResponse.getState())
 
         .taxLiabilities(toTaxLiability(enterpriseCreateResponse.getTaxLiabilities()))
         

@@ -2,6 +2,7 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 
 import java.util.List;
 
+import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.LocationDto;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.PersonTypeDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -48,6 +49,9 @@ public class EnterpriseCreateRequest {
     private String logo;
 
     List<Long> taxLiabilities;
+
+    @Builder.Default //ACTIVE, INACTIVE, SUSPENDED
+    private StateEnum state = StateEnum.ACTIVE;
 
     @NotNull(message = "El tipo de contribuyente es requerido")
     @Min(value = 1, message = "El tipo de contribuyente no es válido")
