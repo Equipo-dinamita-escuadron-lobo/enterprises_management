@@ -1,6 +1,6 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.input.rest;
 
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.CityDTO;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.CityResponseDto;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.CitiesbyDepartmentResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.DepartmentAddressResponse;
 import org.junit.jupiter.api.MethodOrderer;
@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AddressControllerTestsRestTemplate {
      @Autowired
      private TestRestTemplate testRestTemplate;
-     private CityDTO cityDTO;
+     private CityResponseDto cityDTO;
     @Test
     @Order(1)
 
@@ -77,7 +77,7 @@ public class AddressControllerTestsRestTemplate {
 
         // Verificar que las ciudades obtenidas coinciden con las esperadas
         List<String> actualCities = citiesData.getCities().stream()
-                .map(CityDTO::getName)
+                .map(CityResponseDto::getName)
                 .collect(Collectors.toList());
         assertEquals(expectedCities, actualCities);
         assertTrue(actualCities.size() > 0);

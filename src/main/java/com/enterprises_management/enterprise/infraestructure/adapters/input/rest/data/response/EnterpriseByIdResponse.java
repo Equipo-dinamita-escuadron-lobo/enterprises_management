@@ -3,6 +3,7 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 import java.util.List;
 import java.util.UUID;
 
+import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.EnterpriseType;
 import com.enterprises_management.enterprise.domain.models.PersonType;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
@@ -20,7 +21,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EnterpriseCreateResponse {
+public class EnterpriseByIdResponse {
     
     private UUID id;
     private String name;
@@ -30,6 +31,7 @@ public class EnterpriseCreateResponse {
     private String branch; 
     private String email;
     private String logo;
+    private StateEnum state;
 
     List<TaxLiability> taxLiabilities;
 
@@ -40,5 +42,4 @@ public class EnterpriseCreateResponse {
     PersonType personType;
 
     LocationResponseDto location; 
-
 }

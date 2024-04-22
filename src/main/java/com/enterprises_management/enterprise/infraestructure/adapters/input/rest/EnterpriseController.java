@@ -25,9 +25,11 @@ import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.request.EnterpriseCreateRequest;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseByIdResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseCreateResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.TaxLiabilityResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseCreateRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseSearchRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
 
 import jakarta.validation.Valid;
@@ -52,6 +54,7 @@ public class EnterpriseController {
     private final IPersonTypeManagerPort personTypeManagerPort;
 
     private final IEnterpriseUpdateManagerPort enterpriseUpdateManagerPort;
+    private final IEnterpriseSearchRestMapper enterpriseSearchMapper;
 
     @GetMapping("/taxliabilities")
     public ResponseEntity<List<TaxLiabilityResponse>> getAllTaxLiability(){
@@ -121,5 +124,10 @@ public class EnterpriseController {
 
     }
 
+    @GetMapping("/enterprise/{id}")
+    public ResponseEntity<EnterpriseByIdResponse> getEnterpriseById(@PathVariable("id") UUID id){
+        Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
+        return ResponseEntity.ok(enterpriseSearchMapper.toEnterpriseByIdResponse(enterprise));
+    }
     
 }
