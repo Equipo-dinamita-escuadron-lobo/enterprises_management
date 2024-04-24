@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Validated
 @CrossOrigin(origins = "*")
+@PreAuthorize("hasRole('admin_client')")
 public class EnterpriseController {
 
     private final ITaxLiabilityManagerPort taxLiabilityManagerPort;
@@ -62,6 +64,7 @@ public class EnterpriseController {
         return ResponseEntity.ok(taxLiabilityRestMapper.toDomain(taxLiability));
     }
 
+    
     @GetMapping("/")
     public ResponseEntity<List<EnterpriseInfoDto>> getAllEnterprises(){
         List<EnterpriseInfoDto> enterprises = enterpriseSearchManagerPort.getAllEnterprises();
