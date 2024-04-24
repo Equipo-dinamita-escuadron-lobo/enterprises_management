@@ -32,6 +32,7 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseSearchRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -62,18 +63,21 @@ public class EnterpriseController {
         return ResponseEntity.ok(taxLiabilityRestMapper.toDomain(taxLiability));
     }
 
+    @Operation(summary = "Obtener todas las empresas activas")
     @GetMapping("/")
     public ResponseEntity<List<EnterpriseInfoDto>> getAllEnterprises(){
         List<EnterpriseInfoDto> enterprises = enterpriseSearchManagerPort.getAllEnterprises();
         return ResponseEntity.ok(enterprises);
     }
 
+    @Operation(summary = "Obtener todas las empresas inactivas")
     @GetMapping("/inactive")
     public ResponseEntity<List<EnterpriseInfoDto>> getAllEnterprisesInactive(){
         List<EnterpriseInfoDto> enterprises = enterpriseSearchManagerPort.getAllEnterprisesInactive();
         return ResponseEntity.ok(enterprises);
     }
 
+    @Operation(summary = "Crear una empresa")
     @PostMapping("/")
     public ResponseEntity<EnterpriseCreateResponse> createEnterprise(@Valid @RequestBody EnterpriseCreateRequest enterpriseCreateRequest){ 
             Enterprise enterprise = enterpriseCreateMapper.toDomain(enterpriseCreateRequest);
@@ -85,6 +89,7 @@ public class EnterpriseController {
             return ResponseEntity.ok(enterpriseCreateMapper.toCreateResponse(enterprise));   
     }
 
+    @Operation(summary = "Actualizar una empresa por id")
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateEnterprise(@PathVariable("id") UUID id, @Valid @RequestBody EnterpriseCreateRequest enterpriseCreateRequest){
         Enterprise enterprise = enterpriseCreateMapper.toDomain(enterpriseCreateRequest);
@@ -96,6 +101,7 @@ public class EnterpriseController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Actualizar el estado de una empresa por id (ACTIVE, INACTIVE, SUSPENDED)")
     @PutMapping("/update/status/{id}/{state}")
     public ResponseEntity<?> updateEnterpriseStatus(@PathVariable("id") UUID id, @PathVariable("state") String state){
         try {
@@ -124,6 +130,7 @@ public class EnterpriseController {
 
     }
 
+    @Operation(summary = "Obtener una empresa por id")
     @GetMapping("/enterprise/{id}")
     public ResponseEntity<EnterpriseByIdResponse> getEnterpriseById(@PathVariable("id") UUID id){
         Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
