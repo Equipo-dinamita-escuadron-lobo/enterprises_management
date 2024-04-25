@@ -23,6 +23,7 @@ import com.enterprises_management.enterprise.application.ports.input.ITaxLiabili
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
+import com.enterprises_management.enterprise.domain.models.Location;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.request.EnterpriseCreateRequest;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseByIdResponse;
@@ -92,11 +93,14 @@ public class EnterpriseController {
     @Operation(summary = "Actualizar una empresa por id")
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateEnterprise(@PathVariable("id") UUID id, @Valid @RequestBody EnterpriseCreateRequest enterpriseCreateRequest){
+
+        Enterprise enterpriseExist = enterpriseSearchManagerPort.getEnterpriseById(id);
+        if (enterpriseExist == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        
         Enterprise enterprise = enterpriseCreateMapper.toDomain(enterpriseCreateRequest);
 
-        enterprise.setLocation(locationMangerPort.createLocation(enterprise.getLocation()));
-        enterprise.setPersonType(personTypeManagerPort.createPersonType(enterprise.getPersonType()));
-        
         enterpriseUpdateManagerPort.updateEnterprise(id, enterprise);
         return ResponseEntity.ok().build();
     }

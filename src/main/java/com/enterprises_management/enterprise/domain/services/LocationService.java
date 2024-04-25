@@ -18,5 +18,12 @@ public class LocationService implements ILocationMangerPort {
     public Location createLocation(Location location) {
         return locationOutputPort.create(location);
     }
+
+    @Override
+    public boolean deleteLocation(Long id) {
+        return locationOutputPort.delete(id);
+    }
+
+    
     
 }
