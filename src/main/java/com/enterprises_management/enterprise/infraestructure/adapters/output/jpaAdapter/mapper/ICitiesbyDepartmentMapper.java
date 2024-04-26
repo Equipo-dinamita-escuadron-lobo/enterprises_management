@@ -49,4 +49,5 @@ public interface ICitiesbyDepartmentMapper {
                 })
                 .collect(Collectors.toList());
     }
+
 }
