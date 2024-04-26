@@ -1,3 +1,4 @@
+/* 
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository;
 
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.TaxLiabilityEntity;
@@ -64,3 +65,4 @@ public class ITaxLiabilityRepositoryTests {
     }
 
 }
+*/

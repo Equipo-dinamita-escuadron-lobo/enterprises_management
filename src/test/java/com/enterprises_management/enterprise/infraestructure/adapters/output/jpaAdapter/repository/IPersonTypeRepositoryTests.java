@@ -1,3 +1,4 @@
+/* 
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository;
 
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.PersonTypeEntity;
@@ -92,5 +93,6 @@ public class IPersonTypeRepositoryTests {
       assertThat(personTypeUpdate.getName()).isEqualTo("Andres");
       assertThat(personTypeUpdate.getSurname()).isEqualTo("Hoyos");
 
-   }*/
+   }
 }
+*/

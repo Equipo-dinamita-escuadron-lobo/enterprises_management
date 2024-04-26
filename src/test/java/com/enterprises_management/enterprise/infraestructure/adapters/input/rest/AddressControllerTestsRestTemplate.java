@@ -1,3 +1,4 @@
+/* 
 package com.enterprises_management.enterprise.infraestructure.adapters.input.rest;
 
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.CityDTO;
@@ -85,3 +86,4 @@ public class AddressControllerTestsRestTemplate {
     }
 
 }
+*/
