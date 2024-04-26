@@ -1,5 +1,7 @@
 package com.enterprises_management.enterprise.domain.services;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +17,12 @@ public class EnterpriseUpdateService implements IEnterpriseUpdateManagerPort {
     private IEnterpriseUpdateOutputPort enterpriseUpdateOutputPort;
 
     @Override
-    public void updateEnterprise(Long id, Enterprise enterprise) {
+    public void updateEnterprise(UUID id, Enterprise enterprise) {
         enterpriseUpdateOutputPort.updateEnterprise(id, enterprise);   
     }
 
     @Override
-    public void updateEnterpriseStatus(Long id, StateEnum state) {  
+    public void updateEnterpriseStatus(UUID id, StateEnum state) {  
         enterpriseUpdateOutputPort.updateEnterpriseStatus(id, state);
     }
     

@@ -1,10 +1,7 @@
 /* 
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository;
 
-import com.enterprises_management.EnterprisesManagementApplication;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.*;
-import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IEnterpriseRepository;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -103,7 +100,7 @@ public class IEnterpriseRepositoryTests {
         EnterpriseEntity enterpriseEntitySave=iEnterpriseRepository.save(enterpriseEntity);
         //then
         assertThat(enterpriseEntitySave).isNotNull();
-        assertThat(enterpriseEntitySave.getId()).isGreaterThan(0);
+        assertThat(enterpriseEntitySave.getId()).isNotNull();
     }
     @DisplayName("Test to get enterprise by Id")
     @Test

@@ -1,12 +1,14 @@
 package com.enterprises_management.enterprise.domain.services;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseSearchManagerPort;
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseSearchOutputPort;
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
+import com.enterprises_management.enterprise.domain.models.Enterprise;
 
 import lombok.AllArgsConstructor;
 
@@ -24,5 +26,10 @@ public class EnterpriseSearchService implements IEnterpriseSearchManagerPort {
     @Override
     public List<EnterpriseInfoDto> getAllEnterprisesInactive() {
         return enterpriseSearchOutputPort.getAllEnterprisesInactive();
-    } 
+    }
+
+    @Override
+    public Enterprise getEnterpriseById(UUID id) {
+        return enterpriseSearchOutputPort.getEnterpriseById(id);
+    }
 }

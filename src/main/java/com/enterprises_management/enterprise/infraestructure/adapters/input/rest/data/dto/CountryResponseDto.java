@@ -1,6 +1,4 @@
-package com.enterprises_management.enterprise.domain.dto;
-
-import java.util.UUID;
+package com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,10 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EnterpriseInfoDto {
-    
-    private UUID id;
+public class CountryResponseDto {
+    private Long id;
     private String name;
-    private String nit;
-    private String logo;
 }

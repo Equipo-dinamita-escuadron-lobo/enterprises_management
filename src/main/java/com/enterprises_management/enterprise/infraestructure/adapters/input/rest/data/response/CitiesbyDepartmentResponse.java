@@ -4,11 +4,11 @@ import lombok.*;
 
 import java.util.List;
 
-import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.CityDTO;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.CityResponseDto;
 
 @Data
 public class CitiesbyDepartmentResponse {
     private Long id;
     private String name;
-    List<CityDTO> cities;
+    List<CityResponseDto> cities;
 }

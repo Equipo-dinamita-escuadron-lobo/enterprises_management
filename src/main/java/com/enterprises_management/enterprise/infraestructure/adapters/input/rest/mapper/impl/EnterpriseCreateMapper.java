@@ -14,6 +14,10 @@ import com.enterprises_management.enterprise.domain.models.Location;
 import com.enterprises_management.enterprise.domain.models.PersonType;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.domain.models.TaxPayerType;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.CityResponseDto;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.CountryResponseDto;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.DepartmentResponseDto;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.LocationResponseDto;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.request.EnterpriseCreateRequest;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseCreateResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseCreateRestMapper;
@@ -92,7 +96,21 @@ public class EnterpriseCreateMapper implements IEnterpriseCreateRestMapper{
             .build()
         )
 
-        .location(enterprise.getLocation())
+        .location(LocationResponseDto.builder()
+            .address(enterprise.getLocation().getAddress())
+            .city(CityResponseDto.builder()
+                .id(enterprise.getLocation().getCity().getId())
+                .name(enterprise.getLocation().getCity().getName())
+                .build())
+            .country(CountryResponseDto.builder()
+                .id(enterprise.getLocation().getCountry().getId())
+                .name(enterprise.getLocation().getCountry().getName())
+                .build())
+            .department(DepartmentResponseDto.builder()
+                .id(enterprise.getLocation().getDepartment().getId())
+                .name(enterprise.getLocation().getDepartment().getName())
+                .build())
+            .build())
    
         .build();
         return enterpriseCreateResponse;

@@ -1,5 +1,7 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +21,9 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
     @Autowired
     private IEnterpriseUpdateMapper updateMapper;
 
+
     @Override
-    public void updateEnterprise(Long id, Enterprise enterprise) {
+    public void updateEnterprise(UUID id, Enterprise enterprise) {
 
         //actulizar empresa por el id
         EnterpriseEntity enterpriseEntity = enterpriseRepository.findById(id).get();
@@ -56,7 +59,7 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
     }
 
     @Override
-    public void updateEnterpriseStatus(Long id, StateEnum state) {
+    public void updateEnterpriseStatus(UUID id, StateEnum state) {
         EnterpriseEntity enterpriseEntity = enterpriseRepository.findById(id).get();
 
         if (enterpriseEntity == null) {

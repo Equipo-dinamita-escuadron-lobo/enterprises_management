@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 
@@ -16,10 +17,11 @@ import com.enterprises_management.enterprise.domain.enums.StateEnum;
 @Table(name="enterprise")
 public class EnterpriseEntity {
 
+    //id con uuid
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+ 
     private String name;
 
     private String nit;

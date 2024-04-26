@@ -11,8 +11,11 @@ insert into tax_payer_type(name) values
 ('Entidad sin animo de lucro');
 
 insert into tax_liability(name) values
+('Información exogena'),
+('Facturador electronico'),
+('Informante de beneficiarios finales'),
 ('Retención en la fuente a titulo de renta'),
-('Retención en la fuente a titulo de IVA'),
+('Retención en la fuente a titulo de iva'),
 ('Autorretenedor'),
 ('Gran contribuyente');
 
