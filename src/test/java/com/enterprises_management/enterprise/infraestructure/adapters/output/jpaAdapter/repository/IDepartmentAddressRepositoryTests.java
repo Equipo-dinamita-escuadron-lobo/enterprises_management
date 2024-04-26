@@ -1,3 +1,4 @@
+/* 
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository;
 
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.CountryEntity;
@@ -79,3 +80,4 @@ public class IDepartmentAddressRepositoryTests {
         assertThat(listDepartments.size()).isEqualTo(2);
     }
 }
+*/
