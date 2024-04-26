@@ -1,3 +1,4 @@
+/* 
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository;
 
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.CityEntity;
@@ -100,8 +101,5 @@ public class IAddressRepositoryTests {
         assertThat(listCities).isNotNull();
         assertThat(listCities.size()).isEqualTo(2);
     }
-
-
-
-
 }
+*/

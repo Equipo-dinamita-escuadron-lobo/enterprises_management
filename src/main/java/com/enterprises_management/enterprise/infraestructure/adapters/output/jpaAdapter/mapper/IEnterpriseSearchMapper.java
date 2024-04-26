@@ -84,6 +84,7 @@ public interface IEnterpriseSearchMapper {
             //ManyToOne
             .personType(
                 PersonType.builder()
+                .id(enterpriseEntity.getPersonType().getId())
                 .name(enterpriseEntity.getPersonType().getName())
                 .surname(enterpriseEntity.getPersonType().getSurname())
                 .bussinessName(enterpriseEntity.getPersonType().getBussinessName())
@@ -94,6 +95,7 @@ public interface IEnterpriseSearchMapper {
             //OneToOne
             .location(
                 Location.builder()
+                .id(enterpriseEntity.getLocation().getId())
                 .address(enterpriseEntity.getLocation().getAddress())
                 .city(City.builder()
                     .id(enterpriseEntity.getLocation().getCity().getId())

@@ -24,5 +24,14 @@ public class LocationJpaAdapter implements ILocationOutputPort {
         
         return locationMapper.toDomain(locationRepository.save(locationEntity));     
     }
+
+    @Override
+    public boolean delete(Long id) {
+        if (locationRepository.existsById(id)) {
+            locationRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
     
 }

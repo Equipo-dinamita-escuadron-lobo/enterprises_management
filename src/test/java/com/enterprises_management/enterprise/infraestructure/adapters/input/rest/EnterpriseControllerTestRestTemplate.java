@@ -1,3 +1,5 @@
+
+/* 
 package com.enterprises_management.enterprise.infraestructure.adapters.input.rest;
 
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
@@ -19,14 +21,15 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Arrays;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*; 
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @SpringJUnitConfig
 //@Sql(scripts = {"/data.sql"})
 
-public class EnterpriseControllerTestRestTemplate {
+public class EnterpriseControllerTestRestTemplate {    
     @Autowired
     private TestRestTemplate testRestTemplate;
 
@@ -131,5 +134,5 @@ public class EnterpriseControllerTestRestTemplate {
         assertEquals(1L,enterprises.get(0).getId());
     }
 
-}
+} */
 

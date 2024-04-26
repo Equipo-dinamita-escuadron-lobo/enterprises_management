@@ -21,6 +21,7 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
     @Autowired
     private IEnterpriseUpdateMapper updateMapper;
 
+
     @Override
     public void updateEnterprise(UUID id, Enterprise enterprise) {
 

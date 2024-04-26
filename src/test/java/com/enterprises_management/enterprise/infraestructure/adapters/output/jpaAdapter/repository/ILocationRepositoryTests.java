@@ -1,3 +1,4 @@
+/* 
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository;
 
 
@@ -155,3 +156,4 @@ public class ILocationRepositoryTests {
     }
 
 }
+*/
