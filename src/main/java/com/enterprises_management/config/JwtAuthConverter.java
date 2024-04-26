@@ -2,6 +2,7 @@ package com.enterprises_management.config;
 
 import org.springframework.stereotype.Component;
 
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     private String resourceId;
 
     @Override
-    public AbstractAuthenticationToken convert(Jwt jwt) {
+    public AbstractAuthenticationToken convert(@SuppressWarnings("null") Jwt jwt) {
         
         Collection<GrantedAuthority> authorities = Stream
             .concat(jwtGrantedAuthoritiesConverter.convert(jwt).stream(), extractResourceRoles(jwt).stream())
