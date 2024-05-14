@@ -19,7 +19,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Component
-public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> , JwtUtils {
 
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
@@ -29,12 +29,16 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     @Value("${jwt.auth.converter.resource-id}")
     private String resourceId;
 
+    Jwt jwtToken;
+
     @Override
     public AbstractAuthenticationToken convert(@SuppressWarnings("null") Jwt jwt) {
         
         Collection<GrantedAuthority> authorities = Stream
             .concat(jwtGrantedAuthoritiesConverter.convert(jwt).stream(), extractResourceRoles(jwt).stream())
             .toList();
+        
+        this.jwtToken = jwt;
 
         return new JwtAuthenticationToken(jwt, authorities, getPrincipleName(jwt));
         
@@ -78,5 +82,11 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
             .map(role -> new SimpleGrantedAuthority("ROLE_".concat(role)))
             .toList();
     }
-    
+
+    @Override
+    public String getId() {
+        return (String) jwtToken.getClaims().get("sub");
+    }
+  
 }
+

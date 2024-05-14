@@ -21,6 +21,8 @@ public class EnterpriseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    private String idUser;
  
     private String name;
 
