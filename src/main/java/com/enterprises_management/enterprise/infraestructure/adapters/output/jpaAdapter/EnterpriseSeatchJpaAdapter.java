@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.enterprises_management.config.JwtUtils;
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseSearchOutputPort;
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
@@ -22,12 +21,10 @@ public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort{
     
     private final IEnterpriseRepository enterpriseRepository;
     private final IEnterpriseSearchMapper enterpriseMapper;
-    private final JwtUtils jwtUtils;
     
     @Override
     public List<EnterpriseInfoDto> getAllEnterprises() {
-        String idUser = jwtUtils.getId();
-        List<IEnterpriseInfoProjection> enterpriseInfo = enterpriseRepository.findEnterpriseInfo(idUser);
+        List<IEnterpriseInfoProjection> enterpriseInfo = enterpriseRepository.findEnterpriseInfo();
         return enterpriseMapper.toEnterpriseInfoDtoList(enterpriseInfo);
     }
 
