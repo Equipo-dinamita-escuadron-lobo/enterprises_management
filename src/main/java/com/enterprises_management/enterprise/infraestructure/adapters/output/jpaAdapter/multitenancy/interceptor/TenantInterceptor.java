@@ -18,7 +18,6 @@ public class TenantInterceptor implements WebRequestInterceptor {
 
     @Override
     public void preHandle(WebRequest request) throws Exception {
-
         TenantContext.setTenantId(jwtUtils.getId());
     }
 
