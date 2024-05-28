@@ -19,7 +19,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Component
-public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> , JwtUtils {
+public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> , IJwtUtils {
 
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
@@ -32,7 +32,7 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     Jwt jwtToken;
 
     @Override
-    public AbstractAuthenticationToken convert(@SuppressWarnings("null") Jwt jwt) {
+    public AbstractAuthenticationToken convert(Jwt jwt) {
         
         Collection<GrantedAuthority> authorities = Stream
             .concat(jwtGrantedAuthoritiesConverter.convert(jwt).stream(), extractResourceRoles(jwt).stream())

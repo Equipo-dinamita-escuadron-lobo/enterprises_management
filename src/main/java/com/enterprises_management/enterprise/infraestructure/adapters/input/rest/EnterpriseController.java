@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enterprises_management.config.JwtUtils;
+import com.enterprises_management.config.IJwtUtils;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseCreateMannegerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseSearchManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseUpdateManagerPort;
@@ -60,7 +60,7 @@ public class EnterpriseController {
     private final IEnterpriseUpdateManagerPort enterpriseUpdateManagerPort;
     private final IEnterpriseSearchRestMapper enterpriseSearchMapper;
 
-    private final JwtUtils jwtUtils;
+    private final IJwtUtils jwtUtils;
 
     @GetMapping("/taxliabilities")
     public ResponseEntity<List<TaxLiabilityResponse>> getAllTaxLiability(){

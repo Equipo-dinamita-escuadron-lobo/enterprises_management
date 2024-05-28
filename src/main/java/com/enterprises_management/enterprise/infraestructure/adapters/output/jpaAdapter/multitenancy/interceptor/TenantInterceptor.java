@@ -1,7 +1,7 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.multitenancy.interceptor;
 
 
-import com.enterprises_management.config.JwtUtils;
+import com.enterprises_management.config.IJwtUtils;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.multitenancy.util.TenantContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.web.context.request.WebRequestInterceptor;
 public class TenantInterceptor implements WebRequestInterceptor {
 
     @Autowired
-    private  JwtUtils jwtUtils;
+    private  IJwtUtils jwtUtils;
 
     @Override
     public void preHandle(WebRequest request) throws Exception {

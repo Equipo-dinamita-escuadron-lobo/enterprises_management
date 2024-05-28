@@ -1,6 +1,6 @@
 package com.enterprises_management.config;
 
-public interface JwtUtils {
+public interface IJwtUtils {
     
     String getId();
     
