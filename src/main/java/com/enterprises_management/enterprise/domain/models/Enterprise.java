@@ -17,6 +17,9 @@ import lombok.NoArgsConstructor;
 public class Enterprise {
 
     private UUID id;
+
+    private String idUser;
+
     private String name;
     private String nit;
     private String DV;

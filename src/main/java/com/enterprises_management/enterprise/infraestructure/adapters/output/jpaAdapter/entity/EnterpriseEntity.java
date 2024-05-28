@@ -6,6 +6,8 @@ import lombok.*;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.annotations.TenantId;
+
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 
 @Entity
@@ -21,6 +23,8 @@ public class EnterpriseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    private String idUser;
  
     private String name;
 
@@ -55,7 +59,9 @@ public class EnterpriseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     LocationEntity location;
-    //private Integer tenatId;
+
+    @TenantId
+    String tenantId;
 
 
 }

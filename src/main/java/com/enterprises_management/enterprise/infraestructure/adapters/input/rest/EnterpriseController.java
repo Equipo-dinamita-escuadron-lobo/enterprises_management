@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enterprises_management.config.IJwtUtils;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseCreateMannegerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseSearchManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseUpdateManagerPort;
@@ -41,6 +43,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Validated
 @CrossOrigin(origins = "*")
+@PreAuthorize("hasRole('admin_client')")
 public class EnterpriseController {
 
     private final ITaxLiabilityManagerPort taxLiabilityManagerPort;
@@ -56,6 +59,8 @@ public class EnterpriseController {
 
     private final IEnterpriseUpdateManagerPort enterpriseUpdateManagerPort;
     private final IEnterpriseSearchRestMapper enterpriseSearchMapper;
+
+    private final IJwtUtils jwtUtils;
 
     @GetMapping("/taxliabilities")
     public ResponseEntity<List<TaxLiabilityResponse>> getAllTaxLiability(){
@@ -79,11 +84,12 @@ public class EnterpriseController {
 
     @Operation(summary = "Crear una empresa")
     @PostMapping("/")
-    public ResponseEntity<EnterpriseCreateResponse> createEnterprise(@Valid @RequestBody EnterpriseCreateRequest enterpriseCreateRequest){ 
+    public ResponseEntity<EnterpriseCreateResponse> createEnterprise(@Valid @RequestBody EnterpriseCreateRequest enterpriseCreateRequest){   
             Enterprise enterprise = enterpriseCreateMapper.toDomain(enterpriseCreateRequest);
 
             enterprise.setLocation(locationMangerPort.createLocation(enterprise.getLocation()));
             enterprise.setPersonType(personTypeManagerPort.createPersonType(enterprise.getPersonType()));
+            enterprise.setIdUser(jwtUtils.getId());
 
             enterprise = enterpriseCreateMannegerPort.createEnterprise(enterprise);
             return ResponseEntity.ok(enterpriseCreateMapper.toCreateResponse(enterprise));   
@@ -143,5 +149,10 @@ public class EnterpriseController {
         Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
         return ResponseEntity.ok(enterpriseSearchMapper.toEnterpriseByIdResponse(enterprise));
     }
-    
+
+    @GetMapping("/test")
+    public ResponseEntity<?> test(){
+        return ResponseEntity.ok(jwtUtils.getId());
+    }
+  
 }
