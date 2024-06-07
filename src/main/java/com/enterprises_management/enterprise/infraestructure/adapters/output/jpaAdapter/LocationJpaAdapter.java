@@ -10,6 +10,10 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 
 import lombok.Data;
 
+/**
+ * Adaptador para la gestión de direcciones usando JPA.
+ * Implementa la interfaz ILocationOutputPort.
+ */
 @Component
 @Data
 public class LocationJpaAdapter implements ILocationOutputPort {
@@ -17,6 +21,12 @@ public class LocationJpaAdapter implements ILocationOutputPort {
     private final ILocationRepository locationRepository;
     private final ILocationMapper locationMapper;
 
+    /**
+     * Crea una nueva ubicación.
+     *
+     * @param location el modelo de dominio de la ubicación a crear
+     * @return el modelo de dominio de la ubicación creada, o null si ya existe una ubicación con el mismo ID
+     */
     @Override
     public Location create(Location location) {
         LocationEntity locationEntity = locationMapper.toEntity(location);
@@ -25,6 +35,12 @@ public class LocationJpaAdapter implements ILocationOutputPort {
         return locationMapper.toDomain(locationRepository.save(locationEntity));     
     }
 
+    /**
+     * Elimina una ubicación por su ID.
+     *
+     * @param id el ID de la ubicación a eliminar
+     * @return true si la ubicación fue eliminada, false si no se encontró
+     */
     @Override
     public boolean delete(Long id) {
         if (locationRepository.existsById(id)) {
