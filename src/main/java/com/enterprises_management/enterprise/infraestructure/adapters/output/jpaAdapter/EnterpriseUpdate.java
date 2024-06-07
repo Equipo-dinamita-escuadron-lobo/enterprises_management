@@ -12,6 +12,10 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseUpdateMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IEnterpriseRepository;
 
+/**
+ * Adaptador para la actualización de entidades Enterprise usando JPA.
+ * Implementa la interfaz IEnterpriseUpdateOutputPort.
+ */
 @Component
 public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
 
@@ -21,17 +25,23 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
     @Autowired
     private IEnterpriseUpdateMapper updateMapper;
 
-
+    /**
+     * Actualiza una empresa por su ID.
+     *
+     * @param id el UUID de la empresa a actualizar
+     * @param enterprise el modelo de dominio con la nueva información de la empresa
+     */
     @Override
     public void updateEnterprise(UUID id, Enterprise enterprise) {
 
-        //actulizar empresa por el id
+        // Buscar la empresa por su ID
         EnterpriseEntity enterpriseEntity = enterpriseRepository.findById(id).get();
 
         if (enterpriseEntity == null) {
             throw new RuntimeException("Enterprise not found");
         }
 
+        // Actualizar los campos de la entidad empresa con la nueva información
         enterpriseEntity.setName(enterprise.getName());
         enterpriseEntity.setNit(enterprise.getNit());
         enterpriseEntity.setDV(enterprise.getDV());
@@ -57,7 +67,13 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
 
         enterpriseRepository.save(enterpriseEntity);
     }
-
+    
+    /**
+     * Actualiza el estado de una empresa por su ID.
+     *
+     * @param id el UUID de la empresa a actualizar
+     * @param state el nuevo estado de la empresa
+     */
     @Override
     public void updateEnterpriseStatus(UUID id, StateEnum state) {
         EnterpriseEntity enterpriseEntity = enterpriseRepository.findById(id).get();

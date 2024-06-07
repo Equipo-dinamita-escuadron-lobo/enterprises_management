@@ -12,6 +12,10 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 
 import lombok.Data;
 
+/**
+ * Adaptador para la gestión de responsabilidades tributarias usando JPA.
+ * Implementa la interfaz ITaxLiabilityOutputPort.
+ */
 @Component
 @Data
 public class TaxLiabilityJpaAdapter implements ITaxLiabilityOutputPort{
@@ -19,6 +23,11 @@ public class TaxLiabilityJpaAdapter implements ITaxLiabilityOutputPort{
     private final ITaxLiabilityRepository taxLiabilityRepository;
     private final ITaxLiabilityMapper taxLiabilityMapper;
 
+    /**
+     * Obtiene todas las responsabilidades tributarias.
+     *
+     * @return una lista de todas las responsabilidades tributarias en el modelo de dominio
+     */
     @Override
     public List<TaxLiability> getAll() {
         List<TaxLiabilityEntity> taxLiabilityEntities = taxLiabilityRepository.findAll();
