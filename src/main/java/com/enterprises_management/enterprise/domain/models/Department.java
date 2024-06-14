@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,4 +18,5 @@ public class Department {
     private String name;
     private Country country;
     private List<City> cities;
+
 }

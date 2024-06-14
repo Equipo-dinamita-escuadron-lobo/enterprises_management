@@ -17,7 +17,7 @@ public class EnterpriseControllerIntegrationTest {
     EnterpriseController enterpriseController;
 
     @Test
-    void contextLoads() throws Exception {
+    void contextLoads() {
         assertThat(enterpriseController).isNotNull();
     }
 }
