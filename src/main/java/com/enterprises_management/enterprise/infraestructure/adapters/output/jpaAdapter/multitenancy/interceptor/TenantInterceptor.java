@@ -1,8 +1,8 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.multitenancy.interceptor;
 
 
-import com.enterprises_management.config.IJwtUtils;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.multitenancy.util.TenantContext;
+import com.enterprises_management.enterprise.infraestructure.security.IJwtUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

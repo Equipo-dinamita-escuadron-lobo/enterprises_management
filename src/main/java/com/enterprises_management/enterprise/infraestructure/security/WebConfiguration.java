@@ -1,4 +1,4 @@
-package com.enterprises_management.config;
+package com.enterprises_management.enterprise.infraestructure.security;
 
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.multitenancy.interceptor.TenantInterceptor;
 import lombok.RequiredArgsConstructor;

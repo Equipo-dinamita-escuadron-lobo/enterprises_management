@@ -1,4 +1,4 @@
-package com.enterprises_management.config;
+package com.enterprises_management.enterprise.infraestructure.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

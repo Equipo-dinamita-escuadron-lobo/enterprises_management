@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enterprises_management.config.IJwtUtils;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseCreateMannegerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseSearchManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseUpdateManagerPort;
@@ -33,6 +32,7 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseCreateRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseSearchRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
+import com.enterprises_management.enterprise.infraestructure.security.IJwtUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
