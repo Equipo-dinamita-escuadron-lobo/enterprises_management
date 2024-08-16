@@ -150,9 +150,4 @@ public class EnterpriseController {
         return ResponseEntity.ok(enterpriseSearchMapper.toEnterpriseByIdResponse(enterprise));
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<?> test(){
-        return ResponseEntity.ok(jwtUtils.getId());
-    }
-  
 }
