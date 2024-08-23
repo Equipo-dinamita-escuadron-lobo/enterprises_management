@@ -19,6 +19,7 @@ public class AddressSearchService implements IAddressSearchManagerPort {
 
     @Override
     public List<Department> getAllDepartment(){
+
         return addressSearchOutputPort.getAllDepartment();
     }
 
