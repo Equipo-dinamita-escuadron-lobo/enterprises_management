@@ -1,4 +1,4 @@
-package com.enterprises_management.enterprise.domain.services;
+package com.enterprises_management.enterprise.application.ports.services;
 
 import com.enterprises_management.enterprise.application.ports.input.IAddressSearchManagerPort;
 import com.enterprises_management.enterprise.application.ports.output.IAddressSearchOutputPort;
