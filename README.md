@@ -1,3 +1,14 @@
+# Ping Pong
+Para utilizar Swagger, primero se debe hacer ping u otra petición antes de acceder a la interfaz de Swagger.
+
+```
+http://localhost:8080/api/enterprises/test/ping
+```
+**URL Swagger**
+```
+http://localhost:8080/swagger-ui/index.html#/
+```
+
 ## Diagrama de Contexto
 
 ![](https://res.cloudinary.com/dtmtu3rkh/image/upload/v1718347245/Contexto.drawio_fays6y.svg)
