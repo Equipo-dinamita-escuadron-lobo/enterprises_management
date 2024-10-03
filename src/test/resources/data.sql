@@ -1,4 +1,4 @@
-
+/*
 insert into enterprise_type (name) values
 ('Privada'),
 ('Oficial'),
@@ -278,3 +278,4 @@ INSERT INTO city (id, department_id, name) VALUES (175, 32, 'Puerto Inirida');
 
 
 
+*/
