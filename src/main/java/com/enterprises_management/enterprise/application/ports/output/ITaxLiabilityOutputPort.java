@@ -5,5 +5,5 @@ import java.util.List;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
 
 public interface ITaxLiabilityOutputPort {
-    List<TaxLiability> getAll();
+    List<TaxLiability> getAllTaxLiability();
 }

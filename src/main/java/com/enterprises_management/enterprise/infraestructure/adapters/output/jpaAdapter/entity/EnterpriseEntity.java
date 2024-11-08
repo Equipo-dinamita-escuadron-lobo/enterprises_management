@@ -42,6 +42,10 @@ public class EnterpriseEntity {
 
     private StateEnum state;
 
+    private Long mainActivity; //actividad primaria
+
+    private Long secondaryActivity; //actividad secundaria
+
     @ManyToMany
     List<TaxLiabilityEntity> taxLiabilities; //reponsabilidades tributarias
 

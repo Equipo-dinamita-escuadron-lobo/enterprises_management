@@ -32,6 +32,8 @@ public class EnterpriseByIdResponse {
     private String email;
     private String logo;
     private StateEnum state;
+    private Long mainActivity;
+    private Long secondaryActivity;
 
     List<TaxLiability> taxLiabilities;
 

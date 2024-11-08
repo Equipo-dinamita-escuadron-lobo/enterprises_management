@@ -18,6 +18,6 @@ public class TaxLiabilityService implements ITaxLiabilityManagerPort{
 
     @Override
     public List<TaxLiability> getAllTaxLiability() {
-        return taxLiabilityOutputPort.getAll();     
+        return taxLiabilityOutputPort.getAllTaxLiability();     
     } 
 }

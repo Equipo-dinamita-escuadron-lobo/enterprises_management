@@ -30,6 +30,8 @@ public class EnterpriseCreateResponse {
     private String branch; 
     private String email;
     private String logo;
+    private Long mainActivity;
+    private Long secondaryActivity;
 
     List<TaxLiability> taxLiabilities;
 

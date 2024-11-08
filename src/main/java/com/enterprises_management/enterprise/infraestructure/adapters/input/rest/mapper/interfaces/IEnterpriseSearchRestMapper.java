@@ -23,7 +23,8 @@ public interface IEnterpriseSearchRestMapper {
                 .email(enterprise.getEmail())
                 .logo(enterprise.getLogo())
                 .state(enterprise.getState())
-
+                .mainActivity(enterprise.getMainActivity())
+                .secondaryActivity(enterprise.getSecondaryActivity())
                 .taxLiabilities(enterprise.getTaxLiabilities())
 
                 .taxPayerType(enterprise.getTaxPayerType())

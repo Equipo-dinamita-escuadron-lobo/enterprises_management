@@ -48,6 +48,10 @@ public class EnterpriseCreateRequest {
 
     private String logo;
 
+    private Long mainActivity;
+
+    private Long secondaryActivity;
+
     List<Long> taxLiabilities;
 
     @Builder.Default //ACTIVE, INACTIVE, SUSPENDED
