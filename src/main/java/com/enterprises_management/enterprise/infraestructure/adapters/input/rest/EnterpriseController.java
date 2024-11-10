@@ -21,17 +21,21 @@ import com.enterprises_management.enterprise.application.ports.input.IEnterprise
 import com.enterprises_management.enterprise.application.ports.input.ILocationMangerPort;
 import com.enterprises_management.enterprise.application.ports.input.IPersonTypeManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.ITaxLiabilityManagerPort;
+import com.enterprises_management.enterprise.application.ports.input.ITaxPayerTypeManagerPort;
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
+import com.enterprises_management.enterprise.domain.models.TaxPayerType;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.request.EnterpriseCreateRequest;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseByIdResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseCreateResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.TaxLiabilityResponse;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.TaxPayerTypeResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseCreateRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseSearchRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxPayerTypeRestMapper;
 import com.enterprises_management.enterprise.infraestructure.security.IJwtUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,6 +52,9 @@ public class EnterpriseController {
 
     private final ITaxLiabilityManagerPort taxLiabilityManagerPort;
     private final ITaxLiabilityRestMapper taxLiabilityRestMapper;
+
+    private final ITaxPayerTypeManagerPort taxPayerTypeManagerPort;
+    private final ITaxPayerTypeRestMapper taxPayerTypeRestMapper;
 
     private final IEnterpriseSearchManagerPort enterpriseSearchManagerPort;
 
@@ -66,6 +73,11 @@ public class EnterpriseController {
     public ResponseEntity<List<TaxLiabilityResponse>> getAllTaxLiability(){
         List<TaxLiability> taxLiability = taxLiabilityManagerPort.getAllTaxLiability();
         return ResponseEntity.ok(taxLiabilityRestMapper.toDomain(taxLiability));
+    }
+    @GetMapping("/taxpayertype")
+    public ResponseEntity<List<TaxPayerTypeResponse>> getTaxPayer(){
+        List<TaxPayerType> taxPayerType = taxPayerTypeManagerPort.getAllTaxPayerTypes();
+        return ResponseEntity.ok(taxPayerTypeRestMapper.toDomain(taxPayerType));
     }
 
     @Operation(summary = "Obtener todas las empresas activas")
