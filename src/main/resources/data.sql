@@ -20,6 +20,10 @@ INSERT INTO tax_liability(name) VALUES
 ('Gran contribuyente');
 
 insert into country(id,name) VALUES(1,'Colombia');
+insert into country(id,name) VALUES(2,'Extranjero');
+
+INSERT INTO department (id, country_id, name) VALUES (33, 2,'Extranjero');
+INSERT INTO city (id, department_id, name) VALUES (1124,33,'Extranjero');
 
 INSERT INTO department(id, country_id, name) VALUES (1,1,'Amazonas');
 INSERT INTO city (id, department_id, name) VALUES (1,1,'El Encanto');
