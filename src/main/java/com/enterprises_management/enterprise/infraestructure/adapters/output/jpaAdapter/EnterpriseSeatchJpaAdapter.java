@@ -8,10 +8,13 @@ import org.springframework.stereotype.Component;
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseSearchOutputPort;
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.TypeEnterpriseResponseDto;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseTypeEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseSearchMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.projection.IEnterpriseInfoProjection;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IEnterpriseRepository;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.ITypeEnterpriseRepository;
 
 import lombok.Data;
 
@@ -25,6 +28,7 @@ public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort{
     
     private final IEnterpriseRepository enterpriseRepository;
     private final IEnterpriseSearchMapper enterpriseMapper;
+    private final ITypeEnterpriseRepository typeEnterprisesRepository;
     
     /**
      * Obtiene todas las empresas.
@@ -58,6 +62,16 @@ public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort{
     public Enterprise getEnterpriseById(UUID id) {
         EnterpriseEntity enterpriseEntity = enterpriseRepository.findById(id).orElse(null);
         return enterpriseMapper.toEnterprise(enterpriseEntity);
+    }
+
+    /**
+     * Obtiene todos los tipos de empresa.
+     *
+     * @return una lista de DTOs con la información de todos los tipos de empresa
+     */
+    @Override
+    public List<EnterpriseTypeEntity> getAllTypeEnterprises() {
+        return typeEnterprisesRepository.findAll(); 
     }
     
 

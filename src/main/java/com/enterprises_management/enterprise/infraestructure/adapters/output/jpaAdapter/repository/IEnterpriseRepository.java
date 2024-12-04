@@ -19,4 +19,5 @@ public interface IEnterpriseRepository extends JpaRepository<EnterpriseEntity, U
      //filtro por state = 1 (inactivo)
      @Query("SELECT e.id AS id, e.name AS name, e.nit AS nit, e.logo AS logo, e.state AS state FROM EnterpriseEntity e WHERE e.state = 1")
      List<IEnterpriseInfoProjection> findEnterpriseInfoInactive();
+
 }

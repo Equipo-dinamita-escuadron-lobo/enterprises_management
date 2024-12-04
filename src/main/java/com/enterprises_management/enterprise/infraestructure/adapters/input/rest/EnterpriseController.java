@@ -25,6 +25,7 @@ import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.TypeEnterpriseResponseDto;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.request.EnterpriseCreateRequest;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseByIdResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseCreateResponse;
@@ -32,17 +33,18 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseCreateRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseSearchRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseTypeEntity;
 import com.enterprises_management.enterprise.infraestructure.security.IJwtUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@RequestMapping("/api/enterprises")
+@CrossOrigin("*")
 @RestController
-@AllArgsConstructor
+@RequestMapping("/api/enterprises")
+@RequiredArgsConstructor
 @Validated
-@CrossOrigin(origins = "*")
 @PreAuthorize("hasRole('admin_client')")
 public class EnterpriseController {
 
@@ -73,6 +75,14 @@ public class EnterpriseController {
     public ResponseEntity<List<EnterpriseInfoDto>> getAllEnterprises(){
         List<EnterpriseInfoDto> enterprises = enterpriseSearchManagerPort.getAllEnterprises();
         return ResponseEntity.ok(enterprises);
+    }
+
+    /* Nuevo servicio obtener tipos de empresa */
+    @Operation(summary = "Obtener todos los tipos de empresa")
+    @GetMapping("/type-enterprise")
+    public ResponseEntity<List<EnterpriseTypeEntity>> getAllTypeEnterprises(){
+        List<EnterpriseTypeEntity> typesEnterprises = enterpriseSearchManagerPort.getTypeEnterprises();
+        return ResponseEntity.ok(typesEnterprises);
     }
 
     @Operation(summary = "Obtener todas las empresas inactivas")

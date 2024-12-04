@@ -9,6 +9,8 @@ import com.enterprises_management.enterprise.application.ports.input.IEnterprise
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseSearchOutputPort;
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.TypeEnterpriseResponseDto;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseTypeEntity;
 
 import lombok.AllArgsConstructor;
 
@@ -31,5 +33,10 @@ public class EnterpriseSearchService implements IEnterpriseSearchManagerPort {
     @Override
     public Enterprise getEnterpriseById(UUID id) {
         return enterpriseSearchOutputPort.getEnterpriseById(id);
+    }
+
+    @Override
+    public List<EnterpriseTypeEntity> getTypeEnterprises() {
+        return enterpriseSearchOutputPort.getAllTypeEnterprises();
     }
 }
