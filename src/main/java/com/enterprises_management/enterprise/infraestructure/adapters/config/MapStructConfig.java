@@ -6,6 +6,7 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IDepartmentRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseSearchRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxPayerTypeRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseCreateMapper;
 
 
@@ -28,6 +29,12 @@ public class MapStructConfig {
     
     @Bean
     ITaxLiabilityRestMapper mapStructMapperRest() {return Mappers.getMapper(ITaxLiabilityRestMapper.class);}
+
+    @Bean
+    ITaxPayerTypeMapper mapStructTaxPayerTypeMapper() {return Mappers.getMapper(ITaxPayerTypeMapper.class);}
+
+    @Bean
+    ITaxPayerTypeRestMapper mapStructTaxPayerTypeMapperRest() {return Mappers.getMapper(ITaxPayerTypeRestMapper.class);}
 
     @Bean 
     IEnterpriseSearchMapper mapStructMapperEnterprise() {return Mappers.getMapper(IEnterpriseSearchMapper.class);}
