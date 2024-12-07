@@ -6,6 +6,12 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ICitiesbyDepartmentRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IDepartmentRestMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,22 +31,48 @@ import lombok.AllArgsConstructor;
 @CrossOrigin(origins = "*")
 public class AddressController {
 
-
     private final IAddressSearchManagerPort addressSearchManagerPort;
     private final ICitiesbyDepartmentRestMapper citiesbyDepartmentRestMapper;
     private final IDepartmentRestMapper departmentRestMapper;
 
-
     @GetMapping("/departments")
-    public ResponseEntity<List<DepartmentAddressResponse>> getAllDepartment(){
-        List<Department> departments =  addressSearchManagerPort.getAllDepartment();
+    @Operation(summary = "Obtener todos los departamentos", description = "Recupera una lista de todos los departamentos disponibles en el sistema.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Departamentos recuperados exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DepartmentAddressResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Error interno al recuperar los departamentos", content = @Content)
+    })
+    public ResponseEntity<List<DepartmentAddressResponse>> getAllDepartment() {
+        // Recuperar la lista de departamentos a través del puerto de gestión de
+        // direcciones
+        List<Department> departments = addressSearchManagerPort.getAllDepartment();
+
+        // Mapear los departamentos a un DTO y devolver la respuesta con estado HTTP 200
         return ResponseEntity.ok(departmentRestMapper.toDepartmentResponseList(departments));
     }
-    @GetMapping("/cities/{idDepartment}")
-    public ResponseEntity<CitiesbyDepartmentResponse> getAllCities(@PathVariable("idDepartment") Long idDepartment){
-        Department department =addressSearchManagerPort.getAllCities( idDepartment);
-        CitiesbyDepartmentResponse citiesbyDepartmentResponse=citiesbyDepartmentRestMapper.toResponse(department);
-        return ResponseEntity.ok(citiesbyDepartmentResponse);
 
+    @GetMapping("/cities/{idDepartment}")
+    @Operation(summary = "Obtener ciudades por departamento", 
+               description = "Recupera todas las ciudades asociadas a un departamento específico.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ciudades recuperadas exitosamente", 
+                         content = @Content(mediaType = "application/json", 
+                         schema = @Schema(implementation = CitiesbyDepartmentResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Departamento no encontrado", 
+                         content = @Content),
+            @ApiResponse(responseCode = "500", description = "Error interno al recuperar las ciudades", 
+                         content = @Content)
+    })
+    public ResponseEntity<CitiesbyDepartmentResponse> getAllCities(
+            @PathVariable("idDepartment") Long idDepartment) {
+        // Obtener el departamento junto con sus ciudades
+        Department department = addressSearchManagerPort.getAllCities(idDepartment);
+        
+        // Mapear el departamento a una respuesta específica para ciudades
+        CitiesbyDepartmentResponse citiesbyDepartmentResponse = 
+                citiesbyDepartmentRestMapper.toResponse(department);
+        
+        // Retornar la respuesta con estado HTTP 200
+        return ResponseEntity.ok(citiesbyDepartmentResponse);
     }
+    
 }
