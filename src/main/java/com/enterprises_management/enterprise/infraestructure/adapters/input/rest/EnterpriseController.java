@@ -3,6 +3,7 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseCreateMannegerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseSearchManagerPort;
@@ -21,6 +24,9 @@ import com.enterprises_management.enterprise.application.ports.input.IEnterprise
 import com.enterprises_management.enterprise.application.ports.input.ILocationMangerPort;
 import com.enterprises_management.enterprise.application.ports.input.IPersonTypeManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.ITaxLiabilityManagerPort;
+import com.enterprises_management.enterprise.application.ports.input.PdfRUTContent;
+import com.enterprises_management.enterprise.application.ports.output.PdfRUTContentOutput;
+import com.enterprises_management.enterprise.application.ports.services.PdfRUTService;
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
@@ -189,6 +195,23 @@ public class EnterpriseController {
     public ResponseEntity<EnterpriseByIdResponse> getEnterpriseById(@PathVariable("id") UUID id) {
         Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
         return ResponseEntity.ok(enterpriseSearchMapper.toEnterpriseByIdResponse(enterprise));
+    }
+
+    //Crear tercero apartir del Pdf del RUT 
+    @Autowired
+    private PdfRUTService pdfRUTService;
+    @PostMapping("/content-PDF-RUT")
+    public ResponseEntity<PdfRUTContentOutput> uploadPdf(@RequestParam("file") MultipartFile file){
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        try {
+            PdfRUTContent request = new  PdfRUTContent(file);
+            PdfRUTContentOutput response = pdfRUTService.extractContent(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
 }

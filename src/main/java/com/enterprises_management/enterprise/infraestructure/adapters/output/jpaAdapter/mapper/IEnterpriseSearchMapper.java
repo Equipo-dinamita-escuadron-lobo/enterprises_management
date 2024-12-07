@@ -52,7 +52,8 @@ public interface IEnterpriseSearchMapper {
             .email(enterpriseEntity.getEmail())
             .logo(enterpriseEntity.getLogo())
             .state(enterpriseEntity.getState())
-
+            .mainActivity(enterpriseEntity.getMainActivity())
+            .secondaryActivity(enterpriseEntity.getSecondaryActivity())
             //ManyToMany
             .taxLiabilities(
                 enterpriseEntity.getTaxLiabilities().stream()

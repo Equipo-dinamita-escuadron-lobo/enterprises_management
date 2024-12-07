@@ -49,6 +49,8 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
         enterpriseEntity.setBranch(enterprise.getBranch());
         enterpriseEntity.setEmail(enterprise.getEmail());
         enterpriseEntity.setLogo(enterprise.getLogo());
+        enterpriseEntity.setMainActivity(enterprise.getMainActivity());
+        enterpriseEntity.setSecondaryActivity(enterprise.getSecondaryActivity());
 
         //taxLiabilities (reponsabilidades tributarias)
         enterpriseEntity.setTaxLiabilities(updateMapper.toTaxLiabilityEntity(enterprise.getTaxLiabilities()));

@@ -27,7 +27,8 @@ public class Enterprise {
     private String branch; 
     private String email;
     private String logo;
-
+    private Long mainActivity;
+    private Long secondaryActivity;
     private StateEnum state;
 
     List<TaxLiability> taxLiabilities;

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import com.enterprises_management.enterprise.application.ports.output.ITaxLiabilityOutputPort;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
-import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.TaxLiabilityEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.ITaxLiabilityMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.ITaxLiabilityRepository;
 
@@ -28,10 +27,9 @@ public class TaxLiabilityJpaAdapter implements ITaxLiabilityOutputPort{
      *
      * @return una lista de todas las responsabilidades tributarias en el modelo de dominio
      */
+
     @Override
-    public List<TaxLiability> getAll() {
-        List<TaxLiabilityEntity> taxLiabilityEntities = taxLiabilityRepository.findAll();
-        List<TaxLiability> taxLiabilities = taxLiabilityMapper.toModel(taxLiabilityEntities);
-        return taxLiabilities ;     
+    public List<TaxLiability> getAllTaxLiability() {
+        return taxLiabilityMapper.toModel(taxLiabilityRepository.findAll());
     }  
 }
