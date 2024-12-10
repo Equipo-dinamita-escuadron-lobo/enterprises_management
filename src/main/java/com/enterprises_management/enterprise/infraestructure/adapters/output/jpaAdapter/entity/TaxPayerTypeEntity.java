@@ -3,6 +3,10 @@ package com.enterprises_management.enterprise.infraestructure.adapters.output.jp
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entidad JPA que representa un tipo de contribuyente en la base de datos.
+ * Mapea la tabla "tax_payer_type".
+ */
 @Entity
 @Getter
 @Setter
@@ -11,9 +15,16 @@ import lombok.*;
 @Builder
 @Table(name="tax_payer_type")
 public class TaxPayerTypeEntity {
+
+    /**
+     * Identificador único del tipo de contribuyente.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Nombre o descripción del tipo de contribuyente.
+     */
     private String name;
 }

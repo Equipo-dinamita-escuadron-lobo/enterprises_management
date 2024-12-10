@@ -10,10 +10,20 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+/**
+ * Controlador REST para pruebas de acceso y disponibilidad del servidor.
+ * Proporciona endpoints para verificar el acceso de usuarios y administradores.
+ */
 @RestController
 @RequestMapping("/api/enterprises/test")
 public class TestController {
 
+    /**
+     * Prueba de acceso para administradores.
+     * Verifica que un usuario con el rol de administrador ('admin_client') puede acceder a este endpoint.
+     *
+     * @return mensaje de prueba para administradores
+     */
     @Operation(summary = "Prueba de acceso para administradores", description = "Permite verificar que un usuario con el rol de administrador ('admin_client') puede acceder a este endpoint.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Acceso exitoso al recurso", content = @Content(mediaType = "text/plain")),
@@ -25,6 +35,12 @@ public class TestController {
         return "Test for Admin";
     }
 
+    /**
+     * Prueba de acceso para usuarios y administradores.
+     * Verifica que un usuario con los roles 'user_client' o 'admin_client' puede acceder a este endpoint.
+     *
+     * @return mensaje de prueba para usuarios
+     */
     @Operation(summary = "Prueba de acceso para usuarios y administradores", description = "Permite verificar que un usuario con los roles 'user_client' o 'admin_client' puede acceder a este endpoint.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Acceso exitoso al recurso", content = @Content(mediaType = "text/plain")),
@@ -36,6 +52,12 @@ public class TestController {
         return "Test for User";
     }
 
+    /**
+     * Prueba básica de disponibilidad del servidor.
+     * Endpoint público para verificar que el servidor está disponible.
+     *
+     * @return respuesta "pong" para indicar que el servidor está disponible
+     */
     @Operation(summary = "Prueba básica de disponibilidad del servidor", description = "Endpoint público para verificar que el servidor está disponible.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Servidor disponible", content = @Content(mediaType = "text/plain"))

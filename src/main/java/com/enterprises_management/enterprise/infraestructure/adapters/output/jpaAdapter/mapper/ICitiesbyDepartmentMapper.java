@@ -10,16 +10,39 @@ import org.mapstruct.Named;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+/**
+ * Interfaz de mapeo para convertir entre entidades de departamento y su representación en el dominio.
+ * Utiliza MapStruct para generar automáticamente las implementaciones de mapeo.
+ */
 @Mapper
 public interface ICitiesbyDepartmentMapper {
 
+    /**
+     * Convierte un objeto de dominio Department a su entidad correspondiente.
+     *
+     * @param department el objeto de dominio a convertir
+     * @return la entidad DepartmentEntity correspondiente
+     */
     @Mapping(target = "cities", qualifiedByName = "mapCities")
     @Mapping(target = "country", ignore = true)
     DepartmentEntity toEntity(Department department);
 
+    /**
+     * Convierte una entidad DepartmentEntity a su representación en el dominio.
+     *
+     * @param departmentEntity la entidad a convertir
+     * @return el objeto de dominio Department correspondiente
+     */
     @Mapping(target = "cities", qualifiedByName = "mapCitiesDomain")
     Department toDomain(DepartmentEntity departmentEntity);
 
+    /**
+     * Método personalizado para mapear la lista de ciudades del dominio a entidades.
+     *
+     * @param cities lista de ciudades del dominio
+     * @return lista de entidades CityEntity
+     */
     @Named("mapCities")
     default List<CityEntity> mapCities(List<City> cities) {
         if (cities == null) {
@@ -35,6 +58,12 @@ public interface ICitiesbyDepartmentMapper {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Método personalizado para mapear la lista de entidades de ciudad al dominio.
+     *
+     * @param cities lista de entidades CityEntity
+     * @return lista de ciudades del dominio
+     */
     @Named("mapCitiesDomain")
     default List<City> mapCitiesDomain(List<CityEntity> cities) {
         if (cities == null) {
@@ -49,5 +78,4 @@ public interface ICitiesbyDepartmentMapper {
                 })
                 .collect(Collectors.toList());
     }
-
 }

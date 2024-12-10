@@ -17,9 +17,19 @@ import com.enterprises_management.enterprise.domain.models.TaxPayerType;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.projection.IEnterpriseInfoProjection;
 
+/**
+ * Interfaz de mapeo para convertir entre entidades de empresa y DTOs de información.
+ * Utiliza MapStruct para generar automáticamente las implementaciones de mapeo.
+ */
 @Mapper
 public interface IEnterpriseSearchMapper {
 
+    /**
+     * Convierte una lista de proyecciones de información de empresa a una lista de DTOs.
+     *
+     * @param enterpriseInfo lista de proyecciones con información básica de empresas
+     * @return lista de DTOs con información resumida de empresas
+     */
     default List<EnterpriseInfoDto> toEnterpriseInfoDtoList(List<IEnterpriseInfoProjection> enterpriseInfo) {
         if (enterpriseInfo == null) {
             return null;
@@ -38,6 +48,13 @@ public interface IEnterpriseSearchMapper {
                 .toList();
     }
 
+    /**
+     * Convierte una entidad de empresa a su representación en el dominio.
+     * Realiza el mapeo completo incluyendo todas las relaciones y objetos anidados.
+     *
+     * @param enterpriseEntity la entidad a convertir
+     * @return el objeto de dominio Enterprise correspondiente
+     */
     default Enterprise toEnterprise(EnterpriseEntity enterpriseEntity){
         if (enterpriseEntity == null) {
             return null;
@@ -54,7 +71,6 @@ public interface IEnterpriseSearchMapper {
             .state(enterpriseEntity.getState())
             .mainActivity(enterpriseEntity.getMainActivity())
             .secondaryActivity(enterpriseEntity.getSecondaryActivity())
-            //ManyToMany
             .taxLiabilities(
                 enterpriseEntity.getTaxLiabilities().stream()
                 .map(taxLiability -> {
@@ -65,24 +81,18 @@ public interface IEnterpriseSearchMapper {
                 })
                 .toList()
             )
-
-            //ManyToOne
             .taxPayerType(
                 TaxPayerType.builder()
                 .id(enterpriseEntity.getTaxPayerType().getId())
                 .name(enterpriseEntity.getTaxPayerType().getName())
                 .build()
             )
-
-            //ManyToOne
             .enterpriseType(
                 EnterpriseType.builder()
                 .id(enterpriseEntity.getEnterpriseType().getId())
                 .name(enterpriseEntity.getEnterpriseType().getName())
                 .build()
             )
-
-            //ManyToOne
             .personType(
                 PersonType.builder()
                 .id(enterpriseEntity.getPersonType().getId())
@@ -92,8 +102,6 @@ public interface IEnterpriseSearchMapper {
                 .type(enterpriseEntity.getPersonType().getType())
                 .build()
             )
-
-            //OneToOne
             .location(
                 Location.builder()
                 .id(enterpriseEntity.getLocation().getId())
@@ -114,6 +122,4 @@ public interface IEnterpriseSearchMapper {
             )
             .build();
     }
-
-
 }

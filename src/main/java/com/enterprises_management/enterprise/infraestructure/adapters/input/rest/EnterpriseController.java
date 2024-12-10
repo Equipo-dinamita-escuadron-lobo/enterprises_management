@@ -52,6 +52,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
+/**
+ * Controlador REST para gestionar las operaciones relacionadas con las empresas.
+ * Proporciona endpoints para crear, actualizar, y recuperar información de empresas.
+ */
 @RequestMapping("/api/enterprises")
 @RestController
 @AllArgsConstructor
@@ -79,6 +83,11 @@ public class EnterpriseController {
 
     private final IJwtUtils jwtUtils;
 
+    /**
+     * Obtiene todas las responsabilidades tributarias.
+     *
+     * @return lista de responsabilidades tributarias
+     */
     @GetMapping("/taxliabilities")
     @Operation(summary = "Obtener todas las responsabilidades tributarias", description = "Recupera una lista de todas las responsabilidades tributarias disponibles.")
     @ApiResponses(value = {
@@ -89,12 +98,23 @@ public class EnterpriseController {
         List<TaxLiability> taxLiability = taxLiabilityManagerPort.getAllTaxLiability();
         return ResponseEntity.ok(taxLiabilityRestMapper.toDomain(taxLiability));
     }
+
+    /**
+     * Obtiene todos los tipos de contribuyentes.
+     *
+     * @return lista de tipos de contribuyentes
+     */
     @GetMapping("/taxpayertype")
-    public ResponseEntity<List<TaxPayerTypeResponse>> getTaxPayer(){
+    public ResponseEntity<List<TaxPayerTypeResponse>> getTaxPayer() {
         List<TaxPayerType> taxPayerType = taxPayerTypeManagerPort.getAllTaxPayerTypes();
         return ResponseEntity.ok(taxPayerTypeRestMapper.toDomain(taxPayerType));
     }
 
+    /**
+     * Obtiene todas las empresas activas.
+     *
+     * @return lista de empresas activas
+     */
     @Operation(summary = "Obtener todas las empresas activas", description = "Recupera una lista de todas las empresas activas registradas en el sistema.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Empresas activas recuperadas exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EnterpriseInfoDto.class))),
@@ -106,6 +126,11 @@ public class EnterpriseController {
         return ResponseEntity.ok(enterprises);
     }
 
+    /**
+     * Obtiene todas las empresas inactivas.
+     *
+     * @return lista de empresas inactivas
+     */
     @Operation(summary = "Obtener todas las empresas inactivas", description = "Recupera una lista de todas las empresas inactivas registradas en el sistema.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Empresas inactivas recuperadas exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EnterpriseInfoDto.class))),
@@ -118,6 +143,12 @@ public class EnterpriseController {
         return ResponseEntity.ok(enterprises);
     }
 
+    /**
+     * Crea una nueva empresa
+     *
+     * @param enterpriseCreateRequest la solicitud de creación de empresa
+     * @return la respuesta de creación de empresa
+     */
     @Operation(summary = "Crear una empresa", description = "Crea una nueva empresa con la información proporcionada en la solicitud.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Empresa creada exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EnterpriseCreateResponse.class))),
@@ -137,6 +168,13 @@ public class EnterpriseController {
         return ResponseEntity.ok(enterpriseCreateMapper.toCreateResponse(enterprise));
     }
 
+    /**
+     * Actualiza una empresa existente por su ID.
+     *
+     * @param id el identificador de la empresa a actualizar
+     * @param enterpriseCreateRequest la solicitud de actualización de empresa
+     * @return la respuesta de la operación
+     */
     @Operation(summary = "Actualizar una empresa por id", description = "Actualiza la información de una empresa existente basada en su ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Empresa actualizada exitosamente", content = @Content),
@@ -162,6 +200,13 @@ public class EnterpriseController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Actualiza el estado de una empresa por su ID.
+     *
+     * @param id el identificador de la empresa
+     * @param state el nuevo estado de la empresa
+     * @return la respuesta de la operación
+     */
     @Operation(summary = "Actualizar el estado de una empresa por id", description = "Permite actualizar el estado de una empresa a ACTIVE, INACTIVE o SUSPENDED.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Estado de la empresa actualizado exitosamente"),
@@ -194,9 +239,14 @@ public class EnterpriseController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
-
     }
 
+    /**
+     * Obtiene los detalles de una empresa específica por su ID.
+     *
+     * @param id el identificador de la empresa
+     * @return los detalles de la empresa
+     */
     @Operation(summary = "Obtener una empresa por ID", description = "Permite obtener los detalles de una empresa específica utilizando su ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Empresa encontrada exitosamente", content = @Content(mediaType = "application/json")),
@@ -209,21 +259,26 @@ public class EnterpriseController {
         return ResponseEntity.ok(enterpriseSearchMapper.toEnterpriseByIdResponse(enterprise));
     }
 
-    //Crear tercero apartir del Pdf del RUT 
+    /**
+     * Crea un tercero a partir del contenido de un PDF del RUT.
+     *
+     * @param file el archivo PDF del RUT
+     * @return el contenido extraído del PDF
+     */
     @Autowired
     private PdfRUTService pdfRUTService;
+
     @PostMapping("/content-PDF-RUT")
-    public ResponseEntity<PdfRUTContentOutput> uploadPdf(@RequestParam("file") MultipartFile file){
+    public ResponseEntity<PdfRUTContentOutput> uploadPdf(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body(null);
         }
         try {
-            PdfRUTContent request = new  PdfRUTContent(file);
+            PdfRUTContent request = new PdfRUTContent(file);
             PdfRUTContentOutput response = pdfRUTService.extractContent(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }
     }
-
 }

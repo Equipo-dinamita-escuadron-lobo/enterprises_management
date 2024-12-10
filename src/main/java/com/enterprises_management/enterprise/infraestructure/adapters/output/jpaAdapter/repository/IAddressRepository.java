@@ -3,7 +3,17 @@ package com.enterprises_management.enterprise.infraestructure.adapters.output.jp
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.CityEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IAddressRepository extends JpaRepository<CityEntity,Long> {
+/**
+ * Repositorio JPA para la entidad CityEntity.
+ * Proporciona métodos para realizar operaciones CRUD en la base de datos.
+ */
+public interface IAddressRepository extends JpaRepository<CityEntity, Long> {
 
+    /**
+     * Encuentra una entidad CityEntity por su identificador.
+     *
+     * @param id el identificador de la ciudad
+     * @return la entidad CityEntity correspondiente
+     */
     CityEntity findAllById(Long id);
 }

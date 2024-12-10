@@ -3,6 +3,10 @@ package com.enterprises_management.enterprise.infraestructure.adapters.output.jp
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entidad JPA que representa un tipo de empresa en la base de datos.
+ * Mapea la tabla "enterprise_type".
+ */
 @Entity
 @Getter
 @Setter
@@ -11,9 +15,16 @@ import lombok.*;
 @Builder
 @Table(name="enterprise_type")
 public class EnterpriseTypeEntity {
+
+    /**
+     * Identificador único del tipo de empresa.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Nombre del tipo de empresa.
+     */
     private String name;
 }

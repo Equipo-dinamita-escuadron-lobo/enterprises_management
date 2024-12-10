@@ -3,6 +3,10 @@ package com.enterprises_management.enterprise.infraestructure.adapters.output.jp
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entidad JPA que representa una ciudad en la base de datos.
+ * Mapea la tabla "city" y define las relaciones con otras entidades.
+ */
 @Entity
 @Getter
 @Setter
@@ -13,11 +17,20 @@ import lombok.*;
 
 public class CityEntity
 {
+    /**
+     * Identificador único de la ciudad.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+   /**
+    * Departamento al que pertenece la ciudad.
+    */
    @ManyToOne
    //@JoinColumn(name="department_id",referencedColumnName = "id")
     private DepartmentEntity department;
+    /**
+     * Nombre de la ciudad.
+     */
     private String name;
 }

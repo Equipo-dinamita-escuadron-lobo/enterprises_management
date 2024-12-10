@@ -3,6 +3,10 @@ package com.enterprises_management.enterprise.infraestructure.adapters.output.jp
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entidad JPA que representa un tipo de persona en la base de datos.
+ * Mapea la tabla "person_type".
+ */
 @Entity
 @Getter
 @Setter
@@ -11,12 +15,31 @@ import lombok.*;
 @Builder
 @Table(name="person_type")
 public class PersonTypeEntity {
+
+    /**
+     * Identificador único del tipo de persona.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * Tipo de persona (natural o jurídica).
+     */
     private String type;
+
+    /**
+     * Nombre(s) de la persona natural.
+     */
     private String name;
+
+    /**
+     * Apellido(s) de la persona natural.
+     */
     private String surname;
 
-    private String bussinessName;//Razon social
+    /**
+     * Razón social para personas jurídicas.
+     */
+    private String bussinessName;
 }

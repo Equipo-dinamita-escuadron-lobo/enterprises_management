@@ -25,6 +25,10 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 
 import lombok.AllArgsConstructor;
 
+/**
+ * Controlador REST para gestionar las operaciones relacionadas con direcciones.
+ * Proporciona endpoints para obtener información de departamentos y ciudades.
+ */
 @RequestMapping("/api/address")
 @RestController
 @AllArgsConstructor
@@ -35,11 +39,22 @@ public class AddressController {
     private final ICitiesbyDepartmentRestMapper citiesbyDepartmentRestMapper;
     private final IDepartmentRestMapper departmentRestMapper;
 
+    /**
+     * Obtiene todos los departamentos disponibles en el sistema.
+     *
+     * @return ResponseEntity con la lista de departamentos
+     */
     @GetMapping("/departments")
-    @Operation(summary = "Obtener todos los departamentos", description = "Recupera una lista de todos los departamentos disponibles en el sistema.")
+    @Operation(summary = "Obtener todos los departamentos", 
+               description = "Recupera una lista de todos los departamentos disponibles en el sistema.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Departamentos recuperados exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DepartmentAddressResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Error interno al recuperar los departamentos", content = @Content)
+            @ApiResponse(responseCode = "200", 
+                        description = "Departamentos recuperados exitosamente", 
+                        content = @Content(mediaType = "application/json", 
+                        schema = @Schema(implementation = DepartmentAddressResponse.class))),
+            @ApiResponse(responseCode = "500", 
+                        description = "Error interno al recuperar los departamentos", 
+                        content = @Content)
     })
     public ResponseEntity<List<DepartmentAddressResponse>> getAllDepartment() {
         // Recuperar la lista de departamentos a través del puerto de gestión de
@@ -50,17 +65,26 @@ public class AddressController {
         return ResponseEntity.ok(departmentRestMapper.toDepartmentResponseList(departments));
     }
 
+    /**
+     * Obtiene todas las ciudades asociadas a un departamento específico.
+     *
+     * @param idDepartment el identificador del departamento
+     * @return ResponseEntity con la información de las ciudades del departamento
+     */
     @GetMapping("/cities/{idDepartment}")
     @Operation(summary = "Obtener ciudades por departamento", 
                description = "Recupera todas las ciudades asociadas a un departamento específico.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ciudades recuperadas exitosamente", 
-                         content = @Content(mediaType = "application/json", 
-                         schema = @Schema(implementation = CitiesbyDepartmentResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Departamento no encontrado", 
-                         content = @Content),
-            @ApiResponse(responseCode = "500", description = "Error interno al recuperar las ciudades", 
-                         content = @Content)
+            @ApiResponse(responseCode = "200", 
+                        description = "Ciudades recuperadas exitosamente", 
+                        content = @Content(mediaType = "application/json", 
+                        schema = @Schema(implementation = CitiesbyDepartmentResponse.class))),
+            @ApiResponse(responseCode = "404", 
+                        description = "Departamento no encontrado", 
+                        content = @Content),
+            @ApiResponse(responseCode = "500", 
+                        description = "Error interno al recuperar las ciudades", 
+                        content = @Content)
     })
     public ResponseEntity<CitiesbyDepartmentResponse> getAllCities(
             @PathVariable("idDepartment") Long idDepartment) {
@@ -74,5 +98,4 @@ public class AddressController {
         // Retornar la respuesta con estado HTTP 200
         return ResponseEntity.ok(citiesbyDepartmentResponse);
     }
-    
 }

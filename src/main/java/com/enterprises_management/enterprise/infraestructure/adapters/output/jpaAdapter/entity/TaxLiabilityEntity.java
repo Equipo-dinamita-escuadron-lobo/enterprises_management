@@ -3,6 +3,10 @@ package com.enterprises_management.enterprise.infraestructure.adapters.output.jp
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entidad JPA que representa una responsabilidad tributaria en la base de datos.
+ * Mapea la tabla "tax_liability".
+ */
 @Entity
 @Getter
 @Setter
@@ -10,10 +14,17 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Table(name="tax_liability")
-public class TaxLiabilityEntity { // Responsabilidad tributaria
+public class TaxLiabilityEntity {
+
+    /**
+     * Identificador único de la responsabilidad tributaria.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Nombre o descripción de la responsabilidad tributaria.
+     */
     private String name;
 }
