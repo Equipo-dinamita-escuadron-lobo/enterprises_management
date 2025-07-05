@@ -3,6 +3,7 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.TaxLiabilityResponse;
@@ -11,5 +12,7 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 @Mapper
 public interface ITaxLiabilityRestMapper {
     List<TaxLiabilityResponse> toDomain(List<TaxLiability> taxLiabilities);
+  
+    @Mapping( target = "taxLiabilitys", ignore = true)
     TaxLiabilityResponse toResponse(TaxLiability taxLiability);
 }

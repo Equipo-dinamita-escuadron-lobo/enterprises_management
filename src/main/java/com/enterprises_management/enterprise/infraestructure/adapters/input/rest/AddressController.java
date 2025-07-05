@@ -29,7 +29,7 @@ import lombok.AllArgsConstructor;
  * Controlador REST para gestionar las operaciones relacionadas con direcciones.
  * Proporciona endpoints para obtener información de departamentos y ciudades.
  */
-@RequestMapping("/api/address")
+@RequestMapping("/api/enterprises/address")
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
