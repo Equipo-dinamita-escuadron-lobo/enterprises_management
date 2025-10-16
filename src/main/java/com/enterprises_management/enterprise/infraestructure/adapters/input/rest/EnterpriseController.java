@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -258,6 +259,20 @@ public class EnterpriseController {
     }
 
     /**
+     * Elimina (soft delete) una empresa por su ID marcándola como INACTIVE.
+     * Compatible con el frontend que llama DELETE /api/enterprises/enterprise/{id}
+     */
+    @DeleteMapping("/enterprise/{id}")
+    public ResponseEntity<Void> deleteEnterprise(@PathVariable("id") UUID id) {
+        Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
+        if (enterprise == null) {
+            return ResponseEntity.notFound().build();
+        }
+        enterpriseUpdateManagerPort.updateEnterpriseStatus(id, StateEnum.INACTIVE);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * Crea un tercero a partir del contenido de un PDF del RUT.
      *
      * @param file el archivo PDF del RUT
@@ -279,4 +294,6 @@ public class EnterpriseController {
             return ResponseEntity.status(500).body(null);
         }
     }
+
+    
 }
