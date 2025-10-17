@@ -272,6 +272,16 @@ public class EnterpriseController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/enterprise/activate/{id}")
+    public ResponseEntity<Void> activateEnterprise(@PathVariable("id") UUID id) {
+        Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
+        if (enterprise == null) {
+            return ResponseEntity.notFound().build();
+        }
+        enterpriseUpdateManagerPort.updateEnterpriseStatus(id, StateEnum.ACTIVE);
+        return ResponseEntity.noContent().build();
+    }
+
     /**
      * Crea un tercero a partir del contenido de un PDF del RUT.
      *
