@@ -44,4 +44,10 @@ public class EnterpriseUpdateService implements IEnterpriseUpdateManagerPort {
         enterpriseUpdateOutputPort.updateEnterpriseStatus(id, state);
     }
     
+    /** {@inheritDoc} */
+    @Override
+    public void deleteEnterprise(UUID id) {
+        enterpriseUpdateOutputPort.deleteEnterprise(id);
+    }
+    
 }

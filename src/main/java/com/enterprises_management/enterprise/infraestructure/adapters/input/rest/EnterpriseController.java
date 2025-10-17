@@ -295,5 +295,33 @@ public class EnterpriseController {
         }
     }
 
+    /**
+     * Elimina permanentemente una empresa de la base de datos (hard delete).
+     * Esta operación no se puede deshacer.
+     *
+     * @param id el identificador de la empresa a eliminar
+     * @return la respuesta de la operación
+     */
+    @Operation(summary = "Eliminar permanentemente una empresa", description = "Elimina completamente una empresa de la base de datos. Esta operación no se puede deshacer.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Empresa eliminada permanentemente"),
+            @ApiResponse(responseCode = "404", description = "Empresa no encontrada"),
+            @ApiResponse(responseCode = "500", description = "Error interno al eliminar la empresa")
+    })
+    @DeleteMapping("/enterprise/hard/{id}")
+    public ResponseEntity<Void> deleteEnterpriseHard(@PathVariable("id") UUID id) {
+        Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
+        if (enterprise == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        try {
+            enterpriseUpdateManagerPort.deleteEnterprise(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
     
 }

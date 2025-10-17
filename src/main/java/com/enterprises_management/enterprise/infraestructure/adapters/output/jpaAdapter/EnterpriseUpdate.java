@@ -88,4 +88,15 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
 
         enterpriseRepository.save(enterpriseEntity);
     }
+
+    /**
+     * Elimina permanentemente una empresa por su ID.
+     */
+    @Override
+    public void deleteEnterprise(UUID id) {
+        if (!enterpriseRepository.existsById(id)) {
+            throw new RuntimeException("Enterprise not found");
+        }
+        enterpriseRepository.deleteById(id);
+    }
 }

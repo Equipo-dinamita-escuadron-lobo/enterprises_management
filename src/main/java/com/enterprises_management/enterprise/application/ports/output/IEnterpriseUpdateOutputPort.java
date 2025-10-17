@@ -33,4 +33,11 @@ public interface IEnterpriseUpdateOutputPort {
      * @see StateEnum
      */
     void updateEnterpriseStatus(UUID id, StateEnum state);
+
+    /**
+     * Elimina permanentemente una empresa por su identificador.
+     *
+     * @param id UUID identificador único de la empresa a eliminar
+     */
+    void deleteEnterprise(UUID id);
 }
