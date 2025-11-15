@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.service.annotation.PatchExchange;
 
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseCreateMannegerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseSearchManagerPort;
@@ -29,11 +31,13 @@ import com.enterprises_management.enterprise.application.ports.output.PdfRUTCont
 import com.enterprises_management.enterprise.application.ports.services.PdfRUTService;
 import com.enterprises_management.enterprise.application.ports.input.ITaxPayerTypeManagerPort;
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
+import com.enterprises_management.enterprise.domain.enums.InventoryConfigurationTypeEnum;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.domain.models.TaxPayerType;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.request.EnterpriseCreateRequest;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.request.UpdateInventoryConfigRequest;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseByIdResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseCreateResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.TaxLiabilityResponse;
@@ -279,6 +283,17 @@ public class EnterpriseController {
             return ResponseEntity.notFound().build();
         }
         enterpriseUpdateManagerPort.updateEnterpriseStatus(id, StateEnum.ACTIVE);
+        return ResponseEntity.noContent().build();
+    }
+    @PatchMapping("/inventory-config/{id}")
+    public ResponseEntity<Void> inventoryConfigurationType(@PathVariable("id") UUID id,
+                            @Valid @RequestBody UpdateInventoryConfigRequest request){
+
+        Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
+        if (enterprise == null) {
+            return ResponseEntity.notFound().build();
+        }
+        enterpriseUpdateManagerPort.updateEnterpriseInventoryConfiguration(id, request.getInventoryConfigType());
         return ResponseEntity.noContent().build();
     }
 

@@ -2,6 +2,7 @@ package com.enterprises_management.enterprise.application.ports.input;
 
 import java.util.UUID;
 
+import com.enterprises_management.enterprise.domain.enums.InventoryConfigurationTypeEnum;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 
@@ -33,6 +34,10 @@ public interface IEnterpriseUpdateManagerPort {
      * @see StateEnum
      */
     void updateEnterpriseStatus(UUID id, StateEnum state);
+
+
+    void updateEnterpriseInventoryConfiguration(UUID id, InventoryConfigurationTypeEnum inventoryConfigurationType);
+
 
     /**
      * Elimina permanentemente una empresa por su identificador.

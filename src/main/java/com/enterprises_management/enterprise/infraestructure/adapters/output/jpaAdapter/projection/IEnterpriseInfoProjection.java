@@ -2,6 +2,8 @@ package com.enterprises_management.enterprise.infraestructure.adapters.output.jp
 
 import java.util.UUID;
 
+import com.enterprises_management.enterprise.domain.enums.InventoryConfigurationTypeEnum;
+
 /**
  * Proyección de JPA para obtener información básica de una empresa.
  * Define los métodos para acceder a los campos seleccionados de la entidad Enterprise.
@@ -35,4 +37,6 @@ public interface IEnterpriseInfoProjection {
      * @return el logo de la empresa
      */
     String getLogo();
+
+    InventoryConfigurationTypeEnum getInventoryConfigurationType();
 }

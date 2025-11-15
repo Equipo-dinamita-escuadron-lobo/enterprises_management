@@ -3,6 +3,7 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 import java.util.List;
 import java.util.UUID;
 
+import com.enterprises_management.enterprise.domain.enums.InventoryConfigurationTypeEnum;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.EnterpriseType;
 import com.enterprises_management.enterprise.domain.models.PersonType;
@@ -76,6 +77,12 @@ public class EnterpriseByIdResponse {
      * Estado actual de la empresa.
      */
     private StateEnum state;
+
+    /**
+     * configuración de inventario(PEPS, Promedio Ponderado) empresa.
+    */
+    private InventoryConfigurationTypeEnum inventoryConfigurationType;
+
 
     /**
      * Código de la actividad principal.

@@ -42,6 +42,7 @@ public interface IEnterpriseSearchMapper {
                         .name(enterprise.getName())
                         .nit(enterprise.getNit())
                         .logo(enterprise.getLogo())
+                        .inventoryConfigurationType(enterprise.getInventoryConfigurationType())
                         .build();
                     return enterpriseInfoDto;
                 })
@@ -69,6 +70,8 @@ public interface IEnterpriseSearchMapper {
             .email(enterpriseEntity.getEmail())
             .logo(enterpriseEntity.getLogo())
             .state(enterpriseEntity.getState())
+            .inventoryConfigurationType(enterpriseEntity.getInventoryConfigurationType())
+            .inventoryConfigurationType(enterpriseEntity.getInventoryConfigurationType())
             .mainActivity(enterpriseEntity.getMainActivity())
             .secondaryActivity(enterpriseEntity.getSecondaryActivity())
             .taxLiabilities(

@@ -20,7 +20,7 @@ public interface IEnterpriseRepository extends JpaRepository<EnterpriseEntity, U
      *
      * @return lista de proyecciones con información básica de empresas activas
      */
-    @Query("SELECT e.id AS id, e.name AS name, e.nit AS nit, e.logo AS logo, e.state AS state FROM EnterpriseEntity e WHERE e.state = 0")
+    @Query("SELECT e.id AS id, e.name AS name, e.nit AS nit, e.logo AS logo, e.state AS state, e.inventoryConfigurationType AS inventoryConfigurationType FROM EnterpriseEntity e WHERE e.state = 0")
     List<IEnterpriseInfoProjection> findEnterpriseInfo();
 
     /**
@@ -36,6 +36,6 @@ public interface IEnterpriseRepository extends JpaRepository<EnterpriseEntity, U
      *
      * @return lista de proyecciones con información básica de empresas inactivas
      */
-    @Query("SELECT e.id AS id, e.name AS name, e.nit AS nit, e.logo AS logo, e.state AS state FROM EnterpriseEntity e WHERE e.state = 1")
+    @Query("SELECT e.id AS id, e.name AS name, e.nit AS nit, e.logo AS logo, e.state AS state, e.inventoryConfigurationType AS inventoryConfigurationType FROM EnterpriseEntity e WHERE e.state = 1")
     List<IEnterpriseInfoProjection> findEnterpriseInfoInactive();
 }

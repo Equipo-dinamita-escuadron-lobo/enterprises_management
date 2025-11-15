@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.hibernate.annotations.TenantId;
 
+import com.enterprises_management.enterprise.domain.enums.InventoryConfigurationTypeEnum;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 
 /**
@@ -74,6 +75,11 @@ public class EnterpriseEntity {
      * Estado actual de la empresa.
      */
     private StateEnum state;
+    
+    /**
+     * configuración de inventario(PEPS, Promedio Ponderado) empresa.
+     */
+    private InventoryConfigurationTypeEnum inventoryConfigurationType;
 
     /**
      * Código de la actividad principal.

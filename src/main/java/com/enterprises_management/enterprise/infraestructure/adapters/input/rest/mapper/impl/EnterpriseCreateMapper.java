@@ -41,6 +41,7 @@ public class EnterpriseCreateMapper implements IEnterpriseCreateRestMapper{
         .email(enterpriseCreateResponse.getEmail())
         .logo(enterpriseCreateResponse.getLogo())
         .state(enterpriseCreateResponse.getState())
+        .inventoryConfigurationType(enterpriseCreateResponse.getInventoryConfigurationType())
         .mainActivity(enterpriseCreateResponse.getMainActivity())
         .secondaryActivity(enterpriseCreateResponse.getSecondaryActivity())
         .taxLiabilities(toTaxLiability(enterpriseCreateResponse.getTaxLiabilities()))
@@ -82,6 +83,7 @@ public class EnterpriseCreateMapper implements IEnterpriseCreateRestMapper{
         .branch(enterprise.getBranch())
         .email(enterprise.getEmail())
         .logo(enterprise.getLogo())
+        .inventoryConfigurationType(enterprise.getInventoryConfigurationType())
 
         .taxLiabilities(enterprise.getTaxLiabilities())
 

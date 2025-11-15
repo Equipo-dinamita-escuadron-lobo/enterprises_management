@@ -2,6 +2,8 @@ package com.enterprises_management.enterprise.domain.dto;
 
 import java.util.UUID;
 
+import com.enterprises_management.enterprise.domain.enums.InventoryConfigurationTypeEnum;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,4 +45,9 @@ public class EnterpriseInfoDto {
      * URL o ruta del logo de la empresa.
      */
     private String logo;
+    
+    /**
+     * configuración de inventario(PEPS, Promedio Ponderado) empresa.
+    */
+    private InventoryConfigurationTypeEnum inventoryConfigurationType;
 }

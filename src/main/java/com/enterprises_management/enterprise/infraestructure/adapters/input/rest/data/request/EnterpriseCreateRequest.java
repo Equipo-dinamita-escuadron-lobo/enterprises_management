@@ -2,6 +2,7 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 
 import java.util.List;
 
+import com.enterprises_management.enterprise.domain.enums.InventoryConfigurationTypeEnum;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.LocationDto;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.PersonTypeDto;
@@ -99,6 +100,11 @@ public class EnterpriseCreateRequest {
      */
     @Builder.Default
     private StateEnum state = StateEnum.ACTIVE;
+
+    /**
+     * tipo de configuración de inventario (PEPS,WEIGHT_AVERAGE).
+     */
+    private InventoryConfigurationTypeEnum inventoryConfigurationType;
 
     /**
      * Tipo de contribuyente.
