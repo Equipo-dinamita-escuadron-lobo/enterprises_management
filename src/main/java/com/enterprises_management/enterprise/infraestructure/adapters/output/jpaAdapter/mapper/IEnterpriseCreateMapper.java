@@ -14,6 +14,7 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 @Mapper
 public interface IEnterpriseCreateMapper {
 
+    
     /**
      * Convierte un objeto de dominio Enterprise a su entidad correspondiente.
      * Ignora el campo tenantId durante el mapeo.
@@ -23,6 +24,8 @@ public interface IEnterpriseCreateMapper {
      */
     @Mappings({@Mapping(target = "tenantId", ignore = true)})
     EnterpriseEntity toEntity(Enterprise enterprise);
+
+
 
     /**
      * Convierte una entidad EnterpriseEntity a su representación en el dominio.

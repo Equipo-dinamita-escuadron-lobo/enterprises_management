@@ -3,6 +3,7 @@ package com.enterprises_management.enterprise.domain.models;
 import java.util.List;
 import java.util.UUID;
 
+import com.enterprises_management.enterprise.domain.enums.InventoryConfigurationTypeEnum;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 
 import lombok.AllArgsConstructor;
@@ -84,6 +85,11 @@ public class Enterprise {
      * Estado actual de la empresa.
      */
     private StateEnum state;
+
+    /**
+     * configuración de inventario(PEPS, Promedio Ponderado) empresa.
+    */
+    private InventoryConfigurationTypeEnum inventoryConfigurationType;
 
     /**
      * Lista de responsabilidades fiscales de la empresa.

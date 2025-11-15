@@ -3,6 +3,7 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 import java.util.List;
 import java.util.UUID;
 
+import com.enterprises_management.enterprise.domain.enums.InventoryConfigurationTypeEnum;
 import com.enterprises_management.enterprise.domain.models.EnterpriseType;
 import com.enterprises_management.enterprise.domain.models.PersonType;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
@@ -75,6 +76,12 @@ public class EnterpriseCreateResponse {
      * Código de la actividad principal.
      */
     private Long mainActivity;
+
+    /**
+     * tipo de configuración de inventario (PEPS,WEIGHT_AVERAGE).
+     */
+    private InventoryConfigurationTypeEnum inventoryConfigurationType;
+
 
     /**
      * Código de la actividad secundaria.

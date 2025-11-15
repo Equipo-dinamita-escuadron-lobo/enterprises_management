@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseUpdateOutputPort;
+import com.enterprises_management.enterprise.domain.enums.InventoryConfigurationTypeEnum;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
@@ -88,6 +89,21 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
 
         enterpriseRepository.save(enterpriseEntity);
     }
+    @Override
+    public void updateEnterpriseInventoryConfiguration(UUID id,
+            InventoryConfigurationTypeEnum inventoryConfigurationType) {
+        
+        EnterpriseEntity enterpriseEntity = enterpriseRepository.findById(id).get();
+
+        if (enterpriseEntity == null) {
+            throw new RuntimeException("Enterprise not found");
+        }
+        enterpriseEntity.setInventoryConfigurationType(inventoryConfigurationType);
+
+        enterpriseRepository.save(enterpriseEntity);
+    
+    }
+
 
     /**
      * Elimina permanentemente una empresa por su ID.
@@ -99,4 +115,6 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
         }
         enterpriseRepository.deleteById(id);
     }
+
+    
 }

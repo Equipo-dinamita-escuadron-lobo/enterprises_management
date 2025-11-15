@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseUpdateManagerPort;
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseUpdateOutputPort;
+import com.enterprises_management.enterprise.domain.enums.InventoryConfigurationTypeEnum;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 
@@ -48,6 +49,12 @@ public class EnterpriseUpdateService implements IEnterpriseUpdateManagerPort {
     @Override
     public void deleteEnterprise(UUID id) {
         enterpriseUpdateOutputPort.deleteEnterprise(id);
+    }
+
+    @Override
+    public void updateEnterpriseInventoryConfiguration(UUID id,
+            InventoryConfigurationTypeEnum inventoryConfigurationType) {
+        enterpriseUpdateOutputPort.updateEnterpriseInventoryConfiguration(id, inventoryConfigurationType);
     }
     
 }
