@@ -20,7 +20,7 @@ import com.enterprises_management.enterprise.domain.enums.StateEnum;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name="enterprise")
+@Table(name = "enterprise")
 public class EnterpriseEntity {
 
     /**
@@ -123,4 +123,17 @@ public class EnterpriseEntity {
      */
     @TenantId
     String tenantId;
+
+    /**
+     * URL o ruta del logo de la empresa.
+     */
+    @Lob
+    @Column(name = "logo_data")
+    private byte[] logoData;
+
+    @Column(name = "logo_content_type")
+    private String logoContentType;
+
+    @Column(name = "logo_filename")
+    private String logoFilename;
 }
