@@ -258,6 +258,17 @@ public class EnterpriseController {
         return ResponseEntity.ok(enterpriseSearchMapper.toEnterpriseByIdResponse(enterprise));
     }
 
+@GetMapping("/export/{id}")
+public ResponseEntity<EnterpriseByIdResponse> exportEnterprise(@PathVariable("id") UUID id) {
+    Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
+    if (enterprise == null) {
+        return ResponseEntity.notFound().build();
+    }
+    EnterpriseByIdResponse response = enterpriseSearchMapper.toEnterpriseByIdResponse(enterprise);
+    return ResponseEntity.ok(response);
+}
+
+
     /**
      * Elimina (soft delete) una empresa por su ID marcándola como INACTIVE.
      * Compatible con el frontend que llama DELETE /api/enterprises/enterprise/{id}
