@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseCreateMannegerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseSearchManagerPort;
+import com.enterprises_management.enterprise.application.ports.input.IEnterpriseExportManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseUpdateManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.ILocationMangerPort;
 import com.enterprises_management.enterprise.application.ports.input.IPersonTypeManagerPort;
@@ -31,17 +32,20 @@ import com.enterprises_management.enterprise.application.ports.input.ITaxPayerTy
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
+import com.enterprises_management.enterprise.domain.models.EnterpriseExport;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.domain.models.TaxPayerType;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.request.EnterpriseCreateRequest;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseByIdResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseCreateResponse;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseExportByIdResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.TaxLiabilityResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.TaxPayerTypeResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseCreateRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseSearchRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxPayerTypeRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseExportRestMapper;
 import com.enterprises_management.enterprise.infraestructure.security.IJwtUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,6 +75,8 @@ public class EnterpriseController {
 
     private final IEnterpriseSearchManagerPort enterpriseSearchManagerPort;
 
+    private final IEnterpriseExportManagerPort enterpriseExportManagerPort;
+
     private final IEnterpriseCreateMannegerPort enterpriseCreateMannegerPort;
     private final IEnterpriseCreateRestMapper enterpriseCreateMapper;
 
@@ -79,6 +85,8 @@ public class EnterpriseController {
 
     private final IEnterpriseUpdateManagerPort enterpriseUpdateManagerPort;
     private final IEnterpriseSearchRestMapper enterpriseSearchMapper;
+
+    private final IEnterpriseExportRestMapper enterpriseExportRestMapper;
 
     private final IJwtUtils jwtUtils;
 
@@ -258,15 +266,15 @@ public class EnterpriseController {
         return ResponseEntity.ok(enterpriseSearchMapper.toEnterpriseByIdResponse(enterprise));
     }
 
-@GetMapping("/export/{id}")
-public ResponseEntity<EnterpriseByIdResponse> exportEnterprise(@PathVariable("id") UUID id) {
-    Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
-    if (enterprise == null) {
-        return ResponseEntity.notFound().build();
+    @GetMapping("/export/{id}")
+    public ResponseEntity<EnterpriseExportByIdResponse> exportEnterpriseByID(@PathVariable("id") UUID id) {
+        EnterpriseExport enterpriseExport = enterpriseExportManagerPort.exportEnterpriseById(id);
+        if (enterpriseExport == null) {
+            return ResponseEntity.notFound().build();
+        }
+        EnterpriseExportByIdResponse response = enterpriseExportRestMapper.toResponse(enterpriseExport);
+        return ResponseEntity.ok(response);
     }
-    EnterpriseByIdResponse response = enterpriseSearchMapper.toEnterpriseByIdResponse(enterprise);
-    return ResponseEntity.ok(response);
-}
 
 
     /**
