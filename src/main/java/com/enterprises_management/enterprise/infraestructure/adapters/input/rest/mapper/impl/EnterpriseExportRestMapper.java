@@ -16,6 +16,7 @@ public class EnterpriseExportRestMapper implements IEnterpriseExportRestMapper {
                 .id(export.getId())
                 .idUser(export.getIdUser())
                 .enterprise(export.getEnterprise())
+                .thirds(export.getThirds())
                 .build();
     }
 }

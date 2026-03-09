@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseExportManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseSearchManagerPort;
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseSearchOutputPort;
+import com.enterprises_management.enterprise.application.ports.output.IThirdsApiOutputPort;
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.domain.models.EnterpriseExport;
+import com.enterprises_management.enterprise.domain.models.Third;
 
 import lombok.AllArgsConstructor;
 
@@ -35,6 +37,11 @@ public class EnterpriseExportService implements IEnterpriseExportManagerPort {
     private final IEnterpriseSearchOutputPort enterpriseSearchOutputPort;
 
     /**
+     * Puerto de salida para consulta de terceros.
+     */
+    private final IThirdsApiOutputPort thirdsApiOutputPort;
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -43,7 +50,11 @@ public class EnterpriseExportService implements IEnterpriseExportManagerPort {
         if (enterprise == null) {
             return null;
         }
-        return new EnterpriseExport(id, enterprise.getIdUser(), enterprise);
+        // Llamada a la API de terceros
+        String thirds = thirdsApiOutputPort.getThirdsByEnterprise(id, 0, 10, "names", "asc");
+
+        // Aquí puedes adaptar EnterpriseExport para incluir la lista de terceros si lo deseas
+        return new EnterpriseExport(id, enterprise.getIdUser(), enterprise , thirds);
     }
 
 }

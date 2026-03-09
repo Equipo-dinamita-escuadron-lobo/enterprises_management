@@ -44,4 +44,9 @@ public class EnterpriseExportByIdResponse {
      * Información completa de la empresa.
      */
     private Enterprise enterprise;
+
+    /**
+     * Información de terceros asociados a la empresa.
+     */
+    private String thirds;
 }

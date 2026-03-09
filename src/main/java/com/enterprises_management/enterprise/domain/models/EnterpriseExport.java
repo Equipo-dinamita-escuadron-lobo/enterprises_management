@@ -25,5 +25,6 @@ public class EnterpriseExport {
     private UUID id;
     private String idUser;
     private Enterprise enterprise;
+    private String thirds;
 }
 
