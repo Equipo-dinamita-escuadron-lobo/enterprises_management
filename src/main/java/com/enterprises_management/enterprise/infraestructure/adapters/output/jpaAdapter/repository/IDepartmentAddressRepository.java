@@ -3,6 +3,8 @@ package com.enterprises_management.enterprise.infraestructure.adapters.output.jp
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.DepartmentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * Repositorio JPA para la entidad DepartmentEntity.
  * Proporciona métodos para realizar operaciones CRUD en la base de datos.
@@ -10,10 +12,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface IDepartmentAddressRepository extends JpaRepository<DepartmentEntity,Long> {
     
     /**
-     * Encuentra un departamento por su identificador.
+     * Encuentra todos los departamentos que pertenecen a un país.
      *
-     * @param id el identificador del departamento
-     * @return la entidad DepartmentEntity correspondiente
+     * @param countryId el identificador del país
+     * @return lista de entidades DepartmentEntity
      */
-    DepartmentEntity findAllById(Long id);
+    List<DepartmentEntity> findByCountry_Id(Long countryId);
 }

@@ -1,7 +1,11 @@
 package com.enterprises_management.enterprise.application.ports.services;
 
 import com.enterprises_management.enterprise.application.ports.input.IAddressSearchManagerPort;
-import com.enterprises_management.enterprise.application.ports.output.IAddressSearchOutputPort;
+import com.enterprises_management.enterprise.application.ports.output.ICityRepository;
+import com.enterprises_management.enterprise.application.ports.output.ICountryRepository;
+import com.enterprises_management.enterprise.application.ports.output.IDepartmentRepository;
+import com.enterprises_management.enterprise.domain.models.City;
+import com.enterprises_management.enterprise.domain.models.Country;
 import com.enterprises_management.enterprise.domain.models.Department;
 import lombok.AllArgsConstructor;
 
@@ -11,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Servicio que implementa las operaciones de búsqueda de direcciones.
- * Gestiona la lógica de negocio para la obtención de departamentos y sus ciudades asociadas,
+ * Gestiona la lógica de negocio para la obtención de países, departamentos y ciudades,
  * actuando como intermediario entre los puertos de entrada y salida.
  *
  * @author CONTAPP
@@ -22,24 +26,31 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class AddressSearchService implements IAddressSearchManagerPort {
 
-    /**
-     * Puerto de salida para operaciones de búsqueda de direcciones.
-     */
-    private final IAddressSearchOutputPort addressSearchOutputPort;
+    private final ICountryRepository countryRepository;
+    private final IDepartmentRepository departmentRepository;
+    private final ICityRepository cityRepository;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Department> getAllDepartment() {
-        return addressSearchOutputPort.getAllDepartment();
+    public List<Country> getAllCountries() {
+        return countryRepository.findAll();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Department getAllCities(Long idDepartment) {
-        return addressSearchOutputPort.getAllCities(idDepartment);
+    public List<Department> getAllDepartments(Long idCountry) {
+        return departmentRepository.findByCountryId(idCountry);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<City> getAllCities(Long idDepartment) {
+        return cityRepository.findByDepartmentId(idDepartment);
     }
 }
