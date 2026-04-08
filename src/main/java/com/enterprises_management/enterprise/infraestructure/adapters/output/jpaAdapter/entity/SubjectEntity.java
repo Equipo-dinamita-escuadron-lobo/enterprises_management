@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.UUID;
 
-import org.hibernate.annotations.TenantId;
-
 /**
  * Entidad JPA que representa una materia (Subject).
  * Mapea la tabla "subjects" en la base de datos.
@@ -39,10 +37,4 @@ public class SubjectEntity {
      */
     @Column(nullable = false)
     private String name;
-
-    /**
-     * Identificador del inquilino (tenant) para multi-tenancy.
-     */
-    @TenantId
-    String tenantId;
 }
