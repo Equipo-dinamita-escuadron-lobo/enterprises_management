@@ -11,7 +11,7 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
  * Interfaz de mapeo para convertir entre entidades de empresa y su representación en el dominio.
  * Utiliza MapStruct para generar automáticamente las implementaciones de mapeo.
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface IEnterpriseCreateMapper {
 
     /**

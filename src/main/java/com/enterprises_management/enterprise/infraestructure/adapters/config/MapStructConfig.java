@@ -51,9 +51,6 @@ public class MapStructConfig {
     IDepartmentRestMapper mapStructMapperDepartmetRestMappper(){return Mappers.getMapper( IDepartmentRestMapper.class); }
 
     @Bean
-    IEnterpriseCreateMapper mapStructMapperEnterpriseCreate(){return Mappers.getMapper(IEnterpriseCreateMapper.class);}
-
-    @Bean
     ILocationMapper mapStructMapperLocation(){return Mappers.getMapper(ILocationMapper.class);}
 
     @Bean

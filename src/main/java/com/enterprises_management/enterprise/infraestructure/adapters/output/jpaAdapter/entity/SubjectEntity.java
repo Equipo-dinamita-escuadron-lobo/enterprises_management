@@ -1,7 +1,10 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 import org.hibernate.annotations.TenantId;
@@ -13,6 +16,9 @@ import org.hibernate.annotations.TenantId;
 @Entity
 @Table(name = "subjects")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SubjectEntity {
 
     /**
