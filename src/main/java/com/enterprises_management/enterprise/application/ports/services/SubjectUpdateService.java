@@ -7,6 +7,8 @@ import com.enterprises_management.enterprise.application.ports.output.ISubjectUp
 import com.enterprises_management.enterprise.domain.models.Subject;
 
 import lombok.AllArgsConstructor;
+import java.util.UUID;
+
 
 /**
  * Servicio que implementa las operaciones de actualización de materias.
@@ -30,7 +32,7 @@ public class SubjectUpdateService implements ISubjectUpdateManagerPort {
      * {@inheritDoc}
      */
     @Override
-    public Subject updateSubject(String code, Subject subject) {
-        return subjectUpdateOutputPort.update(code, subject);
+    public Subject updateSubject(UUID id, Subject subject) {
+        return subjectUpdateOutputPort.update(id, subject);
     }
 }

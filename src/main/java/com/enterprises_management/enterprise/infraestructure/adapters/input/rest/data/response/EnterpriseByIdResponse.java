@@ -5,9 +5,11 @@ import java.util.UUID;
 
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.EnterpriseType;
+import com.enterprises_management.enterprise.domain.models.InventoryMethod;
 import com.enterprises_management.enterprise.domain.models.PersonType;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.domain.models.TaxPayerType;
+import com.enterprises_management.enterprise.domain.models.Subject;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.LocationResponseDto;
 
 import lombok.AllArgsConstructor;
@@ -31,7 +33,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class EnterpriseByIdResponse {
-    
+
     /**
      * Identificador único de la empresa.
      */
@@ -88,6 +90,11 @@ public class EnterpriseByIdResponse {
     private Long secondaryActivity;
 
     /**
+     * métodos de inventario en la empresa.
+     */
+    private String inventoryMethods;
+    
+    /**
      * Lista de responsabilidades fiscales de la empresa.
      */
     List<TaxLiability> taxLiabilities;
@@ -111,4 +118,10 @@ public class EnterpriseByIdResponse {
      * Ubicación de la empresa.
      */
     LocationResponseDto location;
+
+    /**
+     * Lista de materias disponible en la empresa.
+     */
+    List<Subject> subjects;
+
 }

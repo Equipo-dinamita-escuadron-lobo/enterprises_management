@@ -26,6 +26,8 @@ import com.enterprises_management.enterprise.infraestructure.adapters.input.rest
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import java.util.UUID;
+
 
 /**
  * Controlador REST para la gestión de materias.
@@ -64,12 +66,12 @@ public class SubjectController {
     /**
      * Obtiene una materia por su código.
      *
-     * @param code el código de la materia
+     * @param id el ID de la materia
      * @return Respuesta de la materia
      */
-    @GetMapping("/{code}")
-    public ResponseEntity<SubjectResponse> getSubjectByCode(@PathVariable String code) {
-        Subject subject = subjectSearchManagerPort.getSubjectByCode(code);
+    @GetMapping("/{id}")
+    public ResponseEntity<SubjectResponse> getSubjectByCode(@PathVariable UUID id) {
+        Subject subject = subjectSearchManagerPort.getSubjectByCode(id);
         if (subject == null) {
             return ResponseEntity.notFound().build();
         }
@@ -96,11 +98,11 @@ public class SubjectController {
      * @param request la solicitud de actualización
      * @return Respuesta de la materia actualizada
      */
-    @PutMapping("/{code}")
-    public ResponseEntity<SubjectCreateResponse> updateSubject(@PathVariable String code, @Valid @RequestBody SubjectCreateRequest request) {
+    @PutMapping("/{id}")
+    public ResponseEntity<SubjectCreateResponse> updateSubject(@PathVariable UUID id, @Valid @RequestBody SubjectCreateRequest request) {
         Subject subject = subjectRestMapper.toDomain(request);
-        subject.setCode(code); 
-        subject = subjectUpdateManagerPort.updateSubject(code, subject);
+        subject.setId(id); 
+        subject = subjectUpdateManagerPort.updateSubject(id, subject);
         if (subject == null) {
             return ResponseEntity.notFound().build();
         }
@@ -113,9 +115,9 @@ public class SubjectController {
      * @param code el código de la materia a eliminar
      * @return Respuesta vacía
      */
-    @DeleteMapping("/{code}")
-    public ResponseEntity<Void> deleteSubject(@PathVariable String code) {
-        subjectDeleteManagerPort.deleteSubject(code);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSubject(@PathVariable UUID id) {
+        subjectDeleteManagerPort.deleteSubject(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,5 +1,7 @@
 package com.enterprises_management.enterprise.application.ports.output;
 
+import java.util.UUID;
+
 /**
  * Puerto de salida para la eliminación de materias.
  * Define las operaciones necesarias para eliminar materias
@@ -14,7 +16,7 @@ public interface ISubjectDeleteOutputPort {
     /**
      * Elimina una materia por su código.
      *
-     * @param code el código de la materia a eliminar
+     * @param id el código de la materia a eliminar
      */
-    void delete(String code);
+    void delete(UUID id);
 }

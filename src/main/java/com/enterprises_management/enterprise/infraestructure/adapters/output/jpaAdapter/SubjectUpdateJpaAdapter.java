@@ -9,6 +9,7 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.ISubjectRepository;
 
 import lombok.AllArgsConstructor;
+import java.util.UUID;
 
 /**
  * Adaptador para la actualización de entidades Subject usando JPA.
@@ -27,14 +28,14 @@ public class SubjectUpdateJpaAdapter implements ISubjectUpdateOutputPort {
     /**
      * Actualiza una entidad Subject existente.
      *
-     * @param code el código de la materia a actualizar
+     * @param id el ID de la materia a actualizar
      * @param subject el modelo de dominio con la nueva información
      * @return el modelo de dominio de la Materia actualizada, o null si no existe
      */
     @Override
-    public Subject update(String code, Subject subject) {
-        // Busca la entidad existente por código
-        SubjectEntity existingEntity = subjectRepository.findByCode(code).orElse(null);
+    public Subject update(UUID id, Subject subject) {
+        // Busca la entidad existente por ID
+        SubjectEntity existingEntity = subjectRepository.findById(id).orElse(null);
         if (existingEntity == null) {
             return null;
         }

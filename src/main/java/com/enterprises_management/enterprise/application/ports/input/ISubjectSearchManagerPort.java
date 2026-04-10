@@ -1,6 +1,7 @@
 package com.enterprises_management.enterprise.application.ports.input;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.enterprises_management.enterprise.domain.models.Subject;
 
@@ -25,9 +26,9 @@ public interface ISubjectSearchManagerPort {
     /**
      * Obtiene una materia por su código.
      *
-     * @param code el código de la materia
+     * @param id el código de la materia
      * @return Subject Objeto Subject correspondiente al código, o null si no existe
      * @see Subject
      */
-    Subject getSubjectByCode(String code);
+    Subject getSubjectByCode(UUID id);
 }

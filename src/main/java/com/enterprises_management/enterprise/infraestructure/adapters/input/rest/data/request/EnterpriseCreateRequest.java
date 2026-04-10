@@ -1,6 +1,7 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.request;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.LocationDto;
@@ -19,7 +20,8 @@ import lombok.Setter;
 
 /**
  * DTO que representa la solicitud de creación de una empresa.
- * Contiene todos los campos necesarios para crear una nueva empresa en el sistema,
+ * Contiene todos los campos necesarios para crear una nueva empresa en el
+ * sistema,
  * incluyendo validaciones para asegurar la integridad de los datos.
  *
  * @author CONTAPP
@@ -54,6 +56,7 @@ public class EnterpriseCreateRequest {
     /**
      * Dígito de verificación del NIT.
      */
+    @NotBlank(message = "El Digito de Identificación es requerido")
     private String DV;
 
     /**
@@ -65,6 +68,7 @@ public class EnterpriseCreateRequest {
     /**
      * Sector o rama de actividad de la empresa.
      */
+    @NotBlank(message = "El sector es requerido")
     private String branch;
 
     /**
@@ -82,11 +86,12 @@ public class EnterpriseCreateRequest {
     /**
      * Código de la actividad principal.
      */
+    @NotNull(message = "El código de la actividad principal es requerido")
+    @Min(value = 1, message = "El código de la actividad principal no es válido")
     private Long mainActivity;
 
-    /**
-     * Código de la actividad secundaria.
-     */
+    @NotNull(message = "El código de la actividad secundaria es requerido")
+    @Min(value = 1, message = "El código de la actividad secundaria no es válido")
     private Long secondaryActivity;
 
     /**
@@ -125,4 +130,14 @@ public class EnterpriseCreateRequest {
      */
     @NotNull(message = "La ubicación es requerida")
     LocationDto location;
+
+    /**
+     * Lista de materias disponibles en la empresa.
+     */
+    List<UUID> subjects;
+
+    /**
+     * Lista de métodos de inventario disponibles en la empresa.
+     */
+    private String inventoryMethods;
 }

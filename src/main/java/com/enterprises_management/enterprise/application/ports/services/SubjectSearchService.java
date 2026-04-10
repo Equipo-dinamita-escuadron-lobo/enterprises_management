@@ -9,6 +9,8 @@ import com.enterprises_management.enterprise.application.ports.output.ISubjectSe
 import com.enterprises_management.enterprise.domain.models.Subject;
 
 import lombok.AllArgsConstructor;
+import java.util.UUID;
+
 
 /**
  * Servicio que implementa las operaciones de búsqueda de materias.
@@ -40,7 +42,7 @@ public class SubjectSearchService implements ISubjectSearchManagerPort {
      * {@inheritDoc}
      */
     @Override
-    public Subject getSubjectByCode(String code) {
-        return subjectSearchOutputPort.findByCode(code);
+    public Subject getSubjectByCode(UUID id) {
+        return subjectSearchOutputPort.findByCode(id);
     }
 }

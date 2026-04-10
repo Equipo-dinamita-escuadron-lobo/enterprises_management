@@ -86,6 +86,11 @@ public class Enterprise {
     private StateEnum state;
 
     /**
+     *  métodos de inventario  en la empresa.
+     */
+    private String inventoryMethods;
+
+    /**
      * Lista de responsabilidades fiscales de la empresa.
      */
     List<TaxLiability> taxLiabilities;
@@ -109,4 +114,10 @@ public class Enterprise {
      * Ubicación física de la empresa.
      */
     Location location;
+
+    /**
+     * Lista de materias disponible en la empresa.
+     */
+    List<Subject> subjects;
+
 }

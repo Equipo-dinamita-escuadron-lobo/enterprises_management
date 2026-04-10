@@ -86,6 +86,11 @@ public class EnterpriseEntity {
     private Long secondaryActivity;
 
     /**
+     *  métodos de inventario  en la empresa.
+     */
+    private String inventoryMethods;
+
+    /**
      * Lista de responsabilidades fiscales de la empresa.
      */
     @ManyToMany
@@ -136,4 +141,10 @@ public class EnterpriseEntity {
 
     @Column(name = "logo_filename")
     private String logoFilename;
+
+    @ManyToMany
+    @JoinTable(name = "enterprise_subject", joinColumns = @JoinColumn(name = "enterprise_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
+    private List<SubjectEntity> subjects;
+
+
 }

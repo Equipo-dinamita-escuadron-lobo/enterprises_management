@@ -13,6 +13,11 @@ import lombok.NoArgsConstructor;
 public class SubjectResponse {
 
     /**
+     * Identificador único de la materia (UUID).
+     */
+    private String id;
+    
+    /**
      * Código de la materia.
      */
     private String code;

@@ -6,6 +6,7 @@ import com.enterprises_management.enterprise.application.ports.output.ISubjectDe
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.ISubjectRepository;
 
 import lombok.AllArgsConstructor;
+import java.util.UUID;
 
 /**
  * Adaptador para la eliminación de entidades Subject usando JPA.
@@ -21,10 +22,10 @@ public class SubjectDeleteJpaAdapter implements ISubjectDeleteOutputPort {
     /**
      * Elimina una entidad Subject por código.
      *
-     * @param code el código de la materia a eliminar
+     * @param id el ID de la materia a eliminar
      */
     @Override
-    public void delete(String code) {
-        subjectRepository.findByCode(code).ifPresent(subjectRepository::delete);
+    public void delete(UUID id) {
+        subjectRepository.findById(id).ifPresent(subjectRepository::delete);
     } 
 }

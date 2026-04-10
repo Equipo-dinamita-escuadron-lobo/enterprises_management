@@ -6,6 +6,7 @@ import com.enterprises_management.enterprise.application.ports.input.ISubjectDel
 import com.enterprises_management.enterprise.application.ports.output.ISubjectDeleteOutputPort;
 
 import lombok.AllArgsConstructor;
+import java.util.UUID;
 
 /**
  * Servicio que implementa las operaciones de eliminación de materias.
@@ -29,7 +30,7 @@ public class SubjectDeleteService implements ISubjectDeleteManagerPort {
      * {@inheritDoc}
      */
     @Override
-    public void deleteSubject(String code) {
-        subjectDeleteOutputPort.delete(code);
+    public void deleteSubject(UUID id) {
+        subjectDeleteOutputPort.delete(id);
     }
 }

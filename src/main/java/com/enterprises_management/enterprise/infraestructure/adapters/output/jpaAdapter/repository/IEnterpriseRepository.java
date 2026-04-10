@@ -38,4 +38,12 @@ public interface IEnterpriseRepository extends JpaRepository<EnterpriseEntity, U
      */
     @Query("SELECT e.id AS id, e.name AS name, e.nit AS nit, e.logo AS logo, e.state AS state FROM EnterpriseEntity e WHERE e.state = 1")
     List<IEnterpriseInfoProjection> findEnterpriseInfoInactive();
+
+    /**
+     * Obtiene una empresa por el código de la materia asociada.
+     *
+     * @param subjectCode el código de la materia asociada a la empresa
+     * @return la entidad de la empresa, o null si no se encuentra
+     */
+    List<EnterpriseEntity> findBySubjectsCode(String subjectCode);
 }

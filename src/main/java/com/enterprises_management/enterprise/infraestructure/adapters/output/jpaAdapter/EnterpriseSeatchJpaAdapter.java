@@ -21,11 +21,11 @@ import lombok.Data;
  */
 @Component
 @Data
-public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort{
-    
+public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort {
+
     private final IEnterpriseRepository enterpriseRepository;
     private final IEnterpriseSearchMapper enterpriseMapper;
-    
+
     /**
      * Obtiene todas las empresas.
      *
@@ -59,6 +59,17 @@ public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort{
         EnterpriseEntity enterpriseEntity = enterpriseRepository.findById(id).orElse(null);
         return enterpriseMapper.toEnterprise(enterpriseEntity);
     }
-    
+
+    /**
+     * Obtiene una empresa por el código de la materia asociada.
+     *
+     * @param subjectCode el código de la materia asociada a la empresa
+     * @return el modelo de dominio de la empresa, o null si no se encuentra
+     */
+    @Override
+    public Enterprise getEnterpriseBySubjectCode(String subjectCode) {
+        EnterpriseEntity enterpriseEntity = enterpriseRepository.findBySubjectsCode(subjectCode).get(0);
+        return enterpriseMapper.toEnterprise(enterpriseEntity);
+    }
 
 }

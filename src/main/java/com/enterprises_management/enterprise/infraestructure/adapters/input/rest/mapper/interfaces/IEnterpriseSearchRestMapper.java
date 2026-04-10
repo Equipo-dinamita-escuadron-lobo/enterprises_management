@@ -53,7 +53,12 @@ public interface IEnterpriseSearchRestMapper {
                         .build()
                     )           
                     .build()
-                )           
+                )   
+                
+                .subjects(enterprise.getSubjects())
+
+                .inventoryMethods(enterprise.getInventoryMethods())
+
                 .build();
     }
 }

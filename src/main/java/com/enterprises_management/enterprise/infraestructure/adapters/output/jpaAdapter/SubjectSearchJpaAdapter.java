@@ -13,6 +13,8 @@ import com.enterprises_management.enterprise.infraestructure.adapters.output.jpa
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.ISubjectRepository;
 
 import lombok.AllArgsConstructor;
+import java.util.UUID;
+
 
 /**
  * Adaptador para la búsqueda de entidades Subject usando JPA.
@@ -48,8 +50,8 @@ public class SubjectSearchJpaAdapter implements ISubjectSearchOutputPort {
      * @return el modelo de dominio Subject correspondiente, o null si no existe
      */
     @Override
-    public Subject findByCode(String code) {
-        Optional<SubjectEntity> entity = subjectRepository.findByCode(code);
+    public Subject findByCode(UUID id) {
+        Optional<SubjectEntity> entity = subjectRepository.findById(id);
         return entity.map(searchMapper::toModel).orElse(null);
     }
 }
