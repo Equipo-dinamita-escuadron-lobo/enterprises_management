@@ -14,11 +14,11 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${JWT_ISSUER_URI:http://localhost:8090/auth/realms/oauth2-realm}
-          jwk-set-uri: ${JWT_JWK_SET_URI:http://localhost:8090/auth/realms/oauth2-realm/protocol/openid-connect/certs}
+          issuer-uri: ${JWT_ISSUER_URI:http://contables.unicauca.edu.co:80/auth/realms/oauth2-realm}
+          jwk-set-uri: ${JWT_JWK_SET_URI:http://contables.unicauca.edu.co:80/auth/realms/oauth2-realm/protocol/openid-connect/certs}
           
 server:
-  port: ${PORT:0}
+  port: ${PORT:55877}
 
 eureka:
   instance:
@@ -31,7 +31,7 @@ eureka:
 logging:
   level:
     org:
-      Keycloak: ${KEYCLOAK_LOG_LEVEL:DEBUG}
+      Keycloak: ${KEYCLOAK_LOG_LEVEL:WARN}
 jwt:
   auth:
     converter:
@@ -40,11 +40,6 @@ jwt:
 
 
 management:
-  endpoint:
-    health:
-      probes:
-        enabled: true
-
   servlet:
     multipart:
       max-file-size: 20MB
@@ -54,3 +49,31 @@ app:
   upload:
     public-base-url: http://localhost:8080
     logo-dir: uploads/logos
+
+  # -----------------------------------------------------------------------
+  # Orquestador de copia — perfil dev (feature flag activado para desarrollo)
+  # -----------------------------------------------------------------------
+  copy:
+    orchestrator:
+      enabled: true
+      default-retries: 3
+      bootstrap-config: true
+      stub-mode: true
+      participant:
+        transport: stub
+      stub:
+        latency-ms: 100
+        failure-rate: 0
+      events:
+        amqp:
+          # false en dev local — sin RabbitMQ disponible (en K8s sobreescribir via ConfigMap)
+          enabled: false
+      security:
+        permissive-mode: true
+      backup:
+        # Directorio de backups para el perfil dev (REQ-BACKUP-04)
+        dir: uploads/backups
+        # Tamaño máximo — 500 MB (ADR-47)
+        max-size-bytes: 524288000
+      # Ejecución paralela de módulos dentro de una fase (H3-R3)
+      parallel-execution: true

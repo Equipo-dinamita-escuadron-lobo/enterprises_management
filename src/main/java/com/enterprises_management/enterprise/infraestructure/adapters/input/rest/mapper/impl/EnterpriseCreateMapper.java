@@ -121,6 +121,7 @@ public class EnterpriseCreateMapper implements IEnterpriseCreateRestMapper {
     }
 
     private List<TaxLiability> toTaxLiability(List<Long> taxLiabilities) {
+        if (taxLiabilities == null) return new ArrayList<>();
         List<TaxLiability> taxLiabilitiesList = new ArrayList<>();
         for (Long taxLiability : taxLiabilities) {
             taxLiabilitiesList.add(TaxLiability.builder().id(taxLiability).build());
@@ -129,6 +130,7 @@ public class EnterpriseCreateMapper implements IEnterpriseCreateRestMapper {
     }
 
     private List<Subject> toSubject(List<UUID> subjects) {
+        if (subjects == null) return new ArrayList<>();
         List<Subject> subjectsList = new ArrayList<>();
         for (UUID subject : subjects) {
             subjectsList.add(

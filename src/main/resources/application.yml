@@ -13,11 +13,62 @@ spring:
   sql:
     init:
       mode: always
+      schema-locations:
+        - classpath:schema-copy.sql
 
 springdoc:
     swagger-ui:
       path: ${SWAGGER_PATH:/swagger-ui.html}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: enterprises-management
+
 server:
   error:
     include-stacktrace: never
+
+# -----------------------------------------------------------------------
+# Orquestador de copia — valores base seguros (feature flag desactivado)
+# -----------------------------------------------------------------------
+app:
+  copy:
+    orchestrator:
+      enabled: false
+      default-retries: 3
+      bootstrap-config: false
+      stub-mode: true
+      stub:
+        latency-ms: 0
+        failure-rate: 0
+      participant:
+        transport: http
+        timeout-ms: 30000
+      events:
+        amqp:
+          enabled: true
+      security:
+        permissive-mode: false
+      participants:
+        enabled:
+          # Feature flag para activar/desactivar participante PRODUCTS sin redeploy
+          # Leído por PhaseConfigBootstrap para registrar/omitir PRODUCTS en Fase 2
+          # REQ-BOOTSTRAP-01, Task 3.13
+          products: true
+          # Feature flag para activar/desactivar participante THIRDS sin redeploy
+          # Activado en Fase 4 (Lote 3) una vez que thirds-management implementó el bounded context copy
+          thirds: true
+      backup:
+        # Directorio donde se almacenan los ZIPs de backup (REQ-BACKUP-04)
+        dir: uploads/backups
+        # Tamaño máximo aceptado al servir un ZIP — 500 MB (ADR-47)
+        max-size-bytes: 524288000

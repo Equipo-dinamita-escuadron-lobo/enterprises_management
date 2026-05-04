@@ -20,7 +20,7 @@ public class InventoryMethodEntity {
      * Identificador único del método de inventario.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     /**
