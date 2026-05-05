@@ -45,6 +45,19 @@ management:
       max-file-size: 20MB
       max-request-size: 20MB
 
+resend:
+  key: ${RESEND_KEY:re_NU4GzgUQ_AaRixR5UPTzvKv11pmJozF3g}
+  from: ${RESEND_FROM:onboarding@resend.dev}
+
+keycloak:
+  admin:
+    server-url: ${KEYCLOAK_SERVER_URL:http://contables.unicauca.edu.co/auth}
+    realm: ${KEYCLOAK_REALM_NAME:oauth2-realm}
+    master-realm: ${KEYCLOAK_REALM_MASTER:master}
+    client-id: ${KEYCLOAK_ADMIN:admin-cli}
+    username: ${KEYCLOAK_USER_CONSOLE:contapp-uc@unicauca.edu.co}
+    password: ${KEYCLOAK_PASSWORD:kPiP4WSxSH9Gdq}
+
 app:
   upload:
     public-base-url: http://localhost:8080

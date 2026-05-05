@@ -87,6 +87,19 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     public String getId() {
         return (String) jwtToken.getClaims().get("sub");
     }
-  
+
+    @Override
+    public String getEmail() {
+        if (jwtToken == null) return null;
+        return (String) jwtToken.getClaims().get("email");
+    }
+
+    @Override
+    public String getName() {
+        if (jwtToken == null) return null;
+        Object name = jwtToken.getClaims().get("name");
+        if (name != null) return (String) name;
+        return (String) jwtToken.getClaims().get("preferred_username");
+    }
 }
 
