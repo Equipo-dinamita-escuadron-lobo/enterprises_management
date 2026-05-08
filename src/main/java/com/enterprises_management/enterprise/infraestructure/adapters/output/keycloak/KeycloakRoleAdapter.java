@@ -96,7 +96,11 @@ public class KeycloakRoleAdapter implements IKeycloakRolePort {
                 .block();
 
         if (users == null || users.isEmpty()) return null;
-        return (String) users.get(0).get("id");
+        return users.stream()
+                .filter(u -> email.equalsIgnoreCase((String) u.get("email")))
+                .map(u -> (String) u.get("id"))
+                .findFirst()
+                .orElse(null);
     }
 
     private String getRoleId(String roleName, String token) {

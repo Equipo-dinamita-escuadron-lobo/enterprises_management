@@ -36,7 +36,7 @@ public class ShareEnterpriseService implements IShareEnterpriseInputPort {
 
         List<String> notified = new ArrayList<>();
         List<String> rejected = new ArrayList<>();
-        List<String> pendingRegistration = new ArrayList<>();
+        List<String> notRegistered = new ArrayList<>();
 
         for (String email : emails) {
             if (email == null || !email.toLowerCase().endsWith(ALLOWED_DOMAIN)) {
@@ -44,9 +44,10 @@ public class ShareEnterpriseService implements IShareEnterpriseInputPort {
                 continue;
             }
             try {
-                boolean roleAssigned = keycloakRolePort.assignRoleByEmail(email, role);
-                if (!roleAssigned) {
-                    pendingRegistration.add(email);
+                boolean userExists = keycloakRolePort.assignRoleByEmail(email, role);
+                if (!userExists) {
+                    notRegistered.add(email);
+                    continue;
                 }
                 emailPort.sendShareNotification(email, enterpriseName, role, senderName, senderEmail);
                 notified.add(email);
@@ -55,6 +56,6 @@ public class ShareEnterpriseService implements IShareEnterpriseInputPort {
             }
         }
 
-        return new ShareResult(notified, rejected, pendingRegistration);
+        return new ShareResult(notified, rejected, notRegistered);
     }
 }

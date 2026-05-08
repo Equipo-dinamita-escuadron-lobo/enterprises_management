@@ -2,4 +2,4 @@ package com.enterprises_management.enterprise.infraestructure.adapters.input.res
 
 import java.util.List;
 
-public record ShareEnterpriseResponse(List<String> notified, List<String> rejected, List<String> pendingRegistration) {}
+public record ShareEnterpriseResponse(List<String> notified, List<String> rejected, List<String> notRegistered) {}

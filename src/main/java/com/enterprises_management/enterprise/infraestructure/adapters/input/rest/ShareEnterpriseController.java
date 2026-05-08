@@ -37,6 +37,6 @@ public class ShareEnterpriseController {
                 senderEmail != null ? senderEmail : ""
         );
 
-        return ResponseEntity.ok(new ShareEnterpriseResponse(result.notified(), result.rejected(), result.pendingRegistration()));
+        return ResponseEntity.ok(new ShareEnterpriseResponse(result.notified(), result.rejected(), result.notRegistered()));
     }
 }
