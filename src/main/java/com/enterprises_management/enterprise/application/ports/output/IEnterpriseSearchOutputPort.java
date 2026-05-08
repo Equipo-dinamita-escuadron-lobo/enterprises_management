@@ -49,4 +49,6 @@ public interface IEnterpriseSearchOutputPort {
      * @see EnterpriseInfoDto
      */
     Enterprise getEnterpriseBySubjectCode(String subjectCode);
+
+    List<EnterpriseInfoDto> searchEnterprises(String q);
 }

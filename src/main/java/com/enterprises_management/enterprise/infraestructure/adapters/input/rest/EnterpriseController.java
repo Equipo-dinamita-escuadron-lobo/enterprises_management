@@ -144,6 +144,11 @@ public class EnterpriseController {
             @ApiResponse(responseCode = "204", description = "No se encontraron empresas inactivas", content = @Content),
             @ApiResponse(responseCode = "500", description = "Error interno al recuperar las empresas inactivas", content = @Content)
     })
+    @GetMapping("/search")
+    public ResponseEntity<List<EnterpriseInfoDto>> searchEnterprises(@RequestParam("q") String q) {
+        return ResponseEntity.ok(enterpriseSearchManagerPort.searchEnterprises(q));
+    }
+
     @GetMapping("/inactive")
     public ResponseEntity<List<EnterpriseInfoDto>> getAllEnterprisesInactive() {
         List<EnterpriseInfoDto> enterprises = enterpriseSearchManagerPort.getAllEnterprisesInactive();

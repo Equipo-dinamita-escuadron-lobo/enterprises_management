@@ -68,8 +68,22 @@ public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort {
      */
     @Override
     public Enterprise getEnterpriseBySubjectCode(String subjectCode) {
-        EnterpriseEntity enterpriseEntity = enterpriseRepository.findBySubjectsCode(subjectCode).get(0);
-        return enterpriseMapper.toEnterprise(enterpriseEntity);
+        List<EnterpriseEntity> results = enterpriseRepository.findBySubjectsCode(subjectCode);
+        if (results.isEmpty()) return null;
+        return enterpriseMapper.toEnterprise(results.get(0));
+    }
+
+    @Override
+    public List<EnterpriseInfoDto> searchEnterprises(String q) {
+        return enterpriseRepository.searchByNameNitOrSubject(q)
+                .stream()
+                .map(e -> EnterpriseInfoDto.builder()
+                        .id(e.getId())
+                        .name(e.getName())
+                        .nit(e.getNit())
+                        .logo(e.getLogo())
+                        .build())
+                .toList();
     }
 
 }

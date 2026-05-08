@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.projection.IEnterpriseInfoProjection;
@@ -46,4 +47,12 @@ public interface IEnterpriseRepository extends JpaRepository<EnterpriseEntity, U
      * @return la entidad de la empresa, o null si no se encuentra
      */
     List<EnterpriseEntity> findBySubjectsCode(String subjectCode);
+
+    @Query("SELECT DISTINCT e FROM EnterpriseEntity e LEFT JOIN e.subjects s " +
+           "WHERE e.state = 0 AND (" +
+           "LOWER(e.name) LIKE LOWER(CONCAT('%', :q, '%')) OR " +
+           "LOWER(e.nit)  LIKE LOWER(CONCAT('%', :q, '%')) OR " +
+           "LOWER(s.name) LIKE LOWER(CONCAT('%', :q, '%')) OR " +
+           "LOWER(s.code) LIKE LOWER(CONCAT('%', :q, '%')))")
+    List<EnterpriseEntity> searchByNameNitOrSubject(@Param("q") String q);
 }

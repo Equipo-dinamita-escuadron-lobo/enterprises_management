@@ -51,4 +51,6 @@ public interface IEnterpriseSearchManagerPort {
      * @see EnterpriseInfoDto
      */
     Enterprise getEnterpriseBySubjectCode(String subjectCode);
+
+    List<EnterpriseInfoDto> searchEnterprises(String q);
 }
