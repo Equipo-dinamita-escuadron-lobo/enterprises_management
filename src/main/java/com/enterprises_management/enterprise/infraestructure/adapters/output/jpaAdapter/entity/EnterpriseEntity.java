@@ -71,6 +71,16 @@ public class EnterpriseEntity {
     private String logo;
 
     /**
+     * Clave única del logo almacenado en disco.
+     */
+    private String logoKey;
+
+    /**
+     * Tipo de contenido del logo (ej: image/png).
+     */
+    private String logoContentType;
+
+    /**
      * Estado actual de la empresa.
      */
     private StateEnum state;
@@ -128,19 +138,6 @@ public class EnterpriseEntity {
      */
     @TenantId
     String tenantId;
-
-    /**
-     * URL o ruta del logo de la empresa.
-     */
-    @Lob
-    @Column(name = "logo_data")
-    private byte[] logoData;
-
-    @Column(name = "logo_content_type")
-    private String logoContentType;
-
-    @Column(name = "logo_filename")
-    private String logoFilename;
 
     @ManyToMany
     @JoinTable(name = "enterprise_subject", joinColumns = @JoinColumn(name = "enterprise_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))

@@ -4,7 +4,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface IUploadLogoInputPort {
     /**
-     * Sube un logo y retorna la URL pública para consumirlo luego.
+     * Sube un logo para una empresa y retorna la clave única.
      */
-    String upload(MultipartFile file);
+    String uploadLogo(String enterpriseId, MultipartFile file);
+
+    /**
+     * Obtiene el logo de una empresa como LogoResource.
+     */
+    LogoResource getLogo(String enterpriseId);
+
+    /**
+     * Elimina el logo de una empresa.
+     */
+    void deleteLogo(String enterpriseId);
 }

@@ -17,7 +17,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 @Component
-public class UploadLogoAdapter implements ILogoStorageOutputPort {
+public class LocalLogoStorageAdapter implements ILogoStorageOutputPort {
 
     @Value("${app.storage.logo-dir:uploads/enterprises/logos}")
     private String logoDir;

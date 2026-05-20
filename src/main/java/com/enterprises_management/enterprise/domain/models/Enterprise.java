@@ -71,6 +71,16 @@ public class Enterprise {
     private String logo;
 
     /**
+     * Clave única del logo almacenado en disco.
+     */
+    private String logoKey;
+
+    /**
+     * Tipo de contenido del logo (ej: image/png).
+     */
+    private String logoContentType;
+
+    /**
      * Código de la actividad principal de la empresa.
      */
     private Long mainActivity;
