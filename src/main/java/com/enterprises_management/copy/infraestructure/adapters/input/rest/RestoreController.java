@@ -107,6 +107,7 @@ public class RestoreController {
 
         String bearerToken = extraerBearerToken(httpRequest);
         proceso.setBearerToken(bearerToken);
+        sagaEngineService.registrarBearerToken(proceso.getId(), bearerToken);
 
         final String procesoId = proceso.getId();
         CompletableFuture.runAsync(() -> {
@@ -162,6 +163,7 @@ public class RestoreController {
 
         String bearerToken = extraerBearerToken(httpRequest);
         proceso.setBearerToken(bearerToken);
+        sagaEngineService.registrarBearerToken(proceso.getId(), bearerToken);
 
         final String procesoId = proceso.getId();
         CompletableFuture.runAsync(() -> {

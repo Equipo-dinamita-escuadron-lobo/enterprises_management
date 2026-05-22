@@ -1,7 +1,9 @@
 package com.enterprises_management.copy.infraestructure.adapters.output.httpclient;
 
+import com.enterprises_management.copy.application.output.IBackupReaderPort;
 import com.enterprises_management.copy.application.output.IEquivalenceRepositoryPort;
 import com.enterprises_management.copy.application.output.IParticipantClientPort;
+import com.enterprises_management.copy.domain.enums.CopyProcessType;
 import com.enterprises_management.copy.domain.models.CopyEquivalenceId;
 import com.enterprises_management.copy.domain.models.CopyModuleExecution;
 import com.enterprises_management.copy.domain.models.CopyProcess;
@@ -96,6 +98,7 @@ public class HttpParticipantClientAdapter implements IParticipantClientPort {
     private final long timeoutMs;
     private final IEquivalenceRepositoryPort equivalenciaRepo;
     private final MeterRegistry meterRegistry;
+    private final IBackupReaderPort backupReader;
 
     /**
      * Constructor principal — usado por el contenedor Spring vía {@link HttpParticipantClientConfig}.
@@ -107,6 +110,29 @@ public class HttpParticipantClientAdapter implements IParticipantClientPort {
      * @param timeoutMs       timeout en ms para cada invocación (REQ-CLIENT-04, ADR-26)
      * @param equivalenciaRepo repositorio para cargar equivalencias previas (REQ-EQUIVPREV-01, ADR-28)
      * @param meterRegistry   registro de métricas para temporización de invocaciones (REQ-METRICS-02)
+     * @param backupReader    puerto para leer datos del ZIP de backup en modo RESTORE (null si no aplica)
+     */
+    public HttpParticipantClientAdapter(
+            String nombreModulo,
+            String nombreModuloUrl,
+            WebClient webClient,
+            long timeoutMs,
+            IEquivalenceRepositoryPort equivalenciaRepo,
+            MeterRegistry meterRegistry,
+            IBackupReaderPort backupReader
+    ) {
+        this.nombreModulo = nombreModulo;
+        this.nombreModuloUrl = nombreModuloUrl;
+        this.webClient = webClient;
+        this.timeoutMs = timeoutMs;
+        this.equivalenciaRepo = equivalenciaRepo;
+        this.meterRegistry = meterRegistry;
+        this.backupReader = backupReader;
+    }
+
+    /**
+     * Constructor de compatibilidad para tests que pasan equivalenciaRepo y meterRegistry
+     * pero no requieren backupReader (ADR-55).
      */
     public HttpParticipantClientAdapter(
             String nombreModulo,
@@ -116,17 +142,12 @@ public class HttpParticipantClientAdapter implements IParticipantClientPort {
             IEquivalenceRepositoryPort equivalenciaRepo,
             MeterRegistry meterRegistry
     ) {
-        this.nombreModulo = nombreModulo;
-        this.nombreModuloUrl = nombreModuloUrl;
-        this.webClient = webClient;
-        this.timeoutMs = timeoutMs;
-        this.equivalenciaRepo = equivalenciaRepo;
-        this.meterRegistry = meterRegistry;
+        this(nombreModulo, nombreModuloUrl, webClient, timeoutMs, equivalenciaRepo, meterRegistry, null);
     }
 
     /**
      * Constructor de compatibilidad para tests E2E de Hito 1+2 que no requieren equivalencias.
-     * Usa un repositorio NOP que retorna listas vacías y un SimpleMeterRegistry (ADR-55).
+     * Usa un repositorio NOP que retorna listas vacías, un SimpleMeterRegistry y backupReader=null (ADR-55).
      *
      * @param nombreModulo    nombre del módulo Eureka
      * @param nombreModuloUrl segmento de URL del módulo
@@ -152,7 +173,7 @@ public class HttpParticipantClientAdapter implements IParticipantClientPort {
             public List<CopyEquivalenceId> buscarConFiltros(String idProceso, String modulo, String tabla, String idViejo) {
                 return List.of();
             }
-        }, new SimpleMeterRegistry());
+        }, new SimpleMeterRegistry(), null);
     }
 
     @Override
@@ -295,14 +316,28 @@ public class HttpParticipantClientAdapter implements IParticipantClientPort {
         // REQ-EQUIVPREV-01, ADR-28: cargar equivalencias previas filtradas por dependencias del módulo
         List<CopyEquivalenceDto> equivalenciasPrev = cargarEquivalenciasPrev(proceso.getId());
 
+        // Cargar datos del módulo desde el backup en modo RESTORE
+        Object datosImportados = null;
+        if (proceso.getTipo() == CopyProcessType.RESTORE
+                && proceso.getBackupRef() != null
+                && backupReader != null) {
+            try {
+                datosImportados = backupReader.leerDatosModulo(proceso.getBackupRef(), nombreModulo);
+            } catch (Exception ex) {
+                log.warn("[correlationId={}] No se pudo leer datos del módulo '{}' del backup '{}': {}",
+                        proceso.getId(), nombreModulo, proceso.getBackupRef(), ex.getMessage());
+            }
+        }
+
         return new CopyPhaseRequestDto(
                 UUID.fromString(proceso.getId()),
                 fase,
                 proceso.getEmpresaOrigen() != null ? proceso.getEmpresaOrigen().toString() : "",
-                proceso.getEmpresaDestino() != null ? proceso.getEmpresaDestino() : "",
-                proceso.getSnapshotCorte() != null ? proceso.getSnapshotCorte().toInstant(
-                        java.time.ZoneOffset.UTC) : java.time.Instant.now(),
-                equivalenciasPrev
+                proceso.getEmpresaDestino(),
+                proceso.getSnapshotCorte() != null ? proceso.getSnapshotCorte().atZone(
+                        java.time.ZoneId.systemDefault()).toInstant() : java.time.Instant.now(),
+                equivalenciasPrev,
+                datosImportados
         );
     }
 

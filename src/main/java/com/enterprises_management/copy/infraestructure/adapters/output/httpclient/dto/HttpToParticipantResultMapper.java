@@ -94,7 +94,12 @@ public final class HttpToParticipantResultMapper {
         String estado = response.estado();
 
         if (ESTADO_COMPLETADO.equals(estado)) {
-            return ParticipantResult.exitoConEquivalencias(mapearEquivalencias(response));
+            List<EquivalenciaResultado> equivs = mapearEquivalencias(response);
+            Object datosExportados = response.datosExportados();
+            if (datosExportados != null) {
+                return ParticipantResult.exitoConDatos(equivs, datosExportados);
+            }
+            return ParticipantResult.exitoConEquivalencias(equivs);
         }
 
         if (ESTADO_COMPLETADO_CON_ADVERTENCIAS.equals(estado)) {
@@ -103,7 +108,7 @@ public final class HttpToParticipantResultMapper {
                     ? String.join("; ", response.advertencias())
                     : response.mensaje();
             return new ParticipantResult(true, true, false, advertencias,
-                    mapearEquivalencias(response));
+                    mapearEquivalencias(response), response.datosExportados());
         }
 
         if (ESTADO_ERROR_REINTENTABLE.equals(estado)) {

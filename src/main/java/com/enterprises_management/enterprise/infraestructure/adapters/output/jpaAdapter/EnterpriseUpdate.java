@@ -1,6 +1,8 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,6 +13,7 @@ import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseUpdateMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IEnterpriseRepository;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.ITaxLiabilityRepository;
 
 /**
  * Adaptador para la actualización de entidades Enterprise usando JPA.
@@ -24,6 +27,9 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
 
     @Autowired
     private IEnterpriseUpdateMapper updateMapper;
+
+    @Autowired
+    private ITaxLiabilityRepository taxLiabilityRepository;
 
     /**
      * Actualiza una empresa por su ID.
@@ -53,8 +59,11 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
         enterpriseEntity.setSecondaryActivity(enterprise.getSecondaryActivity());
 
         //taxLiabilities (reponsabilidades tributarias)
-        enterpriseEntity.setTaxLiabilities(updateMapper.toTaxLiabilityEntity(enterprise.getTaxLiabilities()));
-        
+        List<Long> taxIds = enterprise.getTaxLiabilities() == null ? List.of() :
+            enterprise.getTaxLiabilities().stream().map(t -> t.getId()).collect(Collectors.toList());
+        enterpriseEntity.getTaxLiabilities().clear();
+        enterpriseEntity.getTaxLiabilities().addAll(taxLiabilityRepository.findAllById(taxIds));
+
         //taxPayerType (tipo de contribuyente)
         enterpriseEntity.setTaxPayerType(updateMapper.toTaxPayerTypeEntity(enterprise.getTaxPayerType()));
 
@@ -69,7 +78,7 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
 
         enterpriseRepository.save(enterpriseEntity);
     }
-    
+
     /**
      * Actualiza el estado de una empresa por su ID.
      *

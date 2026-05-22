@@ -34,4 +34,15 @@ public interface IBackupReaderPort {
      * @throws BackupCorruptedException si el JSON es inválido o el ZIP está corrupto
      */
     List<CopyEquivalenceId> leerEquivalencias(String backupRef) throws BackupNotFoundException, BackupCorruptedException;
+
+    /**
+     * Lee y deserializa el archivo de datos de un módulo específico del ZIP de backup.
+     * Retorna null si el archivo no existe (compatibilidad con backups sin datos de módulo).
+     *
+     * @param backupRef  ruta relativa al ZIP
+     * @param moduleName nombre del módulo (ej: "CATALOGUE", "PRODUCTS") — se convierte a nombre de archivo
+     * @return objeto deserializado (Map o List según contenido) o null si el archivo no existe
+     * @throws BackupCorruptedException si el JSON es inválido
+     */
+    Object leerDatosModulo(String backupRef, String moduleName) throws BackupCorruptedException;
 }

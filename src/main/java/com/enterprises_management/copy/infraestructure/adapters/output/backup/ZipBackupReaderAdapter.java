@@ -83,6 +83,28 @@ public class ZipBackupReaderAdapter implements IBackupReaderPort {
         }
     }
 
+    @Override
+    public Object leerDatosModulo(String backupRef, String moduleName) throws BackupCorruptedException {
+        Path rutaCompleta = resolverRuta(backupRef);
+        String entryName = moduleName.toLowerCase() + ".json";
+
+        try (ZipFile zip = new ZipFile(rutaCompleta.toFile())) {
+            ZipEntry entrada = zip.getEntry(entryName);
+            if (entrada == null) {
+                return null; // módulo no presente — compatible con backups sin datos
+            }
+            try (InputStream is = zip.getInputStream(entrada)) {
+                return objectMapper.readValue(is, Object.class);
+            } catch (com.fasterxml.jackson.core.JsonProcessingException ex) {
+                throw new BackupCorruptedException("JSON inválido en " + entryName + ": " + ex.getOriginalMessage());
+            }
+        } catch (BackupCorruptedException ex) {
+            throw ex;
+        } catch (IOException ex) {
+            throw new BackupCorruptedException("Error al leer " + entryName + " del ZIP: " + ex.getMessage());
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------

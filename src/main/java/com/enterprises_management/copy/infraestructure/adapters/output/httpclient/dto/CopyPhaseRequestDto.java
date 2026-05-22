@@ -16,6 +16,7 @@ import java.util.UUID;
  * @param entDestino       ID de la empresa destino
  * @param snapshotCorte    timestamp de corte — se copian entidades creadas antes o en este instante
  * @param equivalenciasPrev equivalencias generadas por fases anteriores para remapeo de FKs
+ * @param datosImportados  datos para importar en modo RESTORE (null si no aplica)
  */
 public record CopyPhaseRequestDto(
         UUID idProceso,
@@ -23,5 +24,6 @@ public record CopyPhaseRequestDto(
         String entOrigen,
         String entDestino,
         Instant snapshotCorte,
-        List<CopyEquivalenceDto> equivalenciasPrev
+        List<CopyEquivalenceDto> equivalenciasPrev,
+        Object datosImportados
 ) {}

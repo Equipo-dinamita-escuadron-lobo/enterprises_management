@@ -20,11 +20,14 @@ import java.util.List;
  * @param equivalenciasGeneradas equivalencias de IDs generadas en esta fase
  * @param mensaje                descripción del resultado o error
  * @param advertencias           lista de advertencias no críticas (puede estar vacía)
+ * @param datosExportados        datos exportados por el participante en modo BACKUP (null si no aplica)
  */
 public record CopyPhaseResponseDto(
         String estado,
         int registrosProcesados,
         List<CopyEquivalenceDto> equivalenciasGeneradas,
         String mensaje,
-        List<String> advertencias
+        List<String> advertencias,
+        @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
+        Object datosExportados
 ) {}

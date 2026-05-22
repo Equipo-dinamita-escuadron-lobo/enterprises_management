@@ -29,9 +29,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Motor de saga — orquesta el avance de fases y módulos del proceso de copia.
@@ -68,6 +71,12 @@ public class SagaEngineService {
     private final MeterRegistry meterRegistry;
     private final boolean parallelExecution;
 
+    /** Cache en-memoria: idProceso → bearerToken (transient, no persiste en BD — ADR-29). */
+    private final ConcurrentHashMap<String, String> bearerTokenCache = new ConcurrentHashMap<>();
+
+    /** Cache en-memoria: "idProceso:MODULO" → datosExportados del módulo (BACKUP, no persiste). */
+    private final ConcurrentHashMap<String, Object> datosModulosCache = new ConcurrentHashMap<>();
+
     public SagaEngineService(
             ICopyProcessRepositoryPort procesoRepo,
             ICopyPhaseRepositoryPort faseRepo,
@@ -99,6 +108,26 @@ public class SagaEngineService {
     }
 
     // =========================================================================
+    // Gestión de Bearer Token (ADR-29)
+    // =========================================================================
+
+    /**
+     * Registra el bearer token para propagarlo a los participantes HTTP.
+     * Debe llamarse antes de iniciar la saga (el token es transient y no persiste en BD).
+     */
+    public void registrarBearerToken(String idProceso, String bearerToken) {
+        if (bearerToken != null && !bearerToken.isBlank()) {
+            bearerTokenCache.put(idProceso, bearerToken);
+        }
+    }
+
+    /** Elimina el bearer token del cache una vez que la saga ha terminado. */
+    public void limpiarBearerToken(String idProceso) {
+        bearerTokenCache.remove(idProceso);
+        datosModulosCache.keySet().removeIf(k -> k.startsWith(idProceso + ":")); // limpiar datos exportados
+    }
+
+    // =========================================================================
     // Punto de entrada principal
     // =========================================================================
 
@@ -115,6 +144,12 @@ public class SagaEngineService {
         // 1. Cargar proceso y verificar existencia
         CopyProcess proceso = procesoRepo.buscarPorId(idProceso)
                 .orElseThrow(() -> new CopyProcessNotFoundException(idProceso));
+
+        // ADR-29: el bearerToken es transient (no persiste en BD); recuperarlo del cache en-memoria
+        String cachedBearer = bearerTokenCache.get(idProceso);
+        if (cachedBearer != null) {
+            proceso.setBearerToken(cachedBearer);
+        }
 
         Timer.Sample sample = Timer.start(meterRegistry);
         try {
@@ -243,6 +278,12 @@ public class SagaEngineService {
 
                 // Persistir equivalencias generadas por el módulo (ADR-13)
                 persistirEquivalencias(proceso.getId(), resultado);
+
+                // Acumular datos exportados en modo BACKUP
+                if (resultado.datosExportados() != null) {
+                    datosModulosCache.put(proceso.getId() + ":" + cfg.getModulo(), resultado.datosExportados());
+                    log.debug("[SagaEngine] Datos de módulo '{}' acumulados para proceso {}", cfg.getModulo(), proceso.getId());
+                }
 
                 emitirEvento(proceso.getId(), CopyEventType.MODULO_COMPLETADO,
                         "{\"modulo\":\"" + cfg.getModulo() + "\",\"fase\":" + fase.getNumero() + "}");
@@ -405,7 +446,18 @@ public class SagaEngineService {
                     List<CopyEquivalenceId> equivalencias =
                             equivalenciaRepo.buscarConFiltros(proceso.getId(), null, null, null);
                     List<CopyPhase> fases = faseRepo.buscarPorProceso(proceso.getId());
-                    String backupRef = backupSerializer.serializarBackup(proceso, equivalencias, fases);
+
+                    // Recopilar datos de módulos acumulados durante la saga
+                    String keyPrefix = proceso.getId() + ":";
+                    Map<String, Object> datosModulos = new LinkedHashMap<>();
+                    datosModulosCache.forEach((key, value) -> {
+                        if (key.startsWith(keyPrefix)) {
+                            datosModulos.put(key.substring(keyPrefix.length()), value);
+                        }
+                    });
+                    datosModulosCache.keySet().removeIf(k -> k.startsWith(keyPrefix));
+
+                    String backupRef = backupSerializer.serializarBackup(proceso, equivalencias, fases, datosModulos);
                     proceso.setBackupRef(backupRef);
                     procesoRepo.actualizar(proceso);
                 } catch (Exception ex) {

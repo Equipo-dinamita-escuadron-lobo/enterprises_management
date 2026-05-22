@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseUpdateManagerPort;
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseUpdateOutputPort;
@@ -31,9 +32,10 @@ public class EnterpriseUpdateService implements IEnterpriseUpdateManagerPort {
     /**
      * {@inheritDoc}
      */
+    @Transactional
     @Override
     public void updateEnterprise(UUID id, Enterprise enterprise) {
-        enterpriseUpdateOutputPort.updateEnterprise(id, enterprise);   
+        enterpriseUpdateOutputPort.updateEnterprise(id, enterprise);
     }
 
     /**

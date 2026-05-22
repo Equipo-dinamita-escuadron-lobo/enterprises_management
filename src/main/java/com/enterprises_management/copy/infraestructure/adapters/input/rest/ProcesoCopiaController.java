@@ -97,12 +97,14 @@ public class ProcesoCopiaController {
 
         // Disparar la saga asíncronamente — el cliente recibe 201 de inmediato y hace polling
         final String procesoId = proceso.getId();
-        final String token = bearerToken;
+        sagaEngineService.registrarBearerToken(procesoId, bearerToken); // ADR-29
         CompletableFuture.runAsync(() -> {
             try {
                 sagaEngineService.avanzarFase(procesoId, 1);
             } catch (Exception ex) {
                 log.error("Error al ejecutar la saga para proceso {}: {}", procesoId, ex.getMessage(), ex);
+            } finally {
+                sagaEngineService.limpiarBearerToken(procesoId);
             }
         });
 

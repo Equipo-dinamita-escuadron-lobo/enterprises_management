@@ -1,5 +1,6 @@
 package com.enterprises_management.copy.infraestructure.adapters.output.httpclient;
 
+import com.enterprises_management.copy.application.output.IBackupReaderPort;
 import com.enterprises_management.copy.application.output.IEquivalenceRepositoryPort;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +53,34 @@ public class HttpParticipantClientConfig {
     private long timeoutMs;
 
     /**
+     * Adaptador HTTP para el servicio ENTERPRISES (self-call).
+     *
+     * <p>URI base: {@code lb://enterprises} — Eureka resuelve al propio servicio registrado
+     * con {@code spring.application.name=enterprises} (REQ-CLIENT-02, ADR-17).
+     * El endpoint participante {@code /api/enterprises/copy/phase} maneja la fase BASE in-process.
+     */
+    @Bean("httpEnterprisesClient")
+    public HttpParticipantClientAdapter httpEnterprisesClient(
+            WebClient.Builder loadBalancedWebClientBuilder,
+            IEquivalenceRepositoryPort equivalenciaRepo,
+            MeterRegistry meterRegistry,
+            IBackupReaderPort backupReader
+    ) {
+        WebClient webClient = loadBalancedWebClientBuilder
+                .baseUrl("lb://enterprises")
+                .build();
+        return new HttpParticipantClientAdapter(
+                "ENTERPRISES",
+                "enterprises",
+                webClient,
+                timeoutMs,
+                equivalenciaRepo,
+                meterRegistry,
+                backupReader
+        );
+    }
+
+    /**
      * Adaptador HTTP para el servicio CATALOGUE (account-catalogue).
      *
      * <p>URI base: {@code lb://CATALOGUE} — Eureka resuelve el host al servicio registrado
@@ -61,7 +90,8 @@ public class HttpParticipantClientConfig {
     public HttpParticipantClientAdapter httpCatalogueClient(
             WebClient.Builder loadBalancedWebClientBuilder,
             IEquivalenceRepositoryPort equivalenciaRepo,
-            MeterRegistry meterRegistry
+            MeterRegistry meterRegistry,
+            IBackupReaderPort backupReader
     ) {
         WebClient webClient = loadBalancedWebClientBuilder
                 .baseUrl("lb://CATALOGUE")
@@ -72,7 +102,8 @@ public class HttpParticipantClientConfig {
                 webClient,
                 timeoutMs,
                 equivalenciaRepo,
-                meterRegistry
+                meterRegistry,
+                backupReader
         );
     }
 
@@ -87,7 +118,8 @@ public class HttpParticipantClientConfig {
     public HttpParticipantClientAdapter httpProductsClient(
             WebClient.Builder loadBalancedWebClientBuilder,
             IEquivalenceRepositoryPort equivalenciaRepo,
-            MeterRegistry meterRegistry
+            MeterRegistry meterRegistry,
+            IBackupReaderPort backupReader
     ) {
         WebClient webClient = loadBalancedWebClientBuilder
                 .baseUrl("lb://PRODUCTS")
@@ -98,7 +130,8 @@ public class HttpParticipantClientConfig {
                 webClient,
                 timeoutMs,
                 equivalenciaRepo,
-                meterRegistry
+                meterRegistry,
+                backupReader
         );
     }
 
@@ -113,7 +146,8 @@ public class HttpParticipantClientConfig {
     public HttpParticipantClientAdapter httpThirdsClient(
             WebClient.Builder loadBalancedWebClientBuilder,
             IEquivalenceRepositoryPort equivalenciaRepo,
-            MeterRegistry meterRegistry
+            MeterRegistry meterRegistry,
+            IBackupReaderPort backupReader
     ) {
         WebClient webClient = loadBalancedWebClientBuilder
                 .baseUrl("lb://THIRDS")
@@ -124,7 +158,8 @@ public class HttpParticipantClientConfig {
                 webClient,
                 timeoutMs,
                 equivalenciaRepo,
-                meterRegistry
+                meterRegistry,
+                backupReader
         );
     }
 
@@ -132,7 +167,8 @@ public class HttpParticipantClientConfig {
     public HttpParticipantClientAdapter httpTreasuryClient(
             WebClient.Builder loadBalancedWebClientBuilder,
             IEquivalenceRepositoryPort equivalenciaRepo,
-            MeterRegistry meterRegistry
+            MeterRegistry meterRegistry,
+            IBackupReaderPort backupReader
     ) {
         WebClient webClient = loadBalancedWebClientBuilder
                 .baseUrl("lb://TREASURY")
@@ -143,7 +179,8 @@ public class HttpParticipantClientConfig {
                 webClient,
                 timeoutMs,
                 equivalenciaRepo,
-                meterRegistry
+                meterRegistry,
+                backupReader
         );
     }
 
@@ -151,7 +188,8 @@ public class HttpParticipantClientConfig {
     public HttpParticipantClientAdapter httpStockClient(
             WebClient.Builder loadBalancedWebClientBuilder,
             IEquivalenceRepositoryPort equivalenciaRepo,
-            MeterRegistry meterRegistry
+            MeterRegistry meterRegistry,
+            IBackupReaderPort backupReader
     ) {
         WebClient webClient = loadBalancedWebClientBuilder
                 .baseUrl("lb://STOCK")
@@ -162,7 +200,8 @@ public class HttpParticipantClientConfig {
                 webClient,
                 timeoutMs,
                 equivalenciaRepo,
-                meterRegistry
+                meterRegistry,
+                backupReader
         );
     }
 
@@ -170,7 +209,8 @@ public class HttpParticipantClientConfig {
     public HttpParticipantClientAdapter httpKardexWaClient(
             WebClient.Builder loadBalancedWebClientBuilder,
             IEquivalenceRepositoryPort equivalenciaRepo,
-            MeterRegistry meterRegistry
+            MeterRegistry meterRegistry,
+            IBackupReaderPort backupReader
     ) {
         WebClient webClient = loadBalancedWebClientBuilder
                 .baseUrl("lb://KARDEX")
@@ -181,7 +221,8 @@ public class HttpParticipantClientConfig {
                 webClient,
                 timeoutMs,
                 equivalenciaRepo,
-                meterRegistry
+                meterRegistry,
+                backupReader
         );
     }
 
@@ -189,7 +230,8 @@ public class HttpParticipantClientConfig {
     public HttpParticipantClientAdapter httpFacturesClient(
             WebClient.Builder loadBalancedWebClientBuilder,
             IEquivalenceRepositoryPort equivalenciaRepo,
-            MeterRegistry meterRegistry
+            MeterRegistry meterRegistry,
+            IBackupReaderPort backupReader
     ) {
         WebClient webClient = loadBalancedWebClientBuilder
                 .baseUrl("lb://FACTURES")
@@ -200,7 +242,8 @@ public class HttpParticipantClientConfig {
                 webClient,
                 timeoutMs,
                 equivalenciaRepo,
-                meterRegistry
+                meterRegistry,
+                backupReader
         );
     }
 
@@ -208,7 +251,8 @@ public class HttpParticipantClientConfig {
     public HttpParticipantClientAdapter httpInventoryPepsClient(
             WebClient.Builder loadBalancedWebClientBuilder,
             IEquivalenceRepositoryPort equivalenciaRepo,
-            MeterRegistry meterRegistry
+            MeterRegistry meterRegistry,
+            IBackupReaderPort backupReader
     ) {
         WebClient webClient = loadBalancedWebClientBuilder
                 .baseUrl("lb://INVENTORYPEPS")
@@ -219,7 +263,8 @@ public class HttpParticipantClientConfig {
                 webClient,
                 timeoutMs,
                 equivalenciaRepo,
-                meterRegistry
+                meterRegistry,
+                backupReader
         );
     }
 
@@ -227,7 +272,8 @@ public class HttpParticipantClientConfig {
     public HttpParticipantClientAdapter httpAuxiliaryBookClient(
             WebClient.Builder loadBalancedWebClientBuilder,
             IEquivalenceRepositoryPort equivalenciaRepo,
-            MeterRegistry meterRegistry
+            MeterRegistry meterRegistry,
+            IBackupReaderPort backupReader
     ) {
         WebClient webClient = loadBalancedWebClientBuilder
                 .baseUrl("lb://AUXILIARY-BOOK")
@@ -238,7 +284,8 @@ public class HttpParticipantClientConfig {
                 webClient,
                 timeoutMs,
                 equivalenciaRepo,
-                meterRegistry
+                meterRegistry,
+                backupReader
         );
     }
 }

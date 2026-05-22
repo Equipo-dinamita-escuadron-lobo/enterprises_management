@@ -70,7 +70,8 @@ public class ZipBackupSerializerAdapter implements IBackupSerializerPort {
      * {@code backup_{entIdOrigen}_{idProceso}_{yyyyMMdd-HHmmss}.zip}
      */
     @Override
-    public String serializarBackup(CopyProcess proceso, List<CopyEquivalenceId> equivalencias, List<CopyPhase> fases) {
+    public String serializarBackup(CopyProcess proceso, List<CopyEquivalenceId> equivalencias,
+                                   List<CopyPhase> fases, Map<String, Object> datosModulos) {
         String timestamp = LocalDateTime.now().format(TIMESTAMP_FMT);
         String filename = "backup_" + proceso.getEmpresaOrigen()
                 + "_" + proceso.getId()
@@ -111,6 +112,19 @@ public class ZipBackupSerializerAdapter implements IBackupSerializerPort {
             } catch (Exception ex) {
                 log.warn("[idProceso={}] No se pudo agregar enterprise.json al backup: {}",
                         proceso.getId(), ex.getMessage());
+            }
+
+            // Entradas de datos de módulos (BACKUP con datos reales)
+            for (Map.Entry<String, Object> entry : datosModulos.entrySet()) {
+                try {
+                    String entryName = entry.getKey().toLowerCase() + ".json";
+                    escribirEntrada(zos, entryName, objectMapper.writeValueAsBytes(entry.getValue()));
+                    log.info("[idProceso={}] Módulo '{}' → '{}' agregado al backup",
+                            proceso.getId(), entry.getKey(), entryName);
+                } catch (Exception ex) {
+                    log.warn("[idProceso={}] No se pudo agregar '{}' al backup: {}",
+                            proceso.getId(), entry.getKey(), ex.getMessage());
+                }
             }
 
         } catch (IOException ex) {

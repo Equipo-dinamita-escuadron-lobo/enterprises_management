@@ -55,37 +55,44 @@ public interface IParticipantClientPort {
      * @param reintentable    true si el error es reintentable
      * @param errorDetalle    descripción del error (null si exitoso)
      * @param equivalencias   equivalencias de IDs generadas por el módulo (vacío si fallo o ninguna)
+     * @param datosExportados datos exportados en modo BACKUP (null si no aplica)
      */
     record ParticipantResult(
             boolean exitoso,
             boolean conAdvertencias,
             boolean reintentable,
             String errorDetalle,
-            List<EquivalenciaResultado> equivalencias
+            List<EquivalenciaResultado> equivalencias,
+            Object datosExportados
     ) {
         /** Factory: éxito limpio sin equivalencias. */
         public static ParticipantResult exito() {
-            return new ParticipantResult(true, false, false, null, List.of());
+            return new ParticipantResult(true, false, false, null, List.of(), null);
         }
 
         /** Factory: éxito con equivalencias generadas por el módulo (ADR-13). */
         public static ParticipantResult exitoConEquivalencias(List<EquivalenciaResultado> equivalencias) {
-            return new ParticipantResult(true, false, false, null, equivalencias);
+            return new ParticipantResult(true, false, false, null, equivalencias, null);
+        }
+
+        /** Factory: éxito con equivalencias y datos exportados (modo BACKUP). */
+        public static ParticipantResult exitoConDatos(List<EquivalenciaResultado> equivalencias, Object datosExportados) {
+            return new ParticipantResult(true, false, false, null, equivalencias, datosExportados);
         }
 
         /** Factory: éxito con advertencias. */
         public static ParticipantResult exitoConAdvertencias(String detalle) {
-            return new ParticipantResult(true, true, false, detalle, List.of());
+            return new ParticipantResult(true, true, false, detalle, List.of(), null);
         }
 
         /** Factory: error reintentable. */
         public static ParticipantResult errorReintentable(String detalle) {
-            return new ParticipantResult(false, false, true, detalle, List.of());
+            return new ParticipantResult(false, false, true, detalle, List.of(), null);
         }
 
         /** Factory: error no reintentable. */
         public static ParticipantResult errorNoReintentable(String detalle) {
-            return new ParticipantResult(false, false, false, detalle, List.of());
+            return new ParticipantResult(false, false, false, detalle, List.of(), null);
         }
     }
 }
