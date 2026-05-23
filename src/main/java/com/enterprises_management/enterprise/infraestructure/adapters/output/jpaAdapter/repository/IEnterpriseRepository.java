@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.projection.IEnterpriseInfoProjection;
@@ -47,6 +49,16 @@ public interface IEnterpriseRepository extends JpaRepository<EnterpriseEntity, U
      * @return la entidad de la empresa, o null si no se encuentra
      */
     List<EnterpriseEntity> findBySubjectsCode(String subjectCode);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM enterprise_tax_liabilities WHERE enterprise_id = :enterpriseId", nativeQuery = true)
+    void deleteTaxLiabilitiesByEnterpriseId(@Param("enterpriseId") UUID enterpriseId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO enterprise_tax_liabilities (enterprise_id, tax_liability_id) VALUES (:enterpriseId, :taxId)", nativeQuery = true)
+    void insertTaxLiability(@Param("enterpriseId") UUID enterpriseId, @Param("taxId") Long taxId);
 
     @Query("SELECT DISTINCT e FROM EnterpriseEntity e LEFT JOIN e.subjects s " +
            "WHERE e.state = 0 AND (" +

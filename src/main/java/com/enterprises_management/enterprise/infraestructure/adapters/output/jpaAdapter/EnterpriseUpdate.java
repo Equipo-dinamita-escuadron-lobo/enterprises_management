@@ -61,8 +61,10 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
         //taxLiabilities (reponsabilidades tributarias)
         List<Long> taxIds = enterprise.getTaxLiabilities() == null ? List.of() :
             enterprise.getTaxLiabilities().stream().map(t -> t.getId()).collect(Collectors.toList());
-        enterpriseEntity.getTaxLiabilities().clear();
-        enterpriseEntity.getTaxLiabilities().addAll(taxLiabilityRepository.findAllById(taxIds));
+        enterpriseRepository.deleteTaxLiabilitiesByEnterpriseId(id);
+        for (Long taxId : taxIds) {
+            enterpriseRepository.insertTaxLiability(id, taxId);
+        }
 
         //taxPayerType (tipo de contribuyente)
         enterpriseEntity.setTaxPayerType(updateMapper.toTaxPayerTypeEntity(enterprise.getTaxPayerType()));

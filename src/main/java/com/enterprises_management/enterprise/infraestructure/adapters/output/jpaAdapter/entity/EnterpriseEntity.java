@@ -103,8 +103,13 @@ public class EnterpriseEntity {
     /**
      * Lista de responsabilidades fiscales de la empresa.
      */
-    @ManyToMany
-    List<TaxLiabilityEntity> taxLiabilities;
+    @ElementCollection
+    @CollectionTable(
+        name = "enterprise_tax_liabilities",
+        joinColumns = @JoinColumn(name = "enterprise_id")
+    )
+    @Column(name = "tax_liability_id")
+    List<Long> taxLiabilities;
 
     /**
      * Tipo de contribuyente de la empresa.

@@ -77,13 +77,9 @@ public interface IEnterpriseSearchMapper {
                 .secondaryActivity(enterpriseEntity.getSecondaryActivity())
                 .inventoryMethods(enterpriseEntity.getInventoryMethods())
                 .taxLiabilities(
+                        enterpriseEntity.getTaxLiabilities() == null ? List.of() :
                         enterpriseEntity.getTaxLiabilities().stream()
-                                .map(taxLiability -> {
-                                    return TaxLiability.builder()
-                                            .id(taxLiability.getId())
-                                            .name(taxLiability.getName())
-                                            .build();
-                                })
+                                .map(taxId -> TaxLiability.builder().id(taxId).build())
                                 .toList())
                 .taxPayerType(
                         TaxPayerType.builder()
