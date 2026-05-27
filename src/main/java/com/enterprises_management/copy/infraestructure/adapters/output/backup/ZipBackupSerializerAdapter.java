@@ -198,6 +198,22 @@ public class ZipBackupSerializerAdapter implements IBackupSerializerPort {
             location.put("country_id", rs.getObject("l_country_id"));
             snap.put("location", location);
 
+            // tax liabilities — ElementCollection en enterprise_tax_liabilities
+            List<Long> taxLiabilities = jdbc.queryForList(
+                    "SELECT tax_liability_id FROM enterprise_tax_liabilities WHERE enterprise_id = CAST(? AS uuid)",
+                    Long.class,
+                    empresaId
+            );
+            snap.put("taxLiabilities", taxLiabilities);
+
+            // subject associations — ManyToMany en enterprise_subject
+            List<String> subjectIds = jdbc.queryForList(
+                    "SELECT subject_id::text FROM enterprise_subject WHERE enterprise_id = CAST(? AS uuid)",
+                    String.class,
+                    empresaId
+            );
+            snap.put("subjectIds", subjectIds);
+
             return snap;
         }, empresaId);
     }

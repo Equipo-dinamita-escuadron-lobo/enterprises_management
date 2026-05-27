@@ -232,6 +232,32 @@ public class RestoreController {
                     snap.get("enterprise_type_id"), personTypeId, locationId, snap.get("tenant_id")
             );
 
+            // Restaurar responsabilidades fiscales (enterprise_tax_liabilities)
+            List<?> taxLiabilities = (List<?>) snap.get("taxLiabilities");
+            if (taxLiabilities != null) {
+                for (Object taxId : taxLiabilities) {
+                    if (taxId != null) {
+                        jdbc.update(
+                                "INSERT INTO enterprise_tax_liabilities (enterprise_id, tax_liability_id) VALUES (CAST(? AS uuid), ?)",
+                                newId, ((Number) taxId).longValue()
+                        );
+                    }
+                }
+            }
+
+            // Restaurar asociaciones con materias (enterprise_subject)
+            List<?> subjectIds = (List<?>) snap.get("subjectIds");
+            if (subjectIds != null) {
+                for (Object subjectId : subjectIds) {
+                    if (subjectId != null) {
+                        jdbc.update(
+                                "INSERT INTO enterprise_subject (enterprise_id, subject_id) VALUES (CAST(? AS uuid), CAST(? AS uuid))",
+                                newId, subjectId.toString()
+                        );
+                    }
+                }
+            }
+
             log.info("Empresa creada desde backup ZIP: id={}, name={}", newId, importedName);
             return newId;
 
