@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseUpdateOutputPort;
@@ -119,9 +120,19 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
      */
     @Override
     public void deleteEnterprise(UUID id) {
-        if (!enterpriseRepository.existsById(id)) {
+        EnterpriseEntity entity = isAdmin()
+            ? enterpriseRepository.findByIdNative(id.toString()).orElse(null)
+            : enterpriseRepository.findById(id).orElse(null);
+        if (entity == null) {
             throw new RuntimeException("Enterprise not found");
         }
-        enterpriseRepository.deleteById(id);
+        enterpriseRepository.delete(entity);
+    }
+
+    private boolean isAdmin() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) return false;
+        return auth.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_admin_client"));
     }
 }

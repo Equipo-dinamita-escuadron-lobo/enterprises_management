@@ -3,6 +3,7 @@ package com.enterprises_management.enterprise.infraestructure.adapters.output.jp
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseSearchOutputPort;
@@ -33,7 +34,9 @@ public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort {
      */
     @Override
     public List<EnterpriseInfoDto> getAllEnterprises() {
-        List<IEnterpriseInfoProjection> enterpriseInfo = enterpriseRepository.findEnterpriseInfo();
+        List<IEnterpriseInfoProjection> enterpriseInfo = isAdmin()
+            ? enterpriseRepository.findEnterpriseInfoAll()
+            : enterpriseRepository.findEnterpriseInfo();
         return enterpriseMapper.toEnterpriseInfoDtoList(enterpriseInfo);
     }
 
@@ -44,8 +47,17 @@ public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort {
      */
     @Override
     public List<EnterpriseInfoDto> getAllEnterprisesInactive() {
-        List<IEnterpriseInfoProjection> enterpriseInfo = enterpriseRepository.findEnterpriseInfoInactive();
+        List<IEnterpriseInfoProjection> enterpriseInfo = isAdmin()
+            ? enterpriseRepository.findEnterpriseInfoInactiveAll()
+            : enterpriseRepository.findEnterpriseInfoInactive();
         return enterpriseMapper.toEnterpriseInfoDtoList(enterpriseInfo);
+    }
+
+    private boolean isAdmin() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) return false;
+        return auth.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_admin_client"));
     }
 
     /**
@@ -56,7 +68,9 @@ public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort {
      */
     @Override
     public Enterprise getEnterpriseById(UUID id) {
-        EnterpriseEntity enterpriseEntity = enterpriseRepository.findById(id).orElse(null);
+        EnterpriseEntity enterpriseEntity = isAdmin()
+            ? enterpriseRepository.findByIdNative(id.toString()).orElse(null)
+            : enterpriseRepository.findById(id).orElse(null);
         return enterpriseMapper.toEnterprise(enterpriseEntity);
     }
 

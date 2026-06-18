@@ -11,6 +11,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,9 @@ public class KeycloakRoleAdapter implements IKeycloakRolePort {
     private final String clientId;
     private final String username;
     private final String password;
+
+    @Value("${jwt.auth.converter.resource-id}")
+    private String resourceId;
 
     public KeycloakRoleAdapter(
             @Value("${keycloak.admin.server-url}") String serverUrl,
@@ -43,22 +47,29 @@ public class KeycloakRoleAdapter implements IKeycloakRolePort {
         this.webClient = WebClient.builder().build();
     }
 
+    private static final java.util.Map<String, String> ROLE_MAP = java.util.Map.of(
+        "estudiante",    "super_client",
+        "profesor",      "user_client",
+        "administrador", "admin_client"
+    );
+
     @Override
     public boolean assignRoleByEmail(String email, String role) {
         try {
+            String keycloakRole = ROLE_MAP.getOrDefault(role.toLowerCase(), role);
             String token = getAdminToken();
             String userId = findUserIdByEmail(email, token);
             if (userId == null) {
                 log.info("Usuario {} no encontrado en Keycloak — pendiente de registro", email);
                 return false;
             }
-            String roleId = getRoleId(role, token);
+            String roleId = getRoleId(keycloakRole, token);
             if (roleId == null) {
-                log.warn("Rol '{}' no existe en Keycloak", role);
+                log.warn("Rol '{}' (keycloak: '{}') no existe en Keycloak", role, keycloakRole);
                 return false;
             }
-            assignRole(userId, roleId, role, token);
-            log.info("Rol '{}' asignado a {} en Keycloak", role, email);
+            assignRole(userId, roleId, keycloakRole, token);
+            log.info("Rol '{}' asignado a {} en Keycloak", keycloakRole, email);
             return true;
         } catch (Exception e) {
             log.error("Error al asignar rol Keycloak para {}: {}", email, e.getMessage());
@@ -88,8 +99,22 @@ public class KeycloakRoleAdapter implements IKeycloakRolePort {
     }
 
     private String findUserIdByEmail(String email, String token) {
+        // Intenta primero por campo email, luego por username (en Keycloak son campos distintos)
+        String byEmail = queryUsers("email", email, token);
+        if (byEmail != null) return byEmail;
+        return queryUsers("username", email, token);
+    }
+
+    private String queryUsers(String field, String value, String token) {
+        String uri = UriComponentsBuilder
+                .fromHttpUrl(serverUrl + "/admin/realms/" + realm + "/users")
+                .queryParam(field, value)
+                .queryParam("exact", "true")
+                .build()
+                .toUriString();
+
         List<Map<String, Object>> users = webClient.get()
-                .uri(serverUrl + "/admin/realms/" + realm + "/users?email=" + email + "&exact=true")
+                .uri(uri)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
@@ -97,13 +122,52 @@ public class KeycloakRoleAdapter implements IKeycloakRolePort {
 
         if (users == null || users.isEmpty()) return null;
         return users.stream()
-                .filter(u -> email.equalsIgnoreCase((String) u.get("email")))
+                .filter(u -> value.equalsIgnoreCase((String) u.get("email"))
+                          || value.equalsIgnoreCase((String) u.get("username")))
                 .map(u -> (String) u.get("id"))
                 .findFirst()
                 .orElse(null);
     }
 
+    // Obtiene el UUID interno del cliente (distinto al clientId textual)
+    private String getClientUuid(String clientId, String token) {
+        try {
+            String uri = UriComponentsBuilder
+                    .fromHttpUrl(serverUrl + "/admin/realms/" + realm + "/clients")
+                    .queryParam("clientId", clientId)
+                    .build()
+                    .toUriString();
+
+            List<Map<String, Object>> clients = webClient.get()
+                    .uri(uri)
+                    .header("Authorization", "Bearer " + token)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
+                    .block();
+
+            if (clients == null || clients.isEmpty()) return null;
+            return (String) clients.get(0).get("id");
+        } catch (Exception e) {
+            log.warn("No se pudo obtener UUID del cliente '{}': {}", clientId, e.getMessage());
+            return null;
+        }
+    }
+
     private String getRoleId(String roleName, String token) {
+        // Primero busca como client role bajo resourceId (microservices_client)
+        String clientUuid = getClientUuid(resourceId, token);
+        if (clientUuid != null) {
+            try {
+                Map<String, Object> role = webClient.get()
+                        .uri(serverUrl + "/admin/realms/" + realm + "/clients/" + clientUuid + "/roles/" + roleName)
+                        .header("Authorization", "Bearer " + token)
+                        .retrieve()
+                        .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                        .block();
+                if (role != null) return (String) role.get("id");
+            } catch (WebClientResponseException.NotFound ignored) {}
+        }
+        // Fallback: realm role
         try {
             Map<String, Object> role = webClient.get()
                     .uri(serverUrl + "/admin/realms/" + realm + "/roles/" + roleName)
@@ -111,7 +175,6 @@ public class KeycloakRoleAdapter implements IKeycloakRolePort {
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                     .block();
-
             return role != null ? (String) role.get("id") : null;
         } catch (WebClientResponseException.NotFound e) {
             return null;
@@ -120,6 +183,25 @@ public class KeycloakRoleAdapter implements IKeycloakRolePort {
 
     private void assignRole(String userId, String roleId, String roleName, String token) {
         List<Map<String, String>> roles = List.of(Map.of("id", roleId, "name", roleName));
+
+        // Intenta asignar como client role primero
+        String clientUuid = getClientUuid(resourceId, token);
+        if (clientUuid != null) {
+            try {
+                webClient.post()
+                        .uri(serverUrl + "/admin/realms/" + realm + "/users/" + userId + "/role-mappings/clients/" + clientUuid)
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(roles)
+                        .retrieve()
+                        .toBodilessEntity()
+                        .block();
+                return;
+            } catch (Exception e) {
+                log.warn("No se pudo asignar client role, intentando realm role: {}", e.getMessage());
+            }
+        }
+        // Fallback: realm role
         webClient.post()
                 .uri(serverUrl + "/admin/realms/" + realm + "/users/" + userId + "/role-mappings/realm")
                 .header("Authorization", "Bearer " + token)

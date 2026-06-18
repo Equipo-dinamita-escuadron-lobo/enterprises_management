@@ -1,6 +1,7 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -59,6 +60,15 @@ public interface IEnterpriseRepository extends JpaRepository<EnterpriseEntity, U
     @Transactional
     @Query(value = "INSERT INTO enterprise_tax_liabilities (enterprise_id, tax_liability_id) VALUES (:enterpriseId, :taxId)", nativeQuery = true)
     void insertTaxLiability(@Param("enterpriseId") UUID enterpriseId, @Param("taxId") Long taxId);
+
+    @Query(value = "SELECT e.id, e.name, e.nit, e.logo, e.state FROM enterprise e WHERE e.state = 0", nativeQuery = true)
+    List<IEnterpriseInfoProjection> findEnterpriseInfoAll();
+
+    @Query(value = "SELECT e.id, e.name, e.nit, e.logo, e.state FROM enterprise e WHERE e.state = 1", nativeQuery = true)
+    List<IEnterpriseInfoProjection> findEnterpriseInfoInactiveAll();
+
+    @Query(value = "SELECT * FROM enterprise WHERE id = CAST(:id AS uuid)", nativeQuery = true)
+    Optional<EnterpriseEntity> findByIdNative(@Param("id") String id);
 
     @Query("SELECT DISTINCT e FROM EnterpriseEntity e LEFT JOIN e.subjects s " +
            "WHERE e.state = 0 AND (" +

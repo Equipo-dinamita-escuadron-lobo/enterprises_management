@@ -20,6 +20,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.multitenancy.util.TenantContext;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
@@ -97,13 +99,16 @@ public class ProcesoCopiaController {
 
         // Disparar la saga asíncronamente — el cliente recibe 201 de inmediato y hace polling
         final String procesoId = proceso.getId();
+        final String tenantId = TenantContext.getTenantId();
         sagaEngineService.registrarBearerToken(procesoId, bearerToken); // ADR-29
         CompletableFuture.runAsync(() -> {
             try {
+                TenantContext.setTenantId(tenantId);
                 sagaEngineService.avanzarFase(procesoId, 1);
             } catch (Exception ex) {
                 log.error("Error al ejecutar la saga para proceso {}: {}", procesoId, ex.getMessage(), ex);
             } finally {
+                TenantContext.clear();
                 sagaEngineService.limpiarBearerToken(procesoId);
             }
         });

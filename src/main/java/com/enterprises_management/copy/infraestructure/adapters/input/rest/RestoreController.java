@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.multitenancy.util.TenantContext;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -124,7 +126,7 @@ public class RestoreController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
             }
 
-            empresaDestinoFinal = crearEmpresaDesdeJson(zipPath, true, null);
+            empresaDestinoFinal = crearEmpresaDesdeJson(zipPath, true, null, TenantContext.getTenantId());
 
             if (empresaDestinoFinal == null) {
                 log.error("No se pudo recrear la empresa desde el ZIP {} para inplace restore", request.backupRef());
@@ -132,7 +134,7 @@ public class RestoreController {
             }
         } else {
             // Para restore normal: crear empresa desde enterprise.json del ZIP con el nombre solicitado
-            String createdId = crearEmpresaDesdeJson(zipPath, false, request.empresaDestino());
+            String createdId = crearEmpresaDesdeJson(zipPath, false, request.empresaDestino(), TenantContext.getTenantId());
             if (createdId != null) {
                 empresaDestinoFinal = createdId;
             }
@@ -146,11 +148,15 @@ public class RestoreController {
         sagaEngineService.registrarBearerToken(proceso.getId(), bearerToken);
 
         final String procesoId = proceso.getId();
+        final String tenantId = TenantContext.getTenantId();
         CompletableFuture.runAsync(() -> {
             try {
+                TenantContext.setTenantId(tenantId);
                 sagaEngineService.avanzarFase(procesoId, 1);
             } catch (Exception ex) {
                 log.error("Error al ejecutar la saga para restore {}: {}", procesoId, ex.getMessage(), ex);
+            } finally {
+                TenantContext.clear();
             }
         });
 
@@ -204,7 +210,7 @@ public class RestoreController {
         }
 
         // Crear empresa desde enterprise.json del ZIP (inplace=true → nombre sin sufijo)
-        String empresaDestinoFinal = crearEmpresaDesdeJson(zipPath, inplace, null);
+        String empresaDestinoFinal = crearEmpresaDesdeJson(zipPath, inplace, null, TenantContext.getTenantId());
         if (empresaDestinoFinal == null) {
             empresaDestinoFinal = empresaDestino;
         }
@@ -220,11 +226,15 @@ public class RestoreController {
         sagaEngineService.registrarBearerToken(proceso.getId(), bearerToken);
 
         final String procesoId = proceso.getId();
+        final String tenantId = TenantContext.getTenantId();
         CompletableFuture.runAsync(() -> {
             try {
+                TenantContext.setTenantId(tenantId);
                 sagaEngineService.avanzarFase(procesoId, 1);
             } catch (Exception ex) {
                 log.error("Error al ejecutar la saga para restore upload {}: {}", procesoId, ex.getMessage(), ex);
+            } finally {
+                TenantContext.clear();
             }
         });
 
@@ -246,7 +256,7 @@ public class RestoreController {
      * @return UUID de la empresa creada, o null si el ZIP no contiene enterprise.json
      */
     @SuppressWarnings("unchecked")
-    private String crearEmpresaDesdeJson(Path zipPath, boolean inplace, String nombreDestino) {
+    private String crearEmpresaDesdeJson(Path zipPath, boolean inplace, String nombreDestino, String currentUserId) {
         String json;
         Map<String, Object> snap;
         try (ZipFile zipFile = new ZipFile(zipPath.toFile())) {
@@ -309,11 +319,11 @@ public class RestoreController {
                                             tax_payer_type_id, enterprise_type_id, person_type_id, location_id, tenant_id)
                     VALUES (CAST(? AS uuid), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
-                    newId, snap.get("id_user"), restoredName, snap.get("nit"), snap.get("dv"),
+                    newId, currentUserId, restoredName, snap.get("nit"), snap.get("dv"),
                     snap.get("phone"), snap.get("branch"), snap.get("email"), snap.get("logo"),
                     snap.get("state"), snap.get("main_activity"), snap.get("secondary_activity"),
                     snap.get("inventory_methods"), snap.get("tax_payer_type_id"),
-                    snap.get("enterprise_type_id"), personTypeId, locationId, snap.get("tenant_id")
+                    snap.get("enterprise_type_id"), personTypeId, locationId, currentUserId
             );
         } catch (Exception ex) {
             log.error("No se pudo insertar enterprise desde enterprise.json: {}", ex.getMessage());
