@@ -12,7 +12,9 @@ import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseUpdateMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.SubjectEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IEnterpriseRepository;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.ISubjectRepository;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.ITaxLiabilityRepository;
 
 /**
@@ -30,6 +32,9 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
 
     @Autowired
     private ITaxLiabilityRepository taxLiabilityRepository;
+
+    @Autowired
+    private ISubjectRepository subjectRepository;
 
     /**
      * Actualiza una empresa por su ID.
@@ -77,6 +82,15 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
 
         //location
         enterpriseEntity.setLocation(updateMapper.toLocationEntity(enterprise.getLocation()));
+
+        //inventoryMethods (método de inventario)
+        enterpriseEntity.setInventoryMethods(enterprise.getInventoryMethods());
+
+        //subjects (materias asociadas)
+        List<UUID> subjectIds = enterprise.getSubjects() == null ? List.of() :
+            enterprise.getSubjects().stream().map(s -> s.getId()).collect(Collectors.toList());
+        List<SubjectEntity> subjectEntities = subjectRepository.findAllById(subjectIds);
+        enterpriseEntity.setSubjects(subjectEntities);
 
         enterpriseRepository.save(enterpriseEntity);
     }

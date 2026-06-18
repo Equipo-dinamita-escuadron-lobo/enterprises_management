@@ -81,7 +81,7 @@ public class ProcesoCopiaController {
      * @return 201 con ProcesoCopiaResponse o error semántico
      */
     @PostMapping("/processes")
-    @PreAuthorize("hasAuthority('Backup_Create')")
+    @PreAuthorize("hasRole('admin_client') or hasRole('user_client') or hasRole('super_client')")
     public ResponseEntity<ProcesoCopiaResponse> iniciarProceso(
             @Valid @RequestBody IniciarProcesoRequest request,
             Authentication authentication,
@@ -118,7 +118,7 @@ public class ProcesoCopiaController {
     // -------------------------------------------------------------------------
 
     @GetMapping("/processes")
-    @PreAuthorize("hasAuthority('Backup_View')")
+    @PreAuthorize("hasRole('admin_client') or hasRole('user_client') or hasRole('super_client')")
     public ResponseEntity<List<ProcesoCopiaResponse>> listarProcesos() {
         List<ProcesoCopiaResponse> resultado = queryPort.listarProcesos().stream()
                 .map(p -> {
@@ -140,7 +140,7 @@ public class ProcesoCopiaController {
      * @return 200 con ProcesoCopiaResponse
      */
     @GetMapping("/processes/{id}")
-    @PreAuthorize("hasAuthority('Backup_View')")
+    @PreAuthorize("hasRole('admin_client') or hasRole('user_client') or hasRole('super_client')")
     public ResponseEntity<ProcesoCopiaResponse> consultarProceso(@PathVariable String id) {
         CopyProcess proceso = queryPort.consultarProceso(id);
         List<CopyPhase> fases = queryPort.consultarFases(id);
@@ -158,7 +158,7 @@ public class ProcesoCopiaController {
      * @return 200 con lista de EventoProcesoResponse
      */
     @GetMapping("/processes/{id}/events")
-    @PreAuthorize("hasAuthority('Backup_View')")
+    @PreAuthorize("hasRole('admin_client') or hasRole('user_client') or hasRole('super_client')")
     public ResponseEntity<List<EventoProcesoResponse>> consultarEventos(@PathVariable String id) {
         // Verificar existencia del proceso (lanza 404 si no existe)
         queryPort.consultarProceso(id);
@@ -181,7 +181,7 @@ public class ProcesoCopiaController {
      * @return 200 OK si cancelado, o error semántico
      */
     @PostMapping("/processes/{id}/cancel")
-    @PreAuthorize("hasAuthority('Backup_Cancel')")
+    @PreAuthorize("hasRole('admin_client') or hasRole('user_client') or hasRole('super_client')")
     public ResponseEntity<Void> cancelarProceso(
             @PathVariable String id,
             Authentication authentication
@@ -201,7 +201,7 @@ public class ProcesoCopiaController {
      * @return 200 con lista de ConfiguracionFaseResponse
      */
     @GetMapping("/configuration/phases")
-    @PreAuthorize("hasAuthority('Backup_View')")
+    @PreAuthorize("hasRole('admin_client') or hasRole('user_client') or hasRole('super_client')")
     public ResponseEntity<List<ConfiguracionFaseResponse>> listarConfiguracionFases() {
         List<ConfiguracionFaseResponse> result = IntStream.rangeClosed(1, 4)
                 .boxed()

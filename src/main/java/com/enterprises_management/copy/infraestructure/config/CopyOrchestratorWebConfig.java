@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import com.enterprises_management.copy.infraestructure.adapters.output.notifier.NotificadorEstadoSseAdapter;
 import com.enterprises_management.copy.infraestructure.adapters.output.notifier.SseEmitterRegistry;
+import com.enterprises_management.copy.infraestructure.adapters.output.participant.local.LocalValidationParticipantAdapter;
 import com.enterprises_management.copy.infraestructure.adapters.output.participant.stub.StubParticipantClient;
 import com.enterprises_management.copy.infraestructure.adapters.output.persistence.jpa.adapter.*;
 import org.slf4j.Logger;
@@ -171,6 +172,16 @@ public class CopyOrchestratorWebConfig {
     public StubParticipantClient stubAuxiliaryBookClient(CopyOrchestratorProperties props) {
         return new StubParticipantClient("AUXILIARY-BOOK",
                 (int) props.getStub().getLatencyMs(), props.getStub().getFailureRate());
+    }
+
+    /**
+     * Participante local VALIDACION — siempre activo en fase CIERRE (Hito 8).
+     * No depende del transport (stub vs http): consulta copy_equivalencias directamente.
+     */
+    @Bean("localValidationClient")
+    public LocalValidationParticipantAdapter localValidationParticipantAdapter(
+            IEquivalenceRepositoryPort equivalenciaRepo) {
+        return new LocalValidationParticipantAdapter(equivalenciaRepo);
     }
 
     // -------------------------------------------------------------------------

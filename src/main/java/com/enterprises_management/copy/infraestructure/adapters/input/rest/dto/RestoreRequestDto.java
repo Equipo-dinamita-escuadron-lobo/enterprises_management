@@ -5,8 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * DTO de request para iniciar un proceso RESTORE desde un backup existente (REQ-RESTORE-01).
  *
- * @param backupRef     ruta relativa al archivo ZIP previamente generado
- * @param empresaDestino identificador de la empresa destino del RESTORE (diferente al origen)
+ * @param backupRef      ruta relativa al archivo ZIP previamente generado
+ * @param empresaDestino UUID de la empresa destino; en modo inplace es el UUID de la empresa a sobreescribir
+ * @param inplace        si es true, elimina la empresa destino y la recrea desde el backup (H9)
  */
 public record RestoreRequestDto(
 
@@ -14,6 +15,8 @@ public record RestoreRequestDto(
         String backupRef,
 
         @NotBlank(message = "empresaDestino es obligatorio")
-        String empresaDestino
+        String empresaDestino,
+
+        Boolean inplace
 
 ) {}

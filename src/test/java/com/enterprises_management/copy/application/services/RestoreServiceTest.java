@@ -72,7 +72,7 @@ class RestoreServiceTest {
 
         // WHEN
         CopyProcess resultado = sut.iniciarRestore(
-                new RestoreCommand(backupRef, empresaDestino, "usuario"));
+                new RestoreCommand(backupRef, empresaDestino, "usuario", false));
 
         // THEN — proceso devuelto correctamente
         assertThat(resultado).isNotNull();
@@ -112,7 +112,7 @@ class RestoreServiceTest {
 
         // WHEN / THEN
         assertThatThrownBy(() ->
-                sut.iniciarRestore(new RestoreCommand(backupRef, empresaDestino, "usuario")))
+                sut.iniciarRestore(new RestoreCommand(backupRef, empresaDestino, "usuario", false)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("empresa origen");
 
@@ -137,7 +137,7 @@ class RestoreServiceTest {
 
         // WHEN / THEN
         assertThatThrownBy(() ->
-                sut.iniciarRestore(new RestoreCommand(backupRef, "empresa-nueva", "usuario")))
+                sut.iniciarRestore(new RestoreCommand(backupRef, "empresa-nueva", "usuario", false)))
                 .isInstanceOf(BackupCorruptedException.class)
                 .hasMessageContaining("versión");
 
@@ -158,7 +158,7 @@ class RestoreServiceTest {
 
         // WHEN / THEN
         assertThatThrownBy(() ->
-                sut.iniciarRestore(new RestoreCommand(backupRef, "empresa-nueva", "usuario")))
+                sut.iniciarRestore(new RestoreCommand(backupRef, "empresa-nueva", "usuario", false)))
                 .isInstanceOf(BackupNotFoundException.class);
 
         verify(startPort, never()).iniciar(any());
@@ -193,7 +193,7 @@ class RestoreServiceTest {
         when(equivalenciaRepo.guardar(any())).thenAnswer(inv -> inv.getArgument(0));
 
         // WHEN
-        sut.iniciarRestore(new RestoreCommand(backupRef, "empresa-nueva", "usuario"));
+        sut.iniciarRestore(new RestoreCommand(backupRef, "empresa-nueva", "usuario", false));
 
         // THEN — se sembró exactamente la misma cantidad
         verify(equivalenciaRepo, times(equivalencias.size())).guardar(any());

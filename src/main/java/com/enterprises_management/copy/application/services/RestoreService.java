@@ -105,17 +105,18 @@ public class RestoreService implements ICopyRestoreInputPort {
             throw new IllegalArgumentException("iniciadoPor no puede ser nulo o vacío");
         }
 
-        // REQ-RESTORE-03: RESTORE a la empresa origen no está soportado en v1
-        if (manifest.empresaOrigen() != null &&
-                manifest.empresaOrigen().toString().equals(command.empresaDestino())) {
-            throw new IllegalArgumentException("RESTORE a la empresa origen no está soportado en v1");
-        }
-
-        // REQ-RESTORE-03: RESTORE a la misma empresa destino original tampoco está permitido
-        if (manifest.empresaDestinoOriginal() != null &&
-                manifest.empresaDestinoOriginal().equals(command.empresaDestino())) {
-            throw new IllegalArgumentException(
-                    "La empresa destino no puede ser la misma que la empresa destino original del backup");
+        // REQ-RESTORE-03: estas restricciones no aplican en modo inplace (H9)
+        // porque la empresa origen ya fue eliminada y se creó una nueva con UUID distinto
+        if (!command.inplace()) {
+            if (manifest.empresaOrigen() != null &&
+                    manifest.empresaOrigen().toString().equals(command.empresaDestino())) {
+                throw new IllegalArgumentException("RESTORE a la empresa origen no está soportado en v1");
+            }
+            if (manifest.empresaDestinoOriginal() != null &&
+                    manifest.empresaDestinoOriginal().equals(command.empresaDestino())) {
+                throw new IllegalArgumentException(
+                        "La empresa destino no puede ser la misma que la empresa destino original del backup");
+            }
         }
     }
 }

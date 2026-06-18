@@ -72,7 +72,7 @@ public class BackupController {
      * @return 200 con el contenido binario del ZIP, o 404/403/413 según el caso
      */
     @GetMapping
-    @PreAuthorize("hasAuthority('Backup_Download')")
+    @PreAuthorize("hasRole('admin_client') or hasRole('user_client') or hasRole('super_client')")
     public ResponseEntity<StreamingResponseBody> descargarBackup(@PathVariable String id) {
         // 1. Buscar el proceso — CopyProcessNotFoundException → 404 via CopyExceptionHandler
         CopyProcess proceso = queryPort.consultarProceso(id);

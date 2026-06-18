@@ -56,7 +56,7 @@ public class CopyProcessStreamController {
      * @return SseEmitter conectado al SseEmitterRegistry del proceso
      */
     @GetMapping(value = "/processes/{id}/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    @PreAuthorize("hasAuthority('Backup_View')")
+    @PreAuthorize("hasRole('admin_client') or hasRole('user_client') or hasRole('super_client')")
     public SseEmitter streamEventos(@PathVariable String id) {
         // Verificar existencia del proceso — lanza CopyProcessNotFoundException (404) si no existe
         queryPort.consultarProceso(id);

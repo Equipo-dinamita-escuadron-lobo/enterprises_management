@@ -18,6 +18,9 @@ import org.springframework.stereotype.Component;
  * <p>Fase 1 (siempre activa): ENTERPRISES(orden=1), CATALOGUE(orden=2), PRODUCTS(orden=3).
  * <p>Fase 2 (Hito 3 — ADR-27): PRODUCTS(orden=1) y THIRDS(orden=2) condicionados
  * por feature flags {@code app.copy.orchestrator.participants.enabled.products/thirds}.
+ * <p>Fase 3 (Hito 4): TREASURY, STOCK, KARDEX, FACTURES, INVENTORYPEPS, AUXILIARY-BOOK condicionados
+ * por feature flags {@code app.copy.orchestrator.participants.enabled.*}.
+ * <p>Fase 4 (Hito 8): VALIDACION(orden=1) — siempre activo, valida integridad al cierre.
  *
  * <p>Solo corre cuando {@code app.copy.orchestrator.bootstrap-config=true}.
  */
@@ -144,6 +147,9 @@ public class PhaseConfigBootstrap implements ApplicationRunner {
         if (auxiliaryBookHabilitado) {
             insertadas += insertarSiNoExiste("AUXILIARY-BOOK", 3, 6);
         }
+
+        // Fase 4 (CIERRE): validación de integridad — siempre activa (Hito 8)
+        insertadas += insertarSiNoExiste("VALIDACION", 4, 1);
 
         log.info("Bootstrap de configuración completado: {} filas insertadas", insertadas);
     }

@@ -343,6 +343,7 @@ public class EnterpriseController {
             @ApiResponse(responseCode = "500", description = "Error interno al eliminar la empresa")
     })
     @DeleteMapping("/enterprise/hard/{id}")
+    @PreAuthorize("hasRole('admin_client') or hasRole('user_client')")
     public ResponseEntity<Void> deleteEnterpriseHard(@PathVariable("id") UUID id) {
         Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
         if (enterprise == null) {
