@@ -70,6 +70,18 @@ public interface IEnterpriseRepository extends JpaRepository<EnterpriseEntity, U
     @Query(value = "SELECT * FROM enterprise WHERE id = CAST(:id AS uuid)", nativeQuery = true)
     Optional<EnterpriseEntity> findByIdNative(@Param("id") String id);
 
+    @Query(value = "SELECT DISTINCT e.id, e.name, e.nit, e.logo, e.state " +
+                   "FROM enterprise e LEFT JOIN shared_enterprise se ON se.enterprise_id = e.id " +
+                   "WHERE e.state = 0 AND (e.tenant_id = :userId OR se.shared_with_user_id = :userId)",
+           nativeQuery = true)
+    List<IEnterpriseInfoProjection> findEnterpriseInfoForUser(@Param("userId") String userId);
+
+    @Query(value = "SELECT DISTINCT e.id, e.name, e.nit, e.logo, e.state " +
+                   "FROM enterprise e LEFT JOIN shared_enterprise se ON se.enterprise_id = e.id " +
+                   "WHERE e.state = 1 AND (e.tenant_id = :userId OR se.shared_with_user_id = :userId)",
+           nativeQuery = true)
+    List<IEnterpriseInfoProjection> findEnterpriseInfoInactiveForUser(@Param("userId") String userId);
+
     @Query("SELECT DISTINCT e FROM EnterpriseEntity e LEFT JOIN e.subjects s " +
            "WHERE e.state = 0 AND (" +
            "LOWER(e.name) LIKE LOWER(CONCAT('%', :q, '%')) OR " +

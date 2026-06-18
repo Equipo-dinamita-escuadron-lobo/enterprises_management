@@ -3,8 +3,10 @@ package com.enterprises_management.enterprise.application.ports.services;
 import com.enterprises_management.enterprise.application.ports.input.IShareEnterpriseInputPort;
 import com.enterprises_management.enterprise.application.ports.output.IKeycloakRolePort;
 import com.enterprises_management.enterprise.application.ports.output.IShareEnterpriseEmailPort;
+import com.enterprises_management.enterprise.application.ports.output.ISharedEnterprisePort;
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseSearchOutputPort;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class ShareEnterpriseService implements IShareEnterpriseInputPort {
 
     private static final String ALLOWED_DOMAIN = "@unicauca.edu.co";
@@ -19,13 +22,16 @@ public class ShareEnterpriseService implements IShareEnterpriseInputPort {
     private final IShareEnterpriseEmailPort emailPort;
     private final IEnterpriseSearchOutputPort enterpriseSearchOutputPort;
     private final IKeycloakRolePort keycloakRolePort;
+    private final ISharedEnterprisePort sharedEnterprisePort;
 
     public ShareEnterpriseService(IShareEnterpriseEmailPort emailPort,
                                   IEnterpriseSearchOutputPort enterpriseSearchOutputPort,
-                                  IKeycloakRolePort keycloakRolePort) {
+                                  IKeycloakRolePort keycloakRolePort,
+                                  ISharedEnterprisePort sharedEnterprisePort) {
         this.emailPort = emailPort;
         this.enterpriseSearchOutputPort = enterpriseSearchOutputPort;
         this.keycloakRolePort = keycloakRolePort;
+        this.sharedEnterprisePort = sharedEnterprisePort;
     }
 
     @Override
@@ -44,14 +50,21 @@ public class ShareEnterpriseService implements IShareEnterpriseInputPort {
                 continue;
             }
             try {
-                boolean userExists = keycloakRolePort.assignRoleByEmail(email, role);
-                if (!userExists) {
+                String recipientUserId = keycloakRolePort.getUserIdByEmail(email);
+                if (recipientUserId == null) {
                     notRegistered.add(email);
                     continue;
                 }
-                emailPort.sendShareNotification(email, enterpriseName, role, senderName, senderEmail);
+                keycloakRolePort.assignRoleByEmail(email, role);
+                sharedEnterprisePort.saveShare(UUID.fromString(enterpriseId), recipientUserId);
+                try {
+                    emailPort.sendShareNotification(email, enterpriseName, role, senderName, senderEmail);
+                } catch (Exception e) {
+                    log.warn("No se pudo enviar notificación a {}: {}", email, e.getMessage());
+                }
                 notified.add(email);
             } catch (Exception e) {
+                log.error("Error al compartir empresa con {}: {}", email, e.getMessage());
                 rejected.add(email);
             }
         }

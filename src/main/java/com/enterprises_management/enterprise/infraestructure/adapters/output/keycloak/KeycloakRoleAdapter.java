@@ -54,6 +54,17 @@ public class KeycloakRoleAdapter implements IKeycloakRolePort {
     );
 
     @Override
+    public String getUserIdByEmail(String email) {
+        try {
+            String token = getAdminToken();
+            return findUserIdByEmail(email, token);
+        } catch (Exception e) {
+            log.error("Error buscando usuario en Keycloak para {}: {}", email, e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
     public boolean assignRoleByEmail(String email, String role) {
         try {
             String keycloakRole = ROLE_MAP.getOrDefault(role.toLowerCase(), role);

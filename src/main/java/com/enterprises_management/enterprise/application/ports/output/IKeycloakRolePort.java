@@ -7,4 +7,6 @@ public interface IKeycloakRolePort {
      * @return true si el rol fue asignado, false si el usuario no existe en Keycloak.
      */
     boolean assignRoleByEmail(String email, String role);
+
+    String getUserIdByEmail(String email);
 }

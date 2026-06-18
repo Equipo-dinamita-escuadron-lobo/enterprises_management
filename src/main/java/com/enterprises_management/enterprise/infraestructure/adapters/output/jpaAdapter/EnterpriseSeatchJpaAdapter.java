@@ -11,6 +11,7 @@ import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseSearchMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.multitenancy.util.TenantContext;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.projection.IEnterpriseInfoProjection;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IEnterpriseRepository;
 
@@ -36,7 +37,7 @@ public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort {
     public List<EnterpriseInfoDto> getAllEnterprises() {
         List<IEnterpriseInfoProjection> enterpriseInfo = isAdmin()
             ? enterpriseRepository.findEnterpriseInfoAll()
-            : enterpriseRepository.findEnterpriseInfo();
+            : enterpriseRepository.findEnterpriseInfoForUser(TenantContext.getTenantId());
         return enterpriseMapper.toEnterpriseInfoDtoList(enterpriseInfo);
     }
 
@@ -49,7 +50,7 @@ public class EnterpriseSeatchJpaAdapter implements IEnterpriseSearchOutputPort {
     public List<EnterpriseInfoDto> getAllEnterprisesInactive() {
         List<IEnterpriseInfoProjection> enterpriseInfo = isAdmin()
             ? enterpriseRepository.findEnterpriseInfoInactiveAll()
-            : enterpriseRepository.findEnterpriseInfoInactive();
+            : enterpriseRepository.findEnterpriseInfoInactiveForUser(TenantContext.getTenantId());
         return enterpriseMapper.toEnterpriseInfoDtoList(enterpriseInfo);
     }
 
