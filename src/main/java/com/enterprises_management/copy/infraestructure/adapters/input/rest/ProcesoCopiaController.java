@@ -1,6 +1,7 @@
 package com.enterprises_management.copy.infraestructure.adapters.input.rest;
 
 import com.enterprises_management.copy.application.input.ICopyProcessCancelPort;
+import com.enterprises_management.copy.application.input.ICopyProcessDeletePort;
 import com.enterprises_management.copy.application.input.ICopyProcessQueryPort;
 import com.enterprises_management.copy.application.input.ICopyProcessStartPort;
 import com.enterprises_management.copy.application.input.command.IniciarProcesoCommand;
@@ -49,6 +50,7 @@ public class ProcesoCopiaController {
     private final ICopyProcessStartPort startPort;
     private final ICopyProcessQueryPort queryPort;
     private final ICopyProcessCancelPort cancelPort;
+    private final ICopyProcessDeletePort deletePort;
     private final IPhaseConfigRepositoryPort phaseConfigPort;
     private final SagaEngineService sagaEngineService;
 
@@ -56,12 +58,14 @@ public class ProcesoCopiaController {
             ICopyProcessStartPort startPort,
             ICopyProcessQueryPort queryPort,
             ICopyProcessCancelPort cancelPort,
+            ICopyProcessDeletePort deletePort,
             IPhaseConfigRepositoryPort phaseConfigPort,
             SagaEngineService sagaEngineService
     ) {
         this.startPort = startPort;
         this.queryPort = queryPort;
         this.cancelPort = cancelPort;
+        this.deletePort = deletePort;
         this.phaseConfigPort = phaseConfigPort;
         this.sagaEngineService = sagaEngineService;
     }
@@ -194,6 +198,21 @@ public class ProcesoCopiaController {
         String canceladoPor = extraerSub(authentication);
         cancelPort.cancelar(id, canceladoPor);
         return ResponseEntity.ok().build();
+    }
+
+    // -------------------------------------------------------------------------
+    // DELETE /processes/{id} — Eliminar proceso en estado terminal
+    // -------------------------------------------------------------------------
+
+    @DeleteMapping("/processes/{id}")
+    @PreAuthorize("hasRole('admin_client') or hasRole('user_client') or hasRole('super_client')")
+    public ResponseEntity<Void> eliminarProceso(@PathVariable String id) {
+        try {
+            deletePort.eliminar(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 
     // -------------------------------------------------------------------------
