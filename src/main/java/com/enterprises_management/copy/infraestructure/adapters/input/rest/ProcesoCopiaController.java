@@ -5,8 +5,10 @@ import com.enterprises_management.copy.application.input.ICopyProcessDeletePort;
 import com.enterprises_management.copy.application.input.ICopyProcessQueryPort;
 import com.enterprises_management.copy.application.input.ICopyProcessStartPort;
 import com.enterprises_management.copy.application.input.command.IniciarProcesoCommand;
+import com.enterprises_management.copy.application.output.IEnterpriseDuplicateSetupPort;
 import com.enterprises_management.copy.application.output.IPhaseConfigRepositoryPort;
 import com.enterprises_management.copy.application.services.SagaEngineService;
+import com.enterprises_management.copy.domain.enums.CopyProcessType;
 import com.enterprises_management.copy.domain.models.CopyPhase;
 import com.enterprises_management.copy.domain.models.CopyProcess;
 import com.enterprises_management.copy.infraestructure.adapters.input.rest.dto.*;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.multitenancy.util.TenantContext;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 
@@ -53,6 +56,7 @@ public class ProcesoCopiaController {
     private final ICopyProcessDeletePort deletePort;
     private final IPhaseConfigRepositoryPort phaseConfigPort;
     private final SagaEngineService sagaEngineService;
+    private final IEnterpriseDuplicateSetupPort duplicateSetupPort;
 
     public ProcesoCopiaController(
             ICopyProcessStartPort startPort,
@@ -60,7 +64,8 @@ public class ProcesoCopiaController {
             ICopyProcessCancelPort cancelPort,
             ICopyProcessDeletePort deletePort,
             IPhaseConfigRepositoryPort phaseConfigPort,
-            SagaEngineService sagaEngineService
+            SagaEngineService sagaEngineService,
+            IEnterpriseDuplicateSetupPort duplicateSetupPort
     ) {
         this.startPort = startPort;
         this.queryPort = queryPort;
@@ -68,6 +73,7 @@ public class ProcesoCopiaController {
         this.deletePort = deletePort;
         this.phaseConfigPort = phaseConfigPort;
         this.sagaEngineService = sagaEngineService;
+        this.duplicateSetupPort = duplicateSetupPort;
     }
 
     // -------------------------------------------------------------------------
@@ -95,6 +101,76 @@ public class ProcesoCopiaController {
     ) {
         String iniciadoPor = extraerSub(authentication);
         IniciarProcesoCommand command = CopyRestMapper.toCommand(request, iniciadoPor);
+
+        // DUPLICATE = BACKUP del origen + RESTORE al destino en cadena.
+        // Los participantes (account-catalogue, thirds, etc.) solo entienden BACKUP y RESTORE;
+        // reciben DUPLICATE y devuelven 0 equivalencias. Encadenar ambos reutiliza toda la
+        // infraestructura existente y el tax-remap de RESTORE corre automáticamente.
+        if (request.tipo() == CopyProcessType.DUPLICATE && command.empresaOrigen() != null) {
+            String tenantId = TenantContext.getTenantId();
+            String bearerToken = extraerBearerToken(httpRequest);
+            String nombreDestino = command.empresaDestino() != null ? command.empresaDestino() : "Empresa (copia)";
+
+            // 1. Crear empresa destino en BD antes de que la saga arranque
+            String nuevaEmpresaId = duplicateSetupPort.crearEmpresaDestino(
+                    command.empresaOrigen().toString(), nombreDestino, tenantId);
+            if (nuevaEmpresaId == null) {
+                log.error("[DUPLICATE] No se pudo crear empresa destino — proceso abortado");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+
+            // 2. Iniciar proceso BACKUP (el usuario ve este proceso para hacer polling)
+            IniciarProcesoCommand backupCmd = new IniciarProcesoCommand(
+                    CopyProcessType.BACKUP, command.empresaOrigen(), null, null, iniciadoPor, true);
+            CopyProcess backupProceso = startPort.iniciar(backupCmd);
+            backupProceso.setBearerToken(bearerToken);
+
+            final String backupProcesoId = backupProceso.getId();
+            final UUID finalEmpresaOrigen = command.empresaOrigen();
+            final String finalNuevaEmpresaId = nuevaEmpresaId;
+
+            sagaEngineService.registrarBearerToken(backupProcesoId, bearerToken);
+            CompletableFuture.runAsync(() -> {
+                try {
+                    TenantContext.setTenantId(tenantId);
+
+                    // 3. Correr BACKUP completo (sincrónico dentro de este hilo)
+                    sagaEngineService.avanzarFase(backupProcesoId, 1);
+
+                    // 4. Leer backupRef generado por la saga
+                    CopyProcess completedBackup = queryPort.consultarProceso(backupProcesoId);
+                    String backupRef = completedBackup.getBackupRef();
+
+                    if (backupRef != null) {
+                        // 5. Iniciar RESTORE al destino — tax-remap corre automáticamente al finalizar
+                        IniciarProcesoCommand restoreCmd = new IniciarProcesoCommand(
+                                CopyProcessType.RESTORE, finalEmpresaOrigen, finalNuevaEmpresaId,
+                                backupRef, iniciadoPor, false);
+                        CopyProcess restoreProceso = startPort.iniciar(restoreCmd);
+                        sagaEngineService.registrarBearerToken(restoreProceso.getId(), bearerToken);
+                        try {
+                            sagaEngineService.avanzarFase(restoreProceso.getId(), 1);
+                        } finally {
+                            sagaEngineService.limpiarBearerToken(restoreProceso.getId());
+                        }
+                        log.info("[DUPLICATE] Completado — origen={} destino={} backup={} restore={}",
+                                finalEmpresaOrigen, finalNuevaEmpresaId, backupProcesoId, restoreProceso.getId());
+                    } else {
+                        log.error("[DUPLICATE] BACKUP no generó backupRef — RESTORE no iniciado");
+                    }
+                } catch (Exception ex) {
+                    log.error("[DUPLICATE] Error en cadena BACKUP→RESTORE: {}", ex.getMessage(), ex);
+                } finally {
+                    TenantContext.clear();
+                    sagaEngineService.limpiarBearerToken(backupProcesoId);
+                }
+            });
+
+            List<CopyPhase> fases = queryPort.consultarFases(backupProceso.getId());
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(CopyRestMapper.toResponse(backupProceso, fases));
+        }
+
         CopyProcess proceso = startPort.iniciar(command);
 
         // ADR-29: capturar Bearer del request entrante y almacenarlo en el proceso (transient)
