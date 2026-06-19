@@ -10,6 +10,7 @@ import com.enterprises_management.copy.application.output.IPhaseConfigRepository
 import com.enterprises_management.copy.application.output.IProcessEventPublisherPort;
 import com.enterprises_management.copy.application.output.IProcessEventRepositoryPort;
 import com.enterprises_management.copy.application.output.IProcessNotifierPort;
+import com.enterprises_management.copy.application.output.ITaxLiabilityRemapPort;
 import com.enterprises_management.copy.domain.enums.CopyEventType;
 import com.enterprises_management.copy.domain.enums.CopyProcessType;
 import com.enterprises_management.copy.domain.enums.ModuleExecutionState;
@@ -70,6 +71,7 @@ public class SagaEngineService {
     private final IBackupSerializerPort backupSerializer;
     private final MeterRegistry meterRegistry;
     private final boolean parallelExecution;
+    private final ITaxLiabilityRemapPort taxLiabilityRemapPort;
 
     /** Cache en-memoria: idProceso → bearerToken (transient, no persiste en BD — ADR-29). */
     private final ConcurrentHashMap<String, String> bearerTokenCache = new ConcurrentHashMap<>();
@@ -90,7 +92,8 @@ public class SagaEngineService {
             int defaultRetries,
             IBackupSerializerPort backupSerializer,
             MeterRegistry meterRegistry,
-            boolean parallelExecution
+            boolean parallelExecution,
+            ITaxLiabilityRemapPort taxLiabilityRemapPort
     ) {
         this.procesoRepo = procesoRepo;
         this.faseRepo = faseRepo;
@@ -105,6 +108,7 @@ public class SagaEngineService {
         this.backupSerializer = backupSerializer;
         this.meterRegistry = meterRegistry;
         this.parallelExecution = parallelExecution;
+        this.taxLiabilityRemapPort = taxLiabilityRemapPort;
     }
 
     // =========================================================================
@@ -438,6 +442,20 @@ public class SagaEngineService {
             ).increment();
             emitirEvento(proceso.getId(), CopyEventType.PROCESO_COMPLETADO,
                     "{\"fases\":" + TOTAL_FASES + "}");
+
+            // Remapear tax_liability IDs en enterprise_tax_liabilities para RESTORE
+            if (proceso.getTipo() == CopyProcessType.RESTORE && proceso.getEmpresaDestino() != null) {
+                try {
+                    List<CopyEquivalenceId> taxEqs = equivalenciaRepo.buscarConFiltros(
+                            proceso.getId(), null, "tax", null);
+                    if (!taxEqs.isEmpty()) {
+                        taxLiabilityRemapPort.remapear(proceso.getEmpresaDestino(), taxEqs);
+                    }
+                } catch (Exception ex) {
+                    log.warn("[SagaEngine] No se pudo remapear tax liabilities para proceso {}: {}",
+                            proceso.getId(), ex.getMessage());
+                }
+            }
 
             // Serialización de backup post-completación (REQ-BACKUP-01, REQ-BACKUP-02, ADR-44)
             if (proceso.getTipo() == CopyProcessType.BACKUP ||

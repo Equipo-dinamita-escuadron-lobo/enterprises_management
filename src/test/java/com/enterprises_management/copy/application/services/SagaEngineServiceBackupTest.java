@@ -2,6 +2,7 @@ package com.enterprises_management.copy.application.services;
 
 import com.enterprises_management.copy.application.output.IBackupSerializerPort;
 import com.enterprises_management.copy.application.output.ICopyPhaseRepositoryPort;
+import com.enterprises_management.copy.application.output.ITaxLiabilityRemapPort;
 import com.enterprises_management.copy.application.output.ICopyProcessRepositoryPort;
 import com.enterprises_management.copy.application.output.IEquivalenceRepositoryPort;
 import com.enterprises_management.copy.application.output.IModuleExecutionRepositoryPort;
@@ -55,6 +56,7 @@ class SagaEngineServiceBackupTest {
     @Mock private IProcessEventPublisherPort eventPublisher;
     @Mock private IParticipantClientPort participantClient;
     @Mock private IBackupSerializerPort backupSerializer;
+    @Mock private ITaxLiabilityRemapPort taxRemapPort;
 
     private SagaEngineService sut;
 
@@ -69,7 +71,8 @@ class SagaEngineServiceBackupTest {
                 DEFAULT_RETRIES,
                 backupSerializer,
                 new SimpleMeterRegistry(),
-                false
+                false,
+                taxRemapPort
         );
     }
 

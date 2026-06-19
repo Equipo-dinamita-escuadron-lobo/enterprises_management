@@ -344,12 +344,13 @@ public class CopyOrchestratorWebConfig {
             List<IParticipantClientPort> participantes,
             CopyOrchestratorProperties props,
             IBackupSerializerPort backupSerializer,
-            MeterRegistry meterRegistry
+            MeterRegistry meterRegistry,
+            ITaxLiabilityRemapPort taxRemapPort
     ) {
         return new SagaEngineService(
                 procesoRepo, faseRepo, moduloRepo, equivalenciaRepo, configRepo, eventoRepo,
                 notificador, eventPublisher, participantes, props.getDefaultRetries(),
-                backupSerializer, meterRegistry, props.isParallelExecution()
+                backupSerializer, meterRegistry, props.isParallelExecution(), taxRemapPort
         );
     }
 }

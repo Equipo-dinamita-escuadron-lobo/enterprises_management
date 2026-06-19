@@ -188,6 +188,7 @@ public class RestoreController {
             @RequestParam("file") MultipartFile file,
             @RequestParam("empresaDestino") String empresaDestino,
             @RequestParam(value = "inplace", defaultValue = "false") boolean inplace,
+            @RequestParam(value = "nombreDestino", required = false) String nombreDestino,
             Authentication authentication,
             jakarta.servlet.http.HttpServletRequest httpRequest
     ) throws IOException {
@@ -209,8 +210,8 @@ public class RestoreController {
             }
         }
 
-        // Crear empresa desde enterprise.json del ZIP (inplace=true → nombre sin sufijo)
-        String empresaDestinoFinal = crearEmpresaDesdeJson(zipPath, inplace, null, TenantContext.getTenantId());
+        // Crear empresa desde enterprise.json del ZIP
+        String empresaDestinoFinal = crearEmpresaDesdeJson(zipPath, inplace, inplace ? null : nombreDestino, TenantContext.getTenantId());
         if (empresaDestinoFinal == null) {
             empresaDestinoFinal = empresaDestino;
         }
@@ -309,7 +310,7 @@ public class RestoreController {
                 ? (String) snap.get("name")
                 : (nombreDestino != null && !nombreDestino.isBlank()
                         ? nombreDestino
-                        : snap.get("name") + " (Importada)");
+                        : (String) snap.get("name"));
 
         // Insertar empresa (crítico — si falla, abortamos)
         try {
