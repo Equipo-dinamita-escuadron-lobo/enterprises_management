@@ -20,7 +20,7 @@ import com.enterprises_management.enterprise.domain.enums.StateEnum;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name="enterprise")
+@Table(name = "enterprise")
 public class EnterpriseEntity {
 
     /**
@@ -71,6 +71,16 @@ public class EnterpriseEntity {
     private String logo;
 
     /**
+     * Clave única del logo almacenado en disco.
+     */
+    private String logoKey;
+
+    /**
+     * Tipo de contenido del logo (ej: image/png).
+     */
+    private String logoContentType;
+
+    /**
      * Estado actual de la empresa.
      */
     private StateEnum state;
@@ -86,10 +96,20 @@ public class EnterpriseEntity {
     private Long secondaryActivity;
 
     /**
+     *  métodos de inventario  en la empresa.
+     */
+    private String inventoryMethods;
+
+    /**
      * Lista de responsabilidades fiscales de la empresa.
      */
-    @ManyToMany
-    List<TaxLiabilityEntity> taxLiabilities;
+    @ElementCollection
+    @CollectionTable(
+        name = "enterprise_tax_liabilities",
+        joinColumns = @JoinColumn(name = "enterprise_id")
+    )
+    @Column(name = "tax_liability_id")
+    List<Long> taxLiabilities;
 
     /**
      * Tipo de contribuyente de la empresa.
@@ -123,4 +143,10 @@ public class EnterpriseEntity {
      */
     @TenantId
     String tenantId;
+
+    @ManyToMany
+    @JoinTable(name = "enterprise_subject", joinColumns = @JoinColumn(name = "enterprise_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
+    private List<SubjectEntity> subjects;
+
+
 }

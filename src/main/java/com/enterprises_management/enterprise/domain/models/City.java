@@ -5,6 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
 /**
  * Modelo de dominio que representa una ciudad.
  * Contiene la información básica de una ciudad y su relación
@@ -18,11 +24,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
 public class City
 {
     /**
      * Identificador único de la ciudad.
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -33,5 +42,6 @@ public class City
     /**
      * Departamento al que pertenece la ciudad.
      */
+    @ManyToOne
     private Department department;
 }

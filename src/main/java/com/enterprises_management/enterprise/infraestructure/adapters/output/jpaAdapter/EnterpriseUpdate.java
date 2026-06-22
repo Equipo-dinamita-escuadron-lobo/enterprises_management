@@ -1,8 +1,11 @@
 package com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.enterprises_management.enterprise.application.ports.output.IEnterpriseUpdateOutputPort;
@@ -10,7 +13,10 @@ import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.EnterpriseEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.mapper.IEnterpriseUpdateMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.entity.SubjectEntity;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.IEnterpriseRepository;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.ISubjectRepository;
+import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.repository.ITaxLiabilityRepository;
 
 /**
  * Adaptador para la actualización de entidades Enterprise usando JPA.
@@ -24,6 +30,12 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
 
     @Autowired
     private IEnterpriseUpdateMapper updateMapper;
+
+    @Autowired
+    private ITaxLiabilityRepository taxLiabilityRepository;
+
+    @Autowired
+    private ISubjectRepository subjectRepository;
 
     /**
      * Actualiza una empresa por su ID.
@@ -53,8 +65,13 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
         enterpriseEntity.setSecondaryActivity(enterprise.getSecondaryActivity());
 
         //taxLiabilities (reponsabilidades tributarias)
-        enterpriseEntity.setTaxLiabilities(updateMapper.toTaxLiabilityEntity(enterprise.getTaxLiabilities()));
-        
+        List<Long> taxIds = enterprise.getTaxLiabilities() == null ? List.of() :
+            enterprise.getTaxLiabilities().stream().map(t -> t.getId()).collect(Collectors.toList());
+        enterpriseRepository.deleteTaxLiabilitiesByEnterpriseId(id);
+        for (Long taxId : taxIds) {
+            enterpriseRepository.insertTaxLiability(id, taxId);
+        }
+
         //taxPayerType (tipo de contribuyente)
         enterpriseEntity.setTaxPayerType(updateMapper.toTaxPayerTypeEntity(enterprise.getTaxPayerType()));
 
@@ -67,9 +84,18 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
         //location
         enterpriseEntity.setLocation(updateMapper.toLocationEntity(enterprise.getLocation()));
 
+        //inventoryMethods (método de inventario)
+        enterpriseEntity.setInventoryMethods(enterprise.getInventoryMethods());
+
+        //subjects (materias asociadas)
+        List<UUID> subjectIds = enterprise.getSubjects() == null ? List.of() :
+            enterprise.getSubjects().stream().map(s -> s.getId()).collect(Collectors.toList());
+        List<SubjectEntity> subjectEntities = subjectRepository.findAllById(subjectIds);
+        enterpriseEntity.setSubjects(subjectEntities);
+
         enterpriseRepository.save(enterpriseEntity);
     }
-    
+
     /**
      * Actualiza el estado de una empresa por su ID.
      *
@@ -87,5 +113,26 @@ public class EnterpriseUpdate implements IEnterpriseUpdateOutputPort {
         enterpriseEntity.setState(state);
 
         enterpriseRepository.save(enterpriseEntity);
+    }
+
+    /**
+     * Elimina permanentemente una empresa por su ID.
+     */
+    @Override
+    public void deleteEnterprise(UUID id) {
+        EnterpriseEntity entity = isAdmin()
+            ? enterpriseRepository.findByIdNative(id.toString()).orElse(null)
+            : enterpriseRepository.findById(id).orElse(null);
+        if (entity == null) {
+            throw new RuntimeException("Enterprise not found");
+        }
+        enterpriseRepository.delete(entity);
+    }
+
+    private boolean isAdmin() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) return false;
+        return auth.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_admin_client"));
     }
 }

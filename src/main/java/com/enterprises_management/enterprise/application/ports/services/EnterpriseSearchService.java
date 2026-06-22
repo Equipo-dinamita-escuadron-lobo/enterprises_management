@@ -53,4 +53,17 @@ public class EnterpriseSearchService implements IEnterpriseSearchManagerPort {
     public Enterprise getEnterpriseById(UUID id) {
         return enterpriseSearchOutputPort.getEnterpriseById(id);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Enterprise getEnterpriseBySubjectCode(String subjectCode) {
+        return enterpriseSearchOutputPort.getEnterpriseBySubjectCode(subjectCode);
+    }
+
+    @Override
+    public List<EnterpriseInfoDto> searchEnterprises(String q) {
+        return enterpriseSearchOutputPort.searchEnterprises(q);
+    }
 }

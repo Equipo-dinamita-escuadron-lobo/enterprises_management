@@ -1,0 +1,92 @@
+spring:
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/enterprises}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: ${DB_DRIVER:org.postgresql.Driver}
+
+  jpa:
+    hibernate:
+      ddl-auto: ${DB_HIBERNATE_DDL_AUTO:create-drop}
+        
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI:http://contables.unicauca.edu.co:80/auth/realms/oauth2-realm}
+          jwk-set-uri: ${JWT_JWK_SET_URI:http://contables.unicauca.edu.co:80/auth/realms/oauth2-realm/protocol/openid-connect/certs}
+          
+server:
+  port: ${PORT:55877}
+
+eureka:
+  instance:
+    instance-id: "${spring.application.name}:${random.uuid}"
+    hostname: ${INSTANCE_HOSTNAME:localhost}
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+logging:
+  level:
+    org:
+      Keycloak: ${KEYCLOAK_LOG_LEVEL:WARN}
+jwt:
+  auth:
+    converter:
+      principle-attribute: ${JWT_PRINCIPAL_ATTR:preferred_username}
+      resource-id: ${JWT_RESOURCE_ID:microservices_client}
+
+
+management:
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+resend:
+  key: ${RESEND_KEY:re_NU4GzgUQ_AaRixR5UPTzvKv11pmJozF3g}
+  from: ${RESEND_FROM:onboarding@resend.dev}
+
+keycloak:
+  admin:
+    server-url: ${KEYCLOAK_SERVER_URL:http://contables.unicauca.edu.co/auth}
+    realm: ${KEYCLOAK_REALM_NAME:oauth2-realm}
+    master-realm: ${KEYCLOAK_REALM_MASTER:master}
+    client-id: ${KEYCLOAK_ADMIN:admin-cli}
+    username: ${KEYCLOAK_USER_CONSOLE:contapp-uc@unicauca.edu.co}
+    password: ${KEYCLOAK_PASSWORD:kPiP4WSxSH9Gdq}
+
+app:
+  upload:
+    public-base-url: http://localhost:8080
+    logo-dir: uploads/logos
+
+  # -----------------------------------------------------------------------
+  # Orquestador de copia — perfil dev (feature flag activado para desarrollo)
+  # -----------------------------------------------------------------------
+  copy:
+    orchestrator:
+      enabled: true
+      default-retries: 3
+      bootstrap-config: true
+      stub-mode: true
+      participant:
+        transport: stub
+      stub:
+        latency-ms: 100
+        failure-rate: 0
+      events:
+        amqp:
+          # false en dev local — sin RabbitMQ disponible (en K8s sobreescribir via ConfigMap)
+          enabled: false
+      security:
+        permissive-mode: true
+      backup:
+        # Directorio de backups para el perfil dev (REQ-BACKUP-04)
+        dir: uploads/backups
+        # Tamaño máximo — 500 MB (ADR-47)
+        max-size-bytes: 524288000
+      # Ejecución paralela de módulos dentro de una fase (H3-R3)
+      parallel-execution: true

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import jakarta.persistence.*;
 import java.util.List;
 
 /**
@@ -20,11 +21,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
 public class Department {
 
     /**
      * Identificador único del departamento.
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -35,10 +39,12 @@ public class Department {
     /**
      * País al que pertenece el departamento.
      */
+    @ManyToOne
     private Country country;
 
     /**
      * Lista de ciudades que pertenecen al departamento.
      */
+    @OneToMany(mappedBy = "department")
     private List<City> cities;
 }

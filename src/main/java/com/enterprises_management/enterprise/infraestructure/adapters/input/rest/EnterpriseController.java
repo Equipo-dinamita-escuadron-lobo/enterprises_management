@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseCreateMannegerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseSearchManagerPort;
+import com.enterprises_management.enterprise.application.ports.input.IEnterpriseExportManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.IEnterpriseUpdateManagerPort;
 import com.enterprises_management.enterprise.application.ports.input.ILocationMangerPort;
 import com.enterprises_management.enterprise.application.ports.input.IPersonTypeManagerPort;
@@ -31,17 +32,20 @@ import com.enterprises_management.enterprise.application.ports.input.ITaxPayerTy
 import com.enterprises_management.enterprise.domain.dto.EnterpriseInfoDto;
 import com.enterprises_management.enterprise.domain.enums.StateEnum;
 import com.enterprises_management.enterprise.domain.models.Enterprise;
+import com.enterprises_management.enterprise.domain.models.EnterpriseExport;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.domain.models.TaxPayerType;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.request.EnterpriseCreateRequest;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseByIdResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseCreateResponse;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.EnterpriseExportByIdResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.TaxLiabilityResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response.TaxPayerTypeResponse;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseCreateRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseSearchRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxLiabilityRestMapper;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.ITaxPayerTypeRestMapper;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.mapper.interfaces.IEnterpriseExportRestMapper;
 import com.enterprises_management.enterprise.infraestructure.security.IJwtUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,8 +64,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 @Validated
-@CrossOrigin(origins = "*")
-@PreAuthorize("hasRole('admin_client')")
+@PreAuthorize("hasRole('admin_client') or hasRole('user_client') or hasRole('super_client')")
 public class EnterpriseController {
 
     private final ITaxLiabilityManagerPort taxLiabilityManagerPort;
@@ -72,6 +75,8 @@ public class EnterpriseController {
 
     private final IEnterpriseSearchManagerPort enterpriseSearchManagerPort;
 
+    private final IEnterpriseExportManagerPort enterpriseExportManagerPort;
+
     private final IEnterpriseCreateMannegerPort enterpriseCreateMannegerPort;
     private final IEnterpriseCreateRestMapper enterpriseCreateMapper;
 
@@ -80,6 +85,8 @@ public class EnterpriseController {
 
     private final IEnterpriseUpdateManagerPort enterpriseUpdateManagerPort;
     private final IEnterpriseSearchRestMapper enterpriseSearchMapper;
+
+    private final IEnterpriseExportRestMapper enterpriseExportRestMapper;
 
     private final IJwtUtils jwtUtils;
 
@@ -137,6 +144,11 @@ public class EnterpriseController {
             @ApiResponse(responseCode = "204", description = "No se encontraron empresas inactivas", content = @Content),
             @ApiResponse(responseCode = "500", description = "Error interno al recuperar las empresas inactivas", content = @Content)
     })
+    @GetMapping("/search")
+    public ResponseEntity<List<EnterpriseInfoDto>> searchEnterprises(@RequestParam("q") String q) {
+        return ResponseEntity.ok(enterpriseSearchManagerPort.searchEnterprises(q));
+    }
+
     @GetMapping("/inactive")
     public ResponseEntity<List<EnterpriseInfoDto>> getAllEnterprisesInactive() {
         List<EnterpriseInfoDto> enterprises = enterpriseSearchManagerPort.getAllEnterprisesInactive();
@@ -259,6 +271,41 @@ public class EnterpriseController {
         return ResponseEntity.ok(enterpriseSearchMapper.toEnterpriseByIdResponse(enterprise));
     }
 
+    @GetMapping("/export/{id}")
+    public ResponseEntity<EnterpriseExportByIdResponse> exportEnterpriseByID(@PathVariable("id") UUID id) {
+        EnterpriseExport enterpriseExport = enterpriseExportManagerPort.exportEnterpriseById(id);
+        if (enterpriseExport == null) {
+            return ResponseEntity.notFound().build();
+        }
+        EnterpriseExportByIdResponse response = enterpriseExportRestMapper.toResponse(enterpriseExport);
+        return ResponseEntity.ok(response);
+    }
+
+
+    /**
+     * Elimina (soft delete) una empresa por su ID marcándola como INACTIVE.
+     * Compatible con el frontend que llama DELETE /api/enterprises/enterprise/{id}
+     */
+    @DeleteMapping("/enterprise/{id}")
+    public ResponseEntity<Void> deleteEnterprise(@PathVariable("id") UUID id) {
+        Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
+        if (enterprise == null) {
+            return ResponseEntity.notFound().build();
+        }
+        enterpriseUpdateManagerPort.updateEnterpriseStatus(id, StateEnum.INACTIVE);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/enterprise/activate/{id}")
+    public ResponseEntity<Void> activateEnterprise(@PathVariable("id") UUID id) {
+        Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
+        if (enterprise == null) {
+            return ResponseEntity.notFound().build();
+        }
+        enterpriseUpdateManagerPort.updateEnterpriseStatus(id, StateEnum.ACTIVE);
+        return ResponseEntity.noContent().build();
+    }
+
     /**
      * Crea un tercero a partir del contenido de un PDF del RUT.
      *
@@ -281,4 +328,35 @@ public class EnterpriseController {
             return ResponseEntity.status(500).body(null);
         }
     }
+
+    /**
+     * Elimina permanentemente una empresa de la base de datos (hard delete).
+     * Esta operación no se puede deshacer.
+     *
+     * @param id el identificador de la empresa a eliminar
+     * @return la respuesta de la operación
+     */
+    @Operation(summary = "Eliminar permanentemente una empresa", description = "Elimina completamente una empresa de la base de datos. Esta operación no se puede deshacer.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Empresa eliminada permanentemente"),
+            @ApiResponse(responseCode = "404", description = "Empresa no encontrada"),
+            @ApiResponse(responseCode = "500", description = "Error interno al eliminar la empresa")
+    })
+    @DeleteMapping("/enterprise/hard/{id}")
+    @PreAuthorize("hasRole('admin_client') or hasRole('user_client')")
+    public ResponseEntity<Void> deleteEnterpriseHard(@PathVariable("id") UUID id) {
+        Enterprise enterprise = enterpriseSearchManagerPort.getEnterpriseById(id);
+        if (enterprise == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        try {
+            enterpriseUpdateManagerPort.deleteEnterprise(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    
 }

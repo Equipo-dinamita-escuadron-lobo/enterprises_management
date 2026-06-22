@@ -41,4 +41,14 @@ public interface IEnterpriseSearchOutputPort {
      * @see Enterprise
      */
     Enterprise getEnterpriseById(UUID id);
+
+    /**
+     * Obtiene la información detallada de una empresa especifica por la materia a la que está asociada.
+     * @param subjectCode String código de la materia asociada a la empresa
+     * @return List<EnterpriseInfoDto> Lista de DTOs con la información básica de
+     * @see EnterpriseInfoDto
+     */
+    Enterprise getEnterpriseBySubjectCode(String subjectCode);
+
+    List<EnterpriseInfoDto> searchEnterprises(String q);
 }

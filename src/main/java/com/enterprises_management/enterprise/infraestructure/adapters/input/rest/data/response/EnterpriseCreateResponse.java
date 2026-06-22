@@ -7,6 +7,7 @@ import com.enterprises_management.enterprise.domain.models.EnterpriseType;
 import com.enterprises_management.enterprise.domain.models.PersonType;
 import com.enterprises_management.enterprise.domain.models.TaxLiability;
 import com.enterprises_management.enterprise.domain.models.TaxPayerType;
+import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.SubjectDto;
 import com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.dto.LocationResponseDto;
 
 import lombok.AllArgsConstructor;
@@ -105,4 +106,14 @@ public class EnterpriseCreateResponse {
      * Ubicación de la empresa.
      */
     LocationResponseDto location;
+
+    /**
+     * Lista de materias disponibles en la empresa.
+     */
+    List<SubjectDto> subjects;
+
+    /**
+     * Lista de métodos de inventario disponibles en la empresa.
+     */ 
+    private String inventoryMethods;
 }

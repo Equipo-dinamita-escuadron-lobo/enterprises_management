@@ -71,6 +71,16 @@ public class Enterprise {
     private String logo;
 
     /**
+     * Clave única del logo almacenado en disco.
+     */
+    private String logoKey;
+
+    /**
+     * Tipo de contenido del logo (ej: image/png).
+     */
+    private String logoContentType;
+
+    /**
      * Código de la actividad principal de la empresa.
      */
     private Long mainActivity;
@@ -84,6 +94,11 @@ public class Enterprise {
      * Estado actual de la empresa.
      */
     private StateEnum state;
+
+    /**
+     *  métodos de inventario  en la empresa.
+     */
+    private String inventoryMethods;
 
     /**
      * Lista de responsabilidades fiscales de la empresa.
@@ -109,4 +124,10 @@ public class Enterprise {
      * Ubicación física de la empresa.
      */
     Location location;
+
+    /**
+     * Lista de materias disponible en la empresa.
+     */
+    List<Subject> subjects;
+
 }

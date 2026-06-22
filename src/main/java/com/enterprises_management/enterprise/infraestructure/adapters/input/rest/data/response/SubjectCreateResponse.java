@@ -1,0 +1,24 @@
+package com.enterprises_management.enterprise.infraestructure.adapters.input.rest.data.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * Respuesta para la creación de una materia.
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class SubjectCreateResponse {
+
+    /**
+     * Código de la materia.
+     */
+    private String code;
+
+    /**
+     * Nombre de la materia.
+     */
+    private String name;
+}
