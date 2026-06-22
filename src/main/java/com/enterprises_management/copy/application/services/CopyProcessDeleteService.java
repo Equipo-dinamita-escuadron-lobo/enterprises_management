@@ -6,12 +6,14 @@ import com.enterprises_management.copy.application.output.ICopyProcessDeleteRepo
 import com.enterprises_management.copy.domain.enums.ProcessState;
 import com.enterprises_management.copy.domain.models.CopyProcess;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "app.copy.orchestrator.enabled", havingValue = "true")
 public class CopyProcessDeleteService implements ICopyProcessDeletePort {
 
     private final ICopyProcessQueryPort queryPort;

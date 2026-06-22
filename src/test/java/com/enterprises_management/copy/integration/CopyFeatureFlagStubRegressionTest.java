@@ -1,6 +1,7 @@
 package com.enterprises_management.copy.integration;
 
 import com.enterprises_management.copy.application.output.IParticipantClientPort;
+import com.enterprises_management.copy.infraestructure.adapters.output.participant.local.LocalValidationParticipantAdapter;
 import com.enterprises_management.copy.infraestructure.adapters.output.participant.stub.StubParticipantClient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -70,13 +71,16 @@ class CopyFeatureFlagStubRegressionTest {
                 .withFailMessage("Con transport=stub deben existir beans IParticipantClientPort (stubs)")
                 .isNotEmpty();
 
-        // THEN — todos los beans deben ser StubParticipantClient (no HttpParticipantClientAdapter)
-        participantes.forEach(participante ->
-                assertThat(participante)
-                        .withFailMessage("Con transport=stub, TODOS los participantes deben ser StubParticipantClient. " +
-                                "Encontrado: %s (%s)", participante, participante.getClass().getSimpleName())
-                        .isInstanceOf(StubParticipantClient.class)
-        );
+        // THEN — todos los beans remotos deben ser StubParticipantClient (no HttpParticipantClientAdapter).
+        // LocalValidationParticipantAdapter es un participante local (sin HTTP) y siempre está presente.
+        participantes.stream()
+                .filter(p -> !(p instanceof LocalValidationParticipantAdapter))
+                .forEach(participante ->
+                        assertThat(participante)
+                                .withFailMessage("Con transport=stub, TODOS los participantes remotos deben ser StubParticipantClient. " +
+                                        "Encontrado: %s (%s)", participante, participante.getClass().getSimpleName())
+                                .isInstanceOf(StubParticipantClient.class)
+                );
     }
 
     @Test
@@ -94,16 +98,19 @@ class CopyFeatureFlagStubRegressionTest {
     }
 
     @Test
-    @DisplayName("7.3.1 — transport=stub: 4 stubs activos (ENTERPRISES, CATALOGUE, PRODUCTS, THIRDS) — Hito 3")
+    @DisplayName("7.3.1 — transport=stub: stubs activos para todos los módulos remotos (Hitos 3-8)")
     void flagStub_tresStubsActivos() {
-        // THEN — 4 stubs: ENTERPRISES, CATALOGUE, PRODUCTS, THIRDS (añadido en Hito 3 task 5.3)
-        List<String> modulos = participantes.stream()
+        // THEN — stubs para todos los módulos remotos; VALIDACION es local (no stub).
+        List<String> stubModulos = participantes.stream()
+                .filter(p -> p instanceof StubParticipantClient)
                 .map(IParticipantClientPort::getNombreModulo)
                 .toList();
 
-        assertThat(modulos)
-                .withFailMessage("Con transport=stub, deben existir 4 stubs (ENTERPRISES, CATALOGUE, PRODUCTS, THIRDS). " +
-                        "Módulos encontrados: %s", modulos)
-                .containsExactlyInAnyOrder("ENTERPRISES", "CATALOGUE", "PRODUCTS", "THIRDS");
+        assertThat(stubModulos)
+                .withFailMessage("Con transport=stub, los módulos remotos deben tener stubs. Encontrados: %s", stubModulos)
+                .containsExactlyInAnyOrder(
+                        "ENTERPRISES", "CATALOGUE", "PRODUCTS", "THIRDS",
+                        "TREASURY", "STOCK", "KARDEX", "FACTURES",
+                        "INVENTORYPEPS", "AUXILIARY-BOOK");
     }
 }

@@ -91,7 +91,7 @@ class SagaEngineServiceBackupTest {
         configurarFasesCompletadas(proceso, 4);
         when(equivalenciaRepo.buscarConFiltros(anyString(), any(), any(), any()))
                 .thenReturn(List.of());
-        when(backupSerializer.serializarBackup(any(), any(), any()))
+        when(backupSerializer.serializarBackup(any(), any(), any(), any()))
                 .thenReturn(backupRefEsperado);
         when(procesoRepo.actualizar(any())).thenAnswer(inv -> inv.getArgument(0));
         when(eventoRepo.guardar(any())).thenAnswer(inv -> inv.getArgument(0));
@@ -100,7 +100,7 @@ class SagaEngineServiceBackupTest {
         invocarEvaluarCompletacion(proceso);
 
         // THEN — serializador invocado exactamente una vez
-        verify(backupSerializer, times(1)).serializarBackup(any(), any(), any());
+        verify(backupSerializer, times(1)).serializarBackup(any(), any(), any(), any());
 
         // THEN — procesoRepo.actualizar llamado con backupRef seteado
         ArgumentCaptor<CopyProcess> captor = ArgumentCaptor.forClass(CopyProcess.class);
@@ -125,7 +125,7 @@ class SagaEngineServiceBackupTest {
         configurarFasesCompletadas(proceso, 4);
         when(equivalenciaRepo.buscarConFiltros(anyString(), any(), any(), any()))
                 .thenReturn(List.of());
-        when(backupSerializer.serializarBackup(any(), any(), any()))
+        when(backupSerializer.serializarBackup(any(), any(), any(), any()))
                 .thenReturn("backup_test.zip");
         when(procesoRepo.actualizar(any())).thenAnswer(inv -> inv.getArgument(0));
         when(eventoRepo.guardar(any())).thenAnswer(inv -> inv.getArgument(0));
@@ -134,7 +134,7 @@ class SagaEngineServiceBackupTest {
         invocarEvaluarCompletacion(proceso);
 
         // THEN — serializador invocado porque generateBackup=true
-        verify(backupSerializer, times(1)).serializarBackup(any(), any(), any());
+        verify(backupSerializer, times(1)).serializarBackup(any(), any(), any(), any());
     }
 
     // =========================================================================
@@ -175,7 +175,7 @@ class SagaEngineServiceBackupTest {
         configurarFasesCompletadas(proceso, 4);
         when(equivalenciaRepo.buscarConFiltros(anyString(), any(), any(), any()))
                 .thenReturn(List.of());
-        when(backupSerializer.serializarBackup(any(), any(), any()))
+        when(backupSerializer.serializarBackup(any(), any(), any(), any()))
                 .thenThrow(new RuntimeException("Error de disco simulado"));
         when(procesoRepo.actualizar(any())).thenAnswer(inv -> inv.getArgument(0));
         when(eventoRepo.guardar(any())).thenAnswer(inv -> inv.getArgument(0));

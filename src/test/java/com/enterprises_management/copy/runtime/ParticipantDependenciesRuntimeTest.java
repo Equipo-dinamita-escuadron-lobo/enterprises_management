@@ -67,14 +67,14 @@ class ParticipantDependenciesRuntimeTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    @DisplayName("Bootstrap registra 11 entradas totales en copy_phase_config (3+2+6)")
+    @DisplayName("Bootstrap registra 12 entradas totales en copy_phase_config (3+2+6+1)")
     void bootstrap_registraOnceEntradas() {
         Integer total = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM copy_phase_config WHERE activo = TRUE",
                 Integer.class);
         assertThat(total)
-                .withFailMessage("Se esperaban 11 entradas totales (F1:3 + F2:2 + F3:6), encontradas: %d", total)
-                .isEqualTo(11);
+                .withFailMessage("Se esperaban 12 entradas totales (F1:3 + F2:2 + F3:6 + F4:1), encontradas: %d", total)
+                .isEqualTo(12);
     }
 
     @Test

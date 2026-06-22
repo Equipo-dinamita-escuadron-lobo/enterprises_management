@@ -15,6 +15,7 @@ import com.enterprises_management.copy.infraestructure.adapters.input.rest.advic
 import com.enterprises_management.copy.infraestructure.config.CopyOrchestratorProperties;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.multitenancy.interceptor.TenantInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -74,6 +75,10 @@ class BackupRestoreControllerTest {
     @MockBean
     private CopyOrchestratorProperties props;
 
+    /** Necesario para OAuth2 resource server (SecurityConfig). */
+    @MockBean
+    private JwtDecoder jwtDecoder;
+
     /** Necesario para satisfacer WebConfiguration que requiere TenantInterceptor. */
     @MockBean
     private TenantInterceptor tenantInterceptor;
@@ -89,6 +94,10 @@ class BackupRestoreControllerTest {
     /** Necesario para SecurityConfig. */
     @MockBean
     private com.enterprises_management.enterprise.infraestructure.security.JwtAuthConverter jwtAuthConverter;
+
+    /** Necesario porque RestoreController.iniciarRestore (inplace) usa enterpriseUpdatePort. */
+    @MockBean
+    private com.enterprises_management.enterprise.application.ports.input.IEnterpriseUpdateManagerPort enterpriseUpdatePort;
 
     @TempDir
     Path tempDir;

@@ -8,12 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,18 +35,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebMvcTest(controllers = ProcesoCopiaController.class)
 @Import({
-    com.enterprises_management.enterprise.infraestructure.security.SecurityConfig.class,
-    com.enterprises_management.copy.infraestructure.adapters.input.rest.advice.CopyExceptionHandler.class
+    com.enterprises_management.enterprise.infraestructure.security.SecurityConfig.class
 })
 @TestPropertySource(properties = {
     "app.copy.orchestrator.enabled=false",
     "jwt.auth.converter.principle-attribute=preferred_username",
-    "jwt.auth.converter.resource-id=microservices_client"
+    "jwt.auth.converter.resource-id=microservices_client",
+    "spring.web.resources.add-mappings=false",
+    "spring.mvc.add-mappings=false"
 })
 class FeatureFlagOffTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    /** Necesario para OAuth2 resource server (SecurityConfig). */
+    @MockBean
+    private JwtDecoder jwtDecoder;
 
     /** Necesario para WebConfiguration (multi-tenancy). */
     @MockBean
@@ -76,6 +83,7 @@ class FeatureFlagOffTest {
     @DisplayName("Con flag OFF: POST /processes devuelve 404 — controller no registrado (ADR-14)")
     void featureFlagOff_postProcesses_devuelve404() throws Exception {
         mockMvc.perform(post("/api/enterprises/copy/processes")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"tipo\":\"BACKUP\",\"empresaOrigen\":\""
                                 + java.util.UUID.randomUUID() + "\"}"))

@@ -3,6 +3,7 @@ package com.enterprises_management.copy.application;
 import com.enterprises_management.copy.application.input.IEquivalenciaLookupInputPort;
 import com.enterprises_management.copy.application.output.IEquivalenceRepositoryPort;
 import com.enterprises_management.copy.application.services.EquivalenciaLookupService;
+import com.enterprises_management.copy.application.services.LookupCacheService;
 import com.enterprises_management.copy.domain.models.CopyEquivalenceId;
 import com.enterprises_management.copy.domain.models.EquivalenciaLookupRequest;
 import com.enterprises_management.copy.domain.models.EquivalenciaLookupResponse;
@@ -35,13 +36,15 @@ class EquivalenciaLookupServiceTest {
     @Mock
     private IEquivalenceRepositoryPort equivalenciaRepo;
 
+    private LookupCacheService lookupCacheService;
     private EquivalenciaLookupService service;
 
     private static final int MAX_BATCH = 1000;
 
     @BeforeEach
     void setUp() {
-        service = new EquivalenciaLookupService(equivalenciaRepo, MAX_BATCH);
+        lookupCacheService = new LookupCacheService(5);
+        service = new EquivalenciaLookupService(equivalenciaRepo, MAX_BATCH, lookupCacheService);
     }
 
     // -------------------------------------------------------------------------

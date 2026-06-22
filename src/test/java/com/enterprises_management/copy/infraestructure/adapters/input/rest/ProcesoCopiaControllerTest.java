@@ -15,6 +15,7 @@ import com.enterprises_management.copy.domain.models.CopyProcess;
 import com.enterprises_management.copy.domain.models.CopyProcessEvent;
 import com.enterprises_management.enterprise.infraestructure.adapters.output.jpaAdapter.multitenancy.interceptor.TenantInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -46,6 +49,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     com.enterprises_management.copy.infraestructure.adapters.input.rest.advice.CopyExceptionHandler.class,
     com.enterprises_management.enterprise.infraestructure.security.SecurityConfig.class
 })
+@ActiveProfiles("test")
+@TestPropertySource(properties = "app.copy.orchestrator.enabled=true")
 class ProcesoCopiaControllerTest {
 
     @Autowired
@@ -63,6 +68,10 @@ class ProcesoCopiaControllerTest {
     @MockBean
     private ICopyProcessCancelPort cancelPort;
 
+    /** Necesario para OAuth2 resource server (SecurityConfig). */
+    @MockBean
+    private JwtDecoder jwtDecoder;
+
     /** Necesario para satisfacer WebConfiguration que requiere TenantInterceptor (multi-tenancy). */
     @MockBean
     private TenantInterceptor tenantInterceptor;
@@ -79,12 +88,20 @@ class ProcesoCopiaControllerTest {
     @MockBean
     private SagaEngineService sagaEngineService;
 
+    /** Necesario porque ProcesoCopiaController.eliminarProceso usa deletePort. */
+    @MockBean
+    private com.enterprises_management.copy.application.input.ICopyProcessDeletePort deletePort;
+
+    /** Necesario porque ProcesoCopiaController.iniciarProceso (tipo DUPLICATE) usa duplicateSetupPort. */
+    @MockBean
+    private com.enterprises_management.copy.application.output.IEnterpriseDuplicateSetupPort duplicateSetupPort;
+
     // -------------------------------------------------------------------------
     // POST /api/enterprises/copy/processes
     // -------------------------------------------------------------------------
 
     @Test
-    @WithMockUser(authorities = "Backup_Create")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("POST /processes con body válido DUPLICATE devuelve 201 con idProceso")
     void iniciarProceso_bodyValidoDuplicate_devuelve201() throws Exception {
         String idProceso = UUID.randomUUID().toString();
@@ -92,6 +109,7 @@ class ProcesoCopiaControllerTest {
 
         CopyProcess proceso = mockProceso(idProceso, empresaOrigen, CopyProcessType.DUPLICATE);
         when(startPort.iniciar(any())).thenReturn(proceso);
+        when(duplicateSetupPort.crearEmpresaDestino(any(), any(), any())).thenReturn(UUID.randomUUID().toString());
 
         String body = """
             {
@@ -111,7 +129,7 @@ class ProcesoCopiaControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "Backup_Create")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("POST /processes con tipo inválido devuelve 400")
     void iniciarProceso_tipoInvalido_devuelve400() throws Exception {
         String body = """
@@ -129,7 +147,7 @@ class ProcesoCopiaControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "Backup_Create")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("POST /processes sin empresaOrigen devuelve 400")
     void iniciarProceso_sinEmpresaOrigen_devuelve400() throws Exception {
         String body = """
@@ -146,7 +164,7 @@ class ProcesoCopiaControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "Backup_Create")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("POST /processes cuando ya existe proceso activo devuelve 409")
     void iniciarProceso_procesoActivoExistente_devuelve409() throws Exception {
         UUID empresaOrigen = UUID.randomUUID();
@@ -202,7 +220,7 @@ class ProcesoCopiaControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "Backup_Create")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("POST /processes con tipo=RESTORE sin backupRef devuelve 400 (REQ-API-02)")
     void iniciarProceso_restoreSinBackupRef_devuelve400() throws Exception {
         String body = """
@@ -220,7 +238,7 @@ class ProcesoCopiaControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "Backup_Create")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("POST /processes con tipo=RESTORE y backupRef válido devuelve 201 (REQ-API-02)")
     void iniciarProceso_restoreConBackupRef_devuelve201() throws Exception {
         String idProceso = UUID.randomUUID().toString();
@@ -249,7 +267,7 @@ class ProcesoCopiaControllerTest {
     // -------------------------------------------------------------------------
 
     @Test
-    @WithMockUser(authorities = "Backup_View")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("GET /processes/{id} proceso existente devuelve 200")
     void consultarProceso_procesoExiste_devuelve200() throws Exception {
         String idProceso = UUID.randomUUID().toString();
@@ -265,7 +283,7 @@ class ProcesoCopiaControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "Backup_View")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("GET /processes/{id} proceso inexistente devuelve 404")
     void consultarProceso_procesoNoExiste_devuelve404() throws Exception {
         String idProceso = UUID.randomUUID().toString();
@@ -281,7 +299,7 @@ class ProcesoCopiaControllerTest {
     // -------------------------------------------------------------------------
 
     @Test
-    @WithMockUser(authorities = "Backup_Cancel")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("POST /processes/{id}/cancel proceso cancelable devuelve 200")
     void cancelarProceso_procesoActivo_devuelve200() throws Exception {
         String idProceso = UUID.randomUUID().toString();
@@ -293,7 +311,7 @@ class ProcesoCopiaControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "Backup_Cancel")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("POST /processes/{id}/cancel en estado terminal devuelve 409")
     void cancelarProceso_estadoTerminal_devuelve409() throws Exception {
         String idProceso = UUID.randomUUID().toString();
@@ -306,7 +324,7 @@ class ProcesoCopiaControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "Backup_Cancel")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("POST /processes/{id}/cancel proceso no encontrado devuelve 404")
     void cancelarProceso_procesoNoExiste_devuelve404() throws Exception {
         String idProceso = UUID.randomUUID().toString();
@@ -334,7 +352,7 @@ class ProcesoCopiaControllerTest {
     // -------------------------------------------------------------------------
 
     @Test
-    @WithMockUser(authorities = "Backup_View")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("GET /processes/{id}/events devuelve lista de eventos")
     void consultarEventos_procesoExiste_devuelve200() throws Exception {
         String idProceso = UUID.randomUUID().toString();
@@ -356,7 +374,7 @@ class ProcesoCopiaControllerTest {
     // -------------------------------------------------------------------------
 
     @Test
-    @WithMockUser(authorities = "Backup_View")
+    @WithMockUser(roles = "admin_client")
     @DisplayName("GET /configuration/phases devuelve lista de configuraciones")
     void listarConfiguracionFases_devuelve200() throws Exception {
         when(phaseConfigPort.buscarActivosPorFase(anyInt())).thenReturn(List.of());
