@@ -64,7 +64,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 @Validated
-@PreAuthorize("hasRole('admin_client') or hasRole('user_client') or hasRole('super_client')")
+@PreAuthorize("hasRole('admin_client') or hasRole('user_client') or hasRole('super_client') or hasRole('Administrador') or hasRole('Estudiante') or hasRole('Profesor')")
 public class EnterpriseController {
 
     private final ITaxLiabilityManagerPort taxLiabilityManagerPort;
